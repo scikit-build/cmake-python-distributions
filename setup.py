@@ -10,16 +10,8 @@ setup(
     author='Jean-Christophe Fillion-Robin',
     author_email='jchris.fillionr@kitware.com',
 
-    cmake_args=[
-        '-DBUILD_CursesDialog:BOOL=OFF',
-        '-DCMAKE_USE_OPENSSL:BOOL=ON',
-        '-DBUILD_TESTING:BOOL=OFF',
-        '-DCMake_INSTALL_DEPENDENCIES:BOOL=ON'
-    ],
-
     packages=['cmake'],
 
-    cmake_source_dir='src',
     cmake_install_dir='cmake/data',
 
     entry_points={'console_scripts':

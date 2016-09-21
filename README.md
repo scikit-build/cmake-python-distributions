@@ -18,7 +18,6 @@ Building the wheel requires:
 * C++ Compiler
 * Python
 * [CMake](https://cmake.org)
-* OpenSSL (statically built)
 
 Build the CMake Python wheel with the following command:
 
