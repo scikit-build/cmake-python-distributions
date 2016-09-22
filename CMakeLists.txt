@@ -51,6 +51,17 @@ cmake_minimum_required(VERSION 3.6)
 #
 #   python setup.pt bdist_wheel -- -DBUILD_CMAKE_FROM_SOURCE:BOOL=ON
 #
+#
+# Optimizations
+# -------------
+#
+# On a given platform, when building different "flavor" of CMake python wheels (one
+# for each <python tag>-<abi tag>), the whole process can be made faster by avoiding
+# to re-download CMake.
+#
+# By passing the option ``-DCMakePythonDistributions_ARCHIVE_DOWNLOAD_DIR:PATH=/path/to/cache``,
+# successive build will re-use existing archives instead of re-downloading them.
+#
 
 project(CMakePythonDistributions NONE)
 
@@ -69,6 +80,10 @@ if(CMakePythonDistributions_SUPERBUILD)
     set(default OFF)
   endif()
   option(BUILD_CMAKE_FROM_SOURCE "Build CMake from source" ${default})
+
+  set(CMakePythonDistributions_ARCHIVE_DOWNLOAD_DIR "${CMAKE_BINARY_DIR}"
+    CACHE PATH "Directory where to download archives"
+    )
 
   message(STATUS "***************************************************")
   message(STATUS "Build CMake from source: ${BUILD_CMAKE_FROM_SOURCE}")
@@ -141,6 +156,7 @@ if(CMakePythonDistributions_SUPERBUILD)
     SOURCE_DIR ${CMakeProject_SOURCE_DIR}
     URL ${${src_archive}_url}
     URL_HASH SHA256=${${src_archive}_sha256}
+    DOWNLOAD_DIR ${CMakePythonDistributions_ARCHIVE_DOWNLOAD_DIR}
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ""
     BUILD_IN_SOURCE 1
@@ -185,6 +201,7 @@ if(CMakePythonDistributions_SUPERBUILD)
       SOURCE_DIR ${CMakeProject_BINARY_DISTRIBUTION_DIR}
       URL ${${binary_archive}_url}
       URL_HASH SHA256=${${binary_archive}_sha256}
+      DOWNLOAD_DIR ${CMakePythonDistributions_ARCHIVE_DOWNLOAD_DIR}
       CONFIGURE_COMMAND ""
       BUILD_COMMAND ""
       BUILD_IN_SOURCE 1
