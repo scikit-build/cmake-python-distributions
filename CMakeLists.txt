@@ -62,6 +62,21 @@ cmake_minimum_required(VERSION 3.6)
 # By passing the option ``-DCMakePythonDistributions_ARCHIVE_DOWNLOAD_DIR:PATH=/path/to/cache``,
 # successive build will re-use existing archives instead of re-downloading them.
 #
+# And finally, to avoid rebuilding CMake, the idea is to first create a standalone build
+# of the CMake project and then building the wheel using it.
+#
+# Step 1: Standalone build::
+#
+#   mkdir -p standalone-build && cd $_
+#   cmake -DCMakePythonDistributions_ARCHIVE_DOWNLOAD_DIR:PATH=/path/to/cache \
+#     -G Ninja ../
+#
+# Step 2: Faster build reusing download and build directories::
+#
+#   python setup.py bdist_wheel -- \
+#     -DCMakePythonDistributions_ARCHIVE_DOWNLOAD_DIR:PATH=/path/to/cache \
+#     -DCMakeProject_BINARY_DIR:PATH=/path/to/standalone-build
+#
 
 project(CMakePythonDistributions NONE)
 
@@ -144,6 +159,25 @@ if(CMakePythonDistributions_SUPERBUILD)
   #-----------------------------------------------------------------------------
   include(ExternalProject)
 
+  # Add an empty external project
+  function(cpd_ExternalProject_Add_Empty proj depends)
+    set(depends_args)
+    if(NOT depends STREQUAL "")
+      set(depends_args DEPENDS ${depends})
+    endif()
+    ExternalProject_add(${proj}
+      SOURCE_DIR ${CMAKE_BINARY_DIR}/${proj}
+      DOWNLOAD_COMMAND ""
+      UPDATE_COMMAND ""
+      CONFIGURE_COMMAND ""
+      BUILD_COMMAND ""
+      BUILD_IN_SOURCE 1
+      BUILD_ALWAYS 1
+      INSTALL_COMMAND ""
+      ${depends_args}
+      )
+  endfunction()
+
   # Note: To minimize confusion between variables defined by CMake and
   #       variables used in this project. The following convention applies:
   #         CMakeProject_xxx : Variables defined in this project
@@ -170,24 +204,29 @@ if(CMakePythonDistributions_SUPERBUILD)
 
   if(BUILD_CMAKE_FROM_SOURCE)
 
-    set(CMakeProject_BINARY_DIR ${CMAKE_BINARY_DIR}/CMakeProject-build)
+    if(NOT DEFINED CMakeProject_BINARY_DIR)
+      set(CMakeProject_BINARY_DIR ${CMAKE_BINARY_DIR}/CMakeProject-build)
 
-    ExternalProject_add(CMakeProject-build
-      SOURCE_DIR ${CMakeProject_SOURCE_DIR}
-      BINARY_DIR ${CMakeProject_BINARY_DIR}
-      DOWNLOAD_COMMAND ""
-      UPDATE_COMMAND ""
-      CMAKE_CACHE_ARGS
-        -DBUILD_CursesDialog:BOOL=OFF
-        -DCMAKE_USE_OPENSSL:BOOL=ON
-        -DBUILD_TESTING:BOOL=OFF
-        -DCMake_INSTALL_DEPENDENCIES:BOOL=ON
-      USES_TERMINAL_CONFIGURE 1
-      USES_TERMINAL_BUILD 1
-      INSTALL_COMMAND ""
-      DEPENDS
-        CMakeProject-src-download
-      )
+      ExternalProject_add(CMakeProject-build
+        SOURCE_DIR ${CMakeProject_SOURCE_DIR}
+        BINARY_DIR ${CMakeProject_BINARY_DIR}
+        DOWNLOAD_COMMAND ""
+        UPDATE_COMMAND ""
+        CMAKE_CACHE_ARGS
+          -DBUILD_CursesDialog:BOOL=OFF
+          -DCMAKE_USE_OPENSSL:BOOL=ON
+          -DBUILD_TESTING:BOOL=OFF
+          -DCMake_INSTALL_DEPENDENCIES:BOOL=ON
+        USES_TERMINAL_CONFIGURE 1
+        USES_TERMINAL_BUILD 1
+        INSTALL_COMMAND ""
+        DEPENDS
+          CMakeProject-src-download
+        )
+    else()
+      cpd_ExternalProject_Add_Empty(CMakeProject-build "CMakeProject-src-download")
+      message(STATUS "SuperBuild -   CMakeProject-build - CMakeProject_BINARY_DIR: ${CMakeProject_BINARY_DIR}")
+    endif()
     message(STATUS "SuperBuild -   CMakeProject-build")
 
     list(APPEND ${PROJECT_NAME}_DEPENDS CMakeProject-build)
