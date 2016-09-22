@@ -49,8 +49,8 @@ docs/_build
 .idea/*
 *.swp
 
-# cmake binaries
+# this project
 cmake/resources/*
-
-# cmake sources
 src
+archive-cache
+standalone-build
