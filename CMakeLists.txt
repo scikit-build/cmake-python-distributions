@@ -146,6 +146,7 @@ if(CMakePythonDistributions_SUPERBUILD)
     BUILD_IN_SOURCE 1
     INSTALL_COMMAND ""
     )
+  message(STATUS "SuperBuild - CMakeProject-src-download")
 
   set(${PROJECT_NAME}_DEPENDS CMakeProject-src-download)
   set(${PROJECT_NAME}_CMAKE_CACHE_ARG)
@@ -168,6 +169,7 @@ if(CMakePythonDistributions_SUPERBUILD)
       DEPENDS
         CMakeProject-src-download
       )
+    message(STATUS "SuperBuild -   CMakeProject-build")
 
     list(APPEND ${PROJECT_NAME}_DEPENDS CMakeProject-build)
     list(APPEND ${PROJECT_NAME}_CMAKE_CACHE_ARG
@@ -188,6 +190,7 @@ if(CMakePythonDistributions_SUPERBUILD)
       BUILD_IN_SOURCE 1
       INSTALL_COMMAND ""
       )
+    message(STATUS "SuperBuild - CMakeProject-binary-download")
 
     list(APPEND ${PROJECT_NAME}_DEPENDS CMakeProject-binary-download)
     list(APPEND ${PROJECT_NAME}_CMAKE_CACHE_ARG
@@ -210,6 +213,7 @@ if(CMakePythonDistributions_SUPERBUILD)
     DEPENDS
       ${${PROJECT_NAME}_DEPENDS}
     )
+  message(STATUS "SuperBuild -   ${PROJECT_NAME}")
 
   install(SCRIPT ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-build/cmake_install.cmake)
 
