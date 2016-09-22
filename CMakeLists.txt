@@ -157,6 +157,7 @@ if(CMakePythonDistributions_SUPERBUILD)
     URL ${${src_archive}_url}
     URL_HASH SHA256=${${src_archive}_sha256}
     DOWNLOAD_DIR ${CMakePythonDistributions_ARCHIVE_DOWNLOAD_DIR}
+    USES_TERMINAL_DOWNLOAD 1
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ""
     BUILD_IN_SOURCE 1
@@ -181,6 +182,8 @@ if(CMakePythonDistributions_SUPERBUILD)
         -DCMAKE_USE_OPENSSL:BOOL=ON
         -DBUILD_TESTING:BOOL=OFF
         -DCMake_INSTALL_DEPENDENCIES:BOOL=ON
+      USES_TERMINAL_CONFIGURE 1
+      USES_TERMINAL_BUILD 1
       INSTALL_COMMAND ""
       DEPENDS
         CMakeProject-src-download
@@ -202,6 +205,7 @@ if(CMakePythonDistributions_SUPERBUILD)
       URL ${${binary_archive}_url}
       URL_HASH SHA256=${${binary_archive}_sha256}
       DOWNLOAD_DIR ${CMakePythonDistributions_ARCHIVE_DOWNLOAD_DIR}
+      USES_TERMINAL_DOWNLOAD 1
       CONFIGURE_COMMAND ""
       BUILD_COMMAND ""
       BUILD_IN_SOURCE 1
@@ -226,6 +230,7 @@ if(CMakePythonDistributions_SUPERBUILD)
       -DBUILD_CMAKE_FROM_SOURCE:BOOL=${BUILD_CMAKE_FROM_SOURCE}
       -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
       ${${PROJECT_NAME}_CMAKE_CACHE_ARG}
+    USES_TERMINAL_CONFIGURE 1
     INSTALL_COMMAND ""
     DEPENDS
       ${${PROJECT_NAME}_DEPENDS}
