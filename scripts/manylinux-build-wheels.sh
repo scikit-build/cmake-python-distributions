@@ -22,6 +22,13 @@ for PYBIN in /opt/python/*/bin; do
     ${PYBIN}/python setup.py clean
 done
 
+# Since there are no external shared libraries to bundle into the wheels
+# this step will fixup the wheel switching from 'linux' to 'manylinux1' tag
+for whl in dist/*.whl; do
+    auditwheel repair $whl -w /work/dist/
+    rm $whl
+done
+
 # Install packages and test
 for PYBIN in /opt/python/*/bin/; do
     if [[ ${PYBIN} == *"cp26"* ]]; then
