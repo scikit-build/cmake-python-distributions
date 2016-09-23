@@ -15,7 +15,7 @@ for PYBIN in /opt/python/*/bin; do
         echo "Skipping ${PYBIN}"
         continue
     fi
-    ${PYBIN}/pip install -r /work/requirements-dev.txt
+    ${PYBIN}/pip install --user -r /work/requirements-dev.txt
     ${PYBIN}/python setup.py bdist_wheel -- \
       -DCMakePythonDistributions_ARCHIVE_DOWNLOAD_DIR:PATH=/work/archive-cache \
       -DCMakeProject_BINARY_DIR:PATH=/work/standalone-build
