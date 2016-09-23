@@ -28,6 +28,6 @@ for PYBIN in /opt/python/*/bin/; do
         echo "Skipping ${PYBIN}"
         continue
     fi
-    ${PYBIN}/pip install cmake --no-index -f /work/dist
+    sudo ${PYBIN}/pip install cmake --no-cache-dir --no-index -f /work/dist
     (cd $HOME; ${PYBIN}/cmake --version)
 done
