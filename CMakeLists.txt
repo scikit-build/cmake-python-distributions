@@ -189,24 +189,39 @@ if(CMakePythonDistributions_SUPERBUILD)
   #         CMakeProject_xxx : Variables defined in this project
   #         CMAKE_xxx  : Variables set by CMake
 
-  set(CMakeProject_SOURCE_DIR "${CMAKE_SOURCE_DIR}/src")
-
-  # Download selected source archive
-  ExternalProject_add(CMakeProject-src-download
-    SOURCE_DIR ${CMakeProject_SOURCE_DIR}
-    URL ${${src_archive}_url}
-    URL_HASH SHA256=${${src_archive}_sha256}
-    DOWNLOAD_DIR ${CMakePythonDistributions_ARCHIVE_DOWNLOAD_DIR}
-    USES_TERMINAL_DOWNLOAD 1
-    CONFIGURE_COMMAND ""
-    BUILD_COMMAND ""
-    BUILD_IN_SOURCE 1
-    INSTALL_COMMAND ""
-    )
-  message(STATUS "SuperBuild - CMakeProject-src-download")
-
-  set(${PROJECT_NAME}_DEPENDS CMakeProject-src-download)
   set(${PROJECT_NAME}_CMAKE_CACHE_ARG)
+
+  #
+  # CMakeProject_SOURCE_DIR
+  #
+  if(NOT DEFINED CMakeProject_SOURCE_DIR)
+    set(CMakeProject_SOURCE_DIR "${CMAKE_SOURCE_DIR}/src")
+
+    # Download selected source archive
+    ExternalProject_add(CMakeProject-src-download
+      SOURCE_DIR ${CMakeProject_SOURCE_DIR}
+      URL ${${src_archive}_url}
+      URL_HASH SHA256=${${src_archive}_sha256}
+      DOWNLOAD_DIR ${CMakePythonDistributions_ARCHIVE_DOWNLOAD_DIR}
+      USES_TERMINAL_DOWNLOAD 1
+      CONFIGURE_COMMAND ""
+      BUILD_COMMAND ""
+      BUILD_IN_SOURCE 1
+      INSTALL_COMMAND ""
+      )
+    message(STATUS "SuperBuild - CMakeProject-src-download")
+    message(STATUS "SuperBuild - CMakeProject-src-download - URL: ${${src_archive}_url}")
+  else()
+    cpd_ExternalProject_Add_Empty(CMakeProject-src-download "")
+    message(STATUS "SuperBuild - CMakeProject-src-download")
+  endif()
+  message(STATUS "SuperBuild - CMakeProject-src-download - CMakeProject_SOURCE_DIR: ${CMakeProject_SOURCE_DIR}")
+
+  if(NOT EXISTS ${CMakeProject_SOURCE_DIR})
+    message(FATAL_ERROR "CMakeProject_SOURCE_DIR variable is defined but corresponds to nonexistent directory")
+  endif()
+
+  list(APPEND ${PROJECT_NAME}_DEPENDS CMakeProject-src-download)
 
   if(BUILD_CMAKE_FROM_SOURCE)
 
