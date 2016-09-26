@@ -114,8 +114,11 @@ if(CMakePythonDistributions_SUPERBUILD)
 
   #-----------------------------------------------------------------------------
   # CMake binaries
-  set(linux_binary_url    "https://cmake.org/files/v3.6/cmake-3.6.2-Linux-x86_64.tar.gz")
-  set(linux_binary_sha256 "5df4b69d9e85093ae78b1070d5cb9f824ce0bdd02528948c3f6a740e240083e5")
+  set(linux32_binary_url    "https://cmake.org/files/v3.6/cmake-3.6.2-Linux-i386.tar.gz")
+  set(linux32_binary_sha256 "26c2c86ddd54fd143594b6801a677f0a75bbacf7bb006a274d2854d0004f2749")
+
+  set(linux64_binary_url    "https://cmake.org/files/v3.6/cmake-3.6.2-Linux-x86_64.tar.gz")
+  set(linux64_binary_sha256 "5df4b69d9e85093ae78b1070d5cb9f824ce0bdd02528948c3f6a740e240083e5")
 
   set(macosx_binary_url    "https://cmake.org/files/v3.6/cmake-3.6.2-Darwin-x86_64.tar.gz")
   set(macosx_binary_sha256 "e3ac82120298095245c9948eb11ddfb4b552f5f056ce0ec3c82e3f3a15c53752")
@@ -144,7 +147,10 @@ if(CMakePythonDistributions_SUPERBUILD)
   endif()
   check_archive_var("${src_archive}")
 
-  set(binary_archive "linux_binary")
+  set(binary_archive "linux32_binary")
+  if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+    set(binary_archive "linux64_binary")
+  endif()
   if(APPLE)
     set(binary_archive "macosx_binary")
   endif()

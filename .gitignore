@@ -1,3 +1,13 @@
+# This project
+cmake/resources/*
+src
+archive-cache
+skbuild
+standalone-build
+standalone-x86-build
+standalone-x64-build
+
+# Python
 *.py[cod]
 
 # C extensions
@@ -48,9 +58,3 @@ docs/_build
 # IDE junk
 .idea/*
 *.swp
-
-# this project
-cmake/resources/*
-src
-archive-cache
-standalone-build
