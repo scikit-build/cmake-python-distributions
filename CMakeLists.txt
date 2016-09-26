@@ -192,7 +192,7 @@ if(CMakePythonDistributions_SUPERBUILD)
   set(${PROJECT_NAME}_CMAKE_CACHE_ARG)
 
   #
-  # CMakeProject_SOURCE_DIR
+  # CMakeProject_SOURCE_DIR: Always expect the sources (needed for `sdist`)
   #
   if(NOT DEFINED CMakeProject_SOURCE_DIR)
     set(CMakeProject_SOURCE_DIR "${CMAKE_SOURCE_DIR}/src")
@@ -225,6 +225,9 @@ if(CMakePythonDistributions_SUPERBUILD)
 
   if(BUILD_CMAKE_FROM_SOURCE)
 
+    #
+    # CMakeProject_BINARY_DIR
+    #
     if(NOT DEFINED CMakeProject_BINARY_DIR)
       set(CMakeProject_BINARY_DIR ${CMAKE_BINARY_DIR}/CMakeProject-build)
 
@@ -246,9 +249,13 @@ if(CMakePythonDistributions_SUPERBUILD)
         )
     else()
       cpd_ExternalProject_Add_Empty(CMakeProject-build "CMakeProject-src-download")
-      message(STATUS "SuperBuild -   CMakeProject-build - CMakeProject_BINARY_DIR: ${CMakeProject_BINARY_DIR}")
     endif()
     message(STATUS "SuperBuild -   CMakeProject-build")
+    message(STATUS "SuperBuild -   CMakeProject-build - CMakeProject_BINARY_DIR: ${CMakeProject_BINARY_DIR}")
+
+    if(NOT EXISTS ${CMakeProject_BINARY_DIR})
+      message(FATAL_ERROR "CMakeProject_BINARY_DIR variable is defined but corresponds to nonexistent directory")
+    endif()
 
     list(APPEND ${PROJECT_NAME}_DEPENDS CMakeProject-build)
     list(APPEND ${PROJECT_NAME}_CMAKE_CACHE_ARG
@@ -256,6 +263,10 @@ if(CMakePythonDistributions_SUPERBUILD)
       )
 
   else()
+
+    #
+    # CMakeProject_BINARY_DISTRIBUTION_DIR
+    #
 
     set(CMakeProject_BINARY_DISTRIBUTION_DIR "${CMAKE_BINARY_DIR}/CMakeProject-binary-distribution")
 
@@ -272,6 +283,7 @@ if(CMakePythonDistributions_SUPERBUILD)
       INSTALL_COMMAND ""
       )
     message(STATUS "SuperBuild - CMakeProject-binary-download")
+    message(STATUS "SuperBuild - CMakeProject-binary-download - URL: ${${binary_archive}_url}")
 
     list(APPEND ${PROJECT_NAME}_DEPENDS CMakeProject-binary-download)
     list(APPEND ${PROJECT_NAME}_CMAKE_CACHE_ARG
