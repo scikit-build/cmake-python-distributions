@@ -1,0 +1,25 @@
+machine:
+  services:
+    - docker
+
+dependencies:
+  override:
+    - docker info
+    - docker pull dockcross/manylinux-x64
+    - docker run --rm  dockcross/manylinux-x64 > dockcross-manylinux-x64
+    - chmod +x ./dockcross-manylinux-x64
+    - docker pull dockcross/manylinux-x86
+    - docker run --rm  dockcross/manylinux-x86 > dockcross-manylinux-x86
+    - chmod +x ./dockcross-manylinux-x86
+
+test:
+  override:
+    - ./dockcross-manylinux-x64 ./manylinux-build.sh cp27-cp27mu
+    - ./dockcross-manylinux-x86 ./manylinux-build.sh cp27-cp27mu
+    - ./dockcross-manylinux-x64 ./manylinux-build.sh cp33-cp33m
+    - ./dockcross-manylinux-x86 ./manylinux-build.sh cp33-cp33m
+    - ./dockcross-manylinux-x64 ./manylinux-build.sh cp34-cp34m
+    - ./dockcross-manylinux-x86 ./manylinux-build.sh cp34-cp34m
+    - ./dockcross-manylinux-x64 ./manylinux-build.sh cp35-cp35m
+    - ./dockcross-manylinux-x86 ./manylinux-build.sh cp35-cp35m
+    - mv dist/*-manylinux*.whl $CIRCLE_ARTIFACTS/
