@@ -340,6 +340,16 @@ include\(\"${CMakeProject_BINARY_DIR}/cmake_install.cmake\")
       if(IS_SYMLINK ${file})
         continue()
       endif()
+      set(_permissions)
+      get_filename_component(filename ${file} NAME)
+      if(filename MATCHES "ccmake|cmake|cmake-gui|cpack|ctest")
+        set(_permissions PERMISSIONS
+          OWNER_READ OWNER_WRITE OWNER_EXECUTE
+          GROUP_READ GROUP_EXECUTE
+          WORLD_READ WORLD_EXECUTE
+          )
+      endif()
+      install(${type} ${file} DESTINATION "${relative_directory}" ${_permissions})
     endforeach()
   endif()
 
