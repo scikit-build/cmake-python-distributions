@@ -336,7 +336,10 @@ include\(\"${CMakeProject_BINARY_DIR}/cmake_install.cmake\")
       if(relative_directory STREQUAL "bin")
         set(type PROGRAMS)
       endif()
-      install(${type} ${file} DESTINATION "${relative_directory}")
+      # Skip symlinks like "CMake.app/Contents/Frameworks/QtWidgets.framework/Versions/Current"
+      if(IS_SYMLINK ${file})
+        continue()
+      endif()
     endforeach()
   endif()
 
