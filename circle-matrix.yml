@@ -9,7 +9,9 @@ env:
   - MANYLINUX_IMAGE=manylinux-x86 MANYLINUX_PYTHON=cp35-cp35m
 
 command:
+  - if [[ -e ~/docker/$MANYLINUX_IMAGE.tar ]]; then docker load -i ~/docker/$MANYLINUX_IMAGE.tar; fi
   - docker pull dockcross/$MANYLINUX_IMAGE
+  - mkdir -p ~/docker; docker save dockcross/$MANYLINUX_IMAGE > ~/docker/$MANYLINUX_IMAGE.tar
   - docker run dockcross/$MANYLINUX_IMAGE > dockcross-$MANYLINUX_IMAGE
   - chmod +x ./dockcross-$MANYLINUX_IMAGE
   - MANYLINUX_RUN_ENV=./dockcross-$MANYLINUX_IMAGE MANYLINUX_PYTHON=$MANYLINUX_PYTHON MAKEFLAGS=-j$(grep -c processor /proc/cpuinfo) ci before_install
