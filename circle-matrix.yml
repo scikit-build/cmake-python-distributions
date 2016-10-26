@@ -1,26 +1,20 @@
 env:
-  - IMAGE=manylinux-x64 MANYLINUX_PYTHON=cp27-cp27mu
-  - IMAGE=manylinux-x86 MANYLINUX_PYTHON=cp27-cp27mu
+  - MANYLINUX_IMAGE=manylinux-x64 MANYLINUX_PYTHON=cp27-cp27mu
+  - MANYLINUX_IMAGE=manylinux-x86 MANYLINUX_PYTHON=cp27-cp27mu
+  - MANYLINUX_IMAGE=manylinux-x64 MANYLINUX_PYTHON=cp33-cp33m
+  - MANYLINUX_IMAGE=manylinux-x86 MANYLINUX_PYTHON=cp33-cp33m
+  - MANYLINUX_IMAGE=manylinux-x64 MANYLINUX_PYTHON=cp34-cp34m
+  - MANYLINUX_IMAGE=manylinux-x86 MANYLINUX_PYTHON=cp34-cp34m
+  - MANYLINUX_IMAGE=manylinux-x64 MANYLINUX_PYTHON=cp35-cp35m
+  - MANYLINUX_IMAGE=manylinux-x86 MANYLINUX_PYTHON=cp35-cp35m
 
-  - IMAGE=manylinux-x64 MANYLINUX_PYTHON=cp33-cp33m
-  - IMAGE=manylinux-x86 MANYLINUX_PYTHON=cp33-cp33m
-
-  - IMAGE=manylinux-x64 MANYLINUX_PYTHON=cp34-cp34m
-  - IMAGE=manylinux-x86 MANYLINUX_PYTHON=cp34-cp34m
-
-  - IMAGE=manylinux-x64 MANYLINUX_PYTHON=cp35-cp35m
-  - IMAGE=manylinux-x86 MANYLINUX_PYTHON=cp35-cp35m
-
-before_script:
-  - docker pull dockcross/$IMAGE
-  - docker run dockcross/$IMAGE > dockcross-$IMAGE
-  - chmod +x ./dockcross-$IMAGE
-  - export MANYLINUX_RUN_ENV=./dockcross-$IMAGE
-
-script:
-  - ci before_install
-  - ci install
-  - ci before_build
-  - ci build
-  - ci test
-  - ci after_test
+command:
+  - docker pull dockcross/$MANYLINUX_IMAGE
+  - docker run dockcross/$MANYLINUX_IMAGE > dockcross-$MANYLINUX_IMAGE
+  - chmod +x ./dockcross-$MANYLINUX_IMAGE
+  - MANYLINUX_RUN_ENV=./dockcross-$MANYLINUX_IMAGE MANYLINUX_PYTHON=$MANYLINUX_PYTHON MAKEFLAGS=-j$(grep -c processor /proc/cpuinfo) ci before_install
+  - MANYLINUX_RUN_ENV=./dockcross-$MANYLINUX_IMAGE MANYLINUX_PYTHON=$MANYLINUX_PYTHON MAKEFLAGS=-j$(grep -c processor /proc/cpuinfo) ci install
+  - MANYLINUX_RUN_ENV=./dockcross-$MANYLINUX_IMAGE MANYLINUX_PYTHON=$MANYLINUX_PYTHON MAKEFLAGS=-j$(grep -c processor /proc/cpuinfo) ci before_build
+  - MANYLINUX_RUN_ENV=./dockcross-$MANYLINUX_IMAGE MANYLINUX_PYTHON=$MANYLINUX_PYTHON MAKEFLAGS=-j$(grep -c processor /proc/cpuinfo) ci build
+  - MANYLINUX_RUN_ENV=./dockcross-$MANYLINUX_IMAGE MANYLINUX_PYTHON=$MANYLINUX_PYTHON MAKEFLAGS=-j$(grep -c processor /proc/cpuinfo) ci test
+  - MANYLINUX_RUN_ENV=./dockcross-$MANYLINUX_IMAGE MANYLINUX_PYTHON=$MANYLINUX_PYTHON MAKEFLAGS=-j$(grep -c processor /proc/cpuinfo) ci after_test

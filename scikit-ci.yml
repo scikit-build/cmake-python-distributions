@@ -7,7 +7,7 @@ before_install:
     RUN_ENV: ""
 
   commands:
-    - git clone -b 0.2.0-dev git://github.com/scikit-build/scikit-ci-addons ../ci
+    - git clone -b 0.1.0 git://github.com/scikit-build/scikit-ci-addons ../ci
 
   appveyor:
     environment:
@@ -15,6 +15,7 @@ before_install:
       RUN_ENV: .\\..\\ci\\appveyor\\run-with-visual-studio.cmd
     commands:
       - python ../ci/appveyor/patch_vs2008.py
+      - python ../ci/appveyor/install_cmake.py 3.6.2
 
   circle:
     environment:
@@ -22,15 +23,18 @@ before_install:
       RUN_ENV: $<MANYLINUX_RUN_ENV>
 
   travis:
+    linux:
+      commands:
+        - python ../ci/travis/install_cmake.py 3.6.2
     osx:
       environment:
         RUN_ENV: ../ci/travis/run-with-pyenv.sh
       commands:
         - python ../ci/travis/install_pyenv.py
+        - python ../ci/travis/install_cmake.py 3.6.2
 
 install:
   commands:
-    - python ../ci/$<CI_NAME>/install_cmake.py 3.6.2
     - $<RUN_ENV> $<PYTHON> -m pip install --disable-pip-version-check --upgrade pip
     - $<RUN_ENV> $<PYTHON> -m pip install -r requirements-dev.txt
 
