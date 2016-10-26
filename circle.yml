@@ -13,4 +13,4 @@ dependencies:
 
 test:
   override:
-     - circleci-matrix --config circle-matrix.yml
+     - circleci-matrix

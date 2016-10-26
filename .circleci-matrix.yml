@@ -7,7 +7,6 @@ env:
   - MANYLINUX_IMAGE=manylinux-x86 MANYLINUX_PYTHON=cp34-cp34m
   - MANYLINUX_IMAGE=manylinux-x64 MANYLINUX_PYTHON=cp35-cp35m
   - MANYLINUX_IMAGE=manylinux-x86 MANYLINUX_PYTHON=cp35-cp35m
-
 command:
   - if [[ -e ~/docker/$MANYLINUX_IMAGE.tar ]]; then docker load -i ~/docker/$MANYLINUX_IMAGE.tar; fi
   - (echo "Pulling $MANYLINUX_IMAGE" && docker pull dockcross/$MANYLINUX_IMAGE > ./pull-$MANYLINUX_IMAGE-log.txt 2>&1) || cat ./pull-$MANYLINUX_IMAGE-log.txt
