@@ -1,0 +1,26 @@
+env:
+  - IMAGE=manylinux-x64 MANYLINUX_PYTHON=cp27-cp27mu
+  - IMAGE=manylinux-x86 MANYLINUX_PYTHON=cp27-cp27mu
+
+  - IMAGE=manylinux-x64 MANYLINUX_PYTHON=cp33-cp33m
+  - IMAGE=manylinux-x86 MANYLINUX_PYTHON=cp33-cp33m
+
+  - IMAGE=manylinux-x64 MANYLINUX_PYTHON=cp34-cp34m
+  - IMAGE=manylinux-x86 MANYLINUX_PYTHON=cp34-cp34m
+
+  - IMAGE=manylinux-x64 MANYLINUX_PYTHON=cp35-cp35m
+  - IMAGE=manylinux-x86 MANYLINUX_PYTHON=cp35-cp35m
+
+before_script:
+  - docker pull dockcross/$IMAGE
+  - docker run dockcross/$IMAGE > dockcross-$IMAGE
+  - chmod +x ./dockcross-$IMAGE
+  - export MANYLINUX_RUN_ENV=./dockcross-$IMAGE
+
+script:
+  - ci before_install
+  - ci install
+  - ci before_build
+  - ci build
+  - ci test
+  - ci after_test
