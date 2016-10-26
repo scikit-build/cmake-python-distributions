@@ -3,17 +3,16 @@ schema_version: "0.5.0"
 before_install:
 
   environment:
+    SCIKIT_CI_ADDONS_VERSION: 0.1.0
     PYTHON: python
     RUN_ENV: ""
-
-  commands:
-    - git clone -b 0.1.0 git://github.com/scikit-build/scikit-ci-addons ../ci
 
   appveyor:
     environment:
       PYTHON: $<PYTHON_DIR>\\python.exe
       RUN_ENV: .\\..\\ci\\appveyor\\run-with-visual-studio.cmd
     commands:
+      - git clone -b $<SCIKIT_CI_ADDONS_VERSION> git://github.com/scikit-build/scikit-ci-addons ../ci
       - python ../ci/appveyor/patch_vs2008.py
       - python ../ci/appveyor/install_cmake.py 3.6.2
 
@@ -25,11 +24,13 @@ before_install:
   travis:
     linux:
       commands:
+        - git clone -b $<SCIKIT_CI_ADDONS_VERSION> git://github.com/scikit-build/scikit-ci-addons ../ci
         - python ../ci/travis/install_cmake.py 3.6.2
     osx:
       environment:
         RUN_ENV: ../ci/travis/run-with-pyenv.sh
       commands:
+        - git clone -b $<SCIKIT_CI_ADDONS_VERSION> git://github.com/scikit-build/scikit-ci-addons ../ci
         - python ../ci/travis/install_pyenv.py
         - python ../ci/travis/install_cmake.py 3.6.2
 
