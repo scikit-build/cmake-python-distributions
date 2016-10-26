@@ -13,4 +13,5 @@ dependencies:
 
 test:
   override:
-     - circleci-matrix
+     - circleci-matrix:
+        parallel: true
