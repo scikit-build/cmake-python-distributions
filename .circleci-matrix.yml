@@ -14,3 +14,4 @@ command:
   - docker run dockcross/$MANYLINUX_IMAGE > dockcross && chmod +x ./dockcross
   - sed -i -e "s/--rm//" ./dockcross
   - MANYLINUX_RUN_ENV=./dockcross MANYLINUX_PYTHON=$MANYLINUX_PYTHON ci
+  - mv dist/* $CIRCLE_ARTIFACTS/

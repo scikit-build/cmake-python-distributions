@@ -3,10 +3,6 @@ machine:
   services:
     - docker
 
-general:
-  artifacts:
-    - "dist"
-
 dependencies:
   cache_directories:
     - ~/docker
