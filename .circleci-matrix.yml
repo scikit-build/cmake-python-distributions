@@ -8,9 +8,6 @@ env:
   - MANYLINUX_IMAGE=manylinux-x64 MANYLINUX_PYTHON=cp35-cp35m
   - MANYLINUX_IMAGE=manylinux-x86 MANYLINUX_PYTHON=cp35-cp35m
 command:
-  - if [[ -e ~/docker/$MANYLINUX_IMAGE.tar ]]; then docker load -i ~/docker/$MANYLINUX_IMAGE.tar; fi
-  - (echo "Pulling $MANYLINUX_IMAGE" && docker pull dockcross/$MANYLINUX_IMAGE > log.txt 2>&1) || cat log.txt
-  - mkdir -p ~/docker; docker save dockcross/$MANYLINUX_IMAGE > ~/docker/$MANYLINUX_IMAGE.tar
   - docker run dockcross/$MANYLINUX_IMAGE > dockcross && chmod +x ./dockcross
   - sed -i -e "s/--rm//" ./dockcross
   - MANYLINUX_RUN_ENV=./dockcross MANYLINUX_PYTHON=$MANYLINUX_PYTHON ci
