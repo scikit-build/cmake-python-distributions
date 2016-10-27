@@ -193,6 +193,18 @@ if(CMakePythonDistributions_SUPERBUILD)
 
   set(${PROJECT_NAME}_CMAKE_CACHE_ARG)
 
+  set(ep_download_no_progress_args)
+  set(ep_log_configure_build_args)
+  if(NOT BUILD_VERBOSE)
+    set(ep_download_no_progress_args
+      DOWNLOAD_NO_PROGRESS 1
+      )
+    set(ep_log_configure_build_args
+      LOG_CONFIGURE 1
+      LOG_BUILD 1
+      )
+  endif()
+
   #
   # CMakeProject_SOURCE_DIR: Always expect the sources (needed for `sdist`)
   #
@@ -200,12 +212,6 @@ if(CMakePythonDistributions_SUPERBUILD)
     set(CMakeProject_SOURCE_DIR "${CMAKE_SOURCE_DIR}/src")
 
     # Download selected source archive
-    set(ep_args)
-    if(NOT BUILD_VERBOSE)
-      set(ep_args
-        DOWNLOAD_NO_PROGRESS 1
-        )
-    endif()
     ExternalProject_add(CMakeProject-src-download
       SOURCE_DIR ${CMakeProject_SOURCE_DIR}
       URL ${${src_archive}_url}
@@ -216,7 +222,7 @@ if(CMakePythonDistributions_SUPERBUILD)
       BUILD_COMMAND ""
       BUILD_IN_SOURCE 1
       INSTALL_COMMAND ""
-      ${ep_args}
+      ${ep_download_no_progress_args}
       )
     message(STATUS "SuperBuild - CMakeProject-src-download")
     message(STATUS "SuperBuild - CMakeProject-src-download - URL: ${${src_archive}_url}")
@@ -252,6 +258,7 @@ if(CMakePythonDistributions_SUPERBUILD)
           -DCMake_INSTALL_DEPENDENCIES:BOOL=ON
         USES_TERMINAL_CONFIGURE 1
         USES_TERMINAL_BUILD 1
+        ${ep_log_configure_build_args}
         INSTALL_COMMAND ""
         DEPENDS
           CMakeProject-src-download
@@ -280,12 +287,6 @@ if(CMakePythonDistributions_SUPERBUILD)
     set(CMakeProject_BINARY_DISTRIBUTION_DIR "${CMAKE_BINARY_DIR}/CMakeProject-binary-distribution")
 
     # Download selected binary archive
-    set(ep_args)
-    if(NOT BUILD_VERBOSE)
-      set(ep_args
-        DOWNLOAD_NO_PROGRESS 1
-        )
-    endif()
     ExternalProject_add(CMakeProject-binary-download
       SOURCE_DIR ${CMakeProject_BINARY_DISTRIBUTION_DIR}
       URL ${${binary_archive}_url}
@@ -296,7 +297,7 @@ if(CMakePythonDistributions_SUPERBUILD)
       BUILD_COMMAND ""
       BUILD_IN_SOURCE 1
       INSTALL_COMMAND ""
-      ${ep_args}
+      ${ep_download_no_progress_args}
       )
     message(STATUS "SuperBuild - CMakeProject-binary-download")
     message(STATUS "SuperBuild - CMakeProject-binary-download - URL: ${${binary_archive}_url}")
