@@ -96,6 +96,8 @@ if(CMakePythonDistributions_SUPERBUILD)
   endif()
   option(BUILD_CMAKE_FROM_SOURCE "Build CMake from source" ${default})
 
+  option(BUILD_VERBOSE "Build reporting additional information (e.g download progress, ...)" OFF)
+
   set(CMakePythonDistributions_ARCHIVE_DOWNLOAD_DIR "${CMAKE_BINARY_DIR}"
     CACHE PATH "Directory where to download archives"
     )
@@ -198,6 +200,12 @@ if(CMakePythonDistributions_SUPERBUILD)
     set(CMakeProject_SOURCE_DIR "${CMAKE_SOURCE_DIR}/src")
 
     # Download selected source archive
+    set(ep_args)
+    if(NOT BUILD_VERBOSE)
+      set(ep_args
+        DOWNLOAD_NO_PROGRESS 1
+        )
+    endif()
     ExternalProject_add(CMakeProject-src-download
       SOURCE_DIR ${CMakeProject_SOURCE_DIR}
       URL ${${src_archive}_url}
@@ -208,6 +216,7 @@ if(CMakePythonDistributions_SUPERBUILD)
       BUILD_COMMAND ""
       BUILD_IN_SOURCE 1
       INSTALL_COMMAND ""
+      ${ep_args}
       )
     message(STATUS "SuperBuild - CMakeProject-src-download")
     message(STATUS "SuperBuild - CMakeProject-src-download - URL: ${${src_archive}_url}")
@@ -271,6 +280,12 @@ if(CMakePythonDistributions_SUPERBUILD)
     set(CMakeProject_BINARY_DISTRIBUTION_DIR "${CMAKE_BINARY_DIR}/CMakeProject-binary-distribution")
 
     # Download selected binary archive
+    set(ep_args)
+    if(NOT BUILD_VERBOSE)
+      set(ep_args
+        DOWNLOAD_NO_PROGRESS 1
+        )
+    endif()
     ExternalProject_add(CMakeProject-binary-download
       SOURCE_DIR ${CMakeProject_BINARY_DISTRIBUTION_DIR}
       URL ${${binary_archive}_url}
@@ -281,6 +296,7 @@ if(CMakePythonDistributions_SUPERBUILD)
       BUILD_COMMAND ""
       BUILD_IN_SOURCE 1
       INSTALL_COMMAND ""
+      ${ep_args}
       )
     message(STATUS "SuperBuild - CMakeProject-binary-download")
     message(STATUS "SuperBuild - CMakeProject-binary-download - URL: ${${binary_archive}_url}")
