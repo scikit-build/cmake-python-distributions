@@ -15,3 +15,5 @@ command:
   - sed -i -e "s/--rm//" ./dockcross
   - MANYLINUX_RUN_ENV=./dockcross MANYLINUX_PYTHON=$MANYLINUX_PYTHON ci
   - mv dist/* $CIRCLE_ARTIFACTS/
+  - echo "$CIRCLE_ARTIFACTS:$CIRCLE_ARTIFACTS"
+  - ls $CIRCLE_ARTIFACTS/
