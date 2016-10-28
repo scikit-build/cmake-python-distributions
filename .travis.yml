@@ -39,7 +39,7 @@ cache:
     - $HOME/downloads
 
 before_install:
-  - pip install scikit-ci==0.7.0 scikit-ci-addons==0.3.0
+  - pip install scikit-ci==0.7.0 scikit-ci-addons==0.5.0
   - ci_addons --install ../addons
 
 install:
