@@ -9,13 +9,9 @@ dependencies:
   override:
     - curl -fsSL https://git.io/v2Ifs -o ~/bin/circleci-matrix
     - chmod +x ~/bin/circleci-matrix
-    - pip install scikit-ci==0.7.0
-    - if [[ -e ~/docker/manylinux-x64.tar ]]; then docker load -i ~/docker/manylinux-x64.tar; fi
-    - docker pull dockcross/manylinux-x64
-    - mkdir -p ~/docker; docker save dockcross/manylinux-x64 > ~/docker/manylinux-x64.tar
-    - if [[ -e ~/docker/manylinux-x86.tar ]]; then docker load -i ~/docker/manylinux-x86.tar; fi
-    - docker pull dockcross/manylinux-x86
-    - mkdir -p ~/docker; docker save dockcross/manylinux-x86 > ~/docker/manylinux-x86.tar
+    - pip install scikit-ci==0.7.0 scikit-ci-addons==0.5.0
+    - ci_addons anyci/docker load-pull-save dockcross/manylinux-x64
+    - ci_addons anyci/docker load-pull-save dockcross/manylinux-x86
 
 test:
   override:
