@@ -9,7 +9,7 @@ env:
   - MANYLINUX_IMAGE=manylinux-x86 MANYLINUX_PYTHON=cp35-cp35m
 command:
   - docker run dockcross/$MANYLINUX_IMAGE > dockcross && chmod +x ./dockcross
-  - MANYLINUX_RUN_ENV=./dockcross MANYLINUX_PYTHON=$MANYLINUX_PYTHON ci
+  - MANYLINUX_RUN_ENV=./dockcross MANYLINUX_PYTHON=$MANYLINUX_PYTHON ci --force
   - mv dist/* $CIRCLE_ARTIFACTS/
   - echo "CIRCLE_ARTIFACTS:$CIRCLE_ARTIFACTS"
   - ls $CIRCLE_ARTIFACTS/
