@@ -32,14 +32,8 @@ before_install:
 
 install:
   commands:
-    - $<RUN_ENV> $<PYTHON> -m pip install --disable-pip-version-check --upgrade pip
-    - $<RUN_ENV> $<PYTHON> -m pip install -r requirements-dev.txt
+    - echo nothing
 
 build:
   commands:
-    - $<RUN_ENV> $<PYTHON> setup.py build
-
-after_test:
-  commands:
-    - $<RUN_ENV> $<PYTHON> setup.py sdist
-    - $<RUN_ENV> $<PYTHON> setup.py bdist_wheel
+    - echo nothing
