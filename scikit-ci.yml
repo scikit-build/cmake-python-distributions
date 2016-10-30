@@ -20,9 +20,6 @@ before_install:
       RUN_ENV: $<MANYLINUX_RUN_ENV>
 
   travis:
-    linux:
-      commands:
-        - python ../addons/travis/install_cmake.py 3.6.2
     osx:
       environment:
         RUN_ENV: ../addons/travis/run-with-pyenv.sh
