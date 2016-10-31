@@ -38,6 +38,6 @@ build:
 
 after_test:
   commands:
-    - $<RUN_ENV> $<PYTHON> setup.py sdist
-    - $<RUN_ENV> $<PYTHON> setup.py bdist_wheel
+    - $<RUN_ENV> $<PYTHON> setup.py --quiet sdist
+    - $<RUN_ENV> $<PYTHON> setup.py --quiet bdist_wheel
     - $<RUN_ENV> $<PYTHON> setup.py clean
