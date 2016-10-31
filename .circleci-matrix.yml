@@ -10,8 +10,7 @@ env:
 command:
   - docker run dockcross/$MANYLINUX_IMAGE > dockcross && chmod +x ./dockcross
   - sed -ie "s/cat \/dev/head -c 500 \/dev/" dockcross
-  - rm -f env.json
-  - MANYLINUX_RUN_ENV=./dockcross MANYLINUX_PYTHON=$MANYLINUX_PYTHON ci
+  - MANYLINUX_RUN_ENV=./dockcross MANYLINUX_PYTHON=$MANYLINUX_PYTHON ci --clear-cached-env
   - mv dist/* $CIRCLE_ARTIFACTS/
   - echo "CIRCLE_ARTIFACTS:$CIRCLE_ARTIFACTS"
   - ls $CIRCLE_ARTIFACTS/
