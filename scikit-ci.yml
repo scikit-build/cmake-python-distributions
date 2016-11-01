@@ -34,10 +34,10 @@ install:
 
 build:
   commands:
-    - $<RUN_ENV> $<PYTHON> setup.py build
+    - $<RUN_ENV> $<PYTHON> setup.py --hide-listing build
 
 after_test:
   commands:
-    - $<RUN_ENV> $<PYTHON> setup.py --quiet sdist
-    - $<RUN_ENV> $<PYTHON> setup.py --quiet bdist_wheel
+    - $<RUN_ENV> $<PYTHON> setup.py --hide-listing sdist
+    - $<RUN_ENV> $<PYTHON> setup.py --hide-listing bdist_wheel
     - $<RUN_ENV> $<PYTHON> setup.py clean
