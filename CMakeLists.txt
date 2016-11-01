@@ -256,6 +256,7 @@ if(CMakePythonDistributions_SUPERBUILD)
           -DCMAKE_USE_OPENSSL:BOOL=ON
           -DBUILD_TESTING:BOOL=OFF
           -DCMake_INSTALL_DEPENDENCIES:BOOL=ON
+          -DCMAKE_INSTALL_MESSAGE:STRING=NEVER
         USES_TERMINAL_CONFIGURE 1
         USES_TERMINAL_BUILD 1
         ${ep_log_configure_build_args}
@@ -326,6 +327,9 @@ if(CMakePythonDistributions_SUPERBUILD)
     )
   message(STATUS "SuperBuild -   ${PROJECT_NAME}")
 
+  # This adds an "install" target in the top-level directory. The
+  # target will simply include the install rules associated with the
+  # inner build
   install(SCRIPT ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-build/cmake_install.cmake)
 
 else()
@@ -335,11 +339,14 @@ else()
 
     # Install CMakeProject
     install(CODE "
+message(STATUS \"Install CMake project\")
 include\(\"${CMakeProject_BINARY_DIR}/cmake_install.cmake\")
 ")
 
   #-----------------------------------------------------------------------------
   else()
+
+    set(CMAKE_INSTALL_MESSAGE "NEVER")
 
     # Install all files from binary distribution
     file(GLOB_RECURSE binary_distribution_files
