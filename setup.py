@@ -17,8 +17,11 @@ setup(
 
     cmake_install_dir='cmake/data',
 
-    entry_points={'console_scripts':
-      ['cmake=cmake:cmake', 'cpack=cmake:cpack', 'ctest=cmake:ctest']},
+    entry_points={
+        'console_scripts': [
+            'cmake=cmake:cmake', 'cpack=cmake:cpack', 'ctest=cmake:ctest'
+        ]
+    },
 
     url=r'http://cmake.org/',
     download_url=r'https://cmake.org/download',
