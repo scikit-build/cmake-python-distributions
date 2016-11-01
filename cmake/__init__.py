@@ -3,6 +3,11 @@ import platform
 import subprocess
 import sys
 
+from ._version import get_versions
+
+__version__ = get_versions()['version']
+del get_versions
+
 CMAKE_DATA = os.path.join(os.path.dirname(__file__), 'data')
 
 if platform.system().lower() == "darwin":

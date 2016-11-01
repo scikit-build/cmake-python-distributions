@@ -2,3 +2,5 @@ include CMakeLists.txt
 include requirements-dev.txt
 
 recursive-include src *
+include versioneer.py
+include cmake/_version.py
