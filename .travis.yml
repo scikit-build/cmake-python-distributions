@@ -31,7 +31,7 @@ cache:
     - $HOME/downloads
 
 before_install:
-  - pip install scikit-ci==0.9.0 scikit-ci-addons==0.7.0
+  - pip install scikit-ci==0.10.0 scikit-ci-addons==0.7.0
   - ci_addons --install ../addons
 
 install:
@@ -42,3 +42,6 @@ script:
 
 after_success:
   - ci after_test
+env:
+  global:
+    secure: YL5nQR6pOBSC99JH4v7hBX0AE3Qd90b0TaWkReDNVK31eKsasS9FEuamj+BolSu3n3cjcjDa1nWb007KUCC5LoxWQZw4yWyWWaucRewi6xcKnTifidDvchuw/z7B0KNVh3hraetE3kYsPgp/45bwM3889Q/7/HHDfa3iE0q5d3cgKfSbv/MhV5mTuikiogDvJu9v7gvOfnH+tX4QDcR4YMSN57kJfhG0qWrqAmiYuwe95Nzgj/WeWYxo40ULCYISY1lExZOxBtZpjQJeeGW2bnqfHeUYgrSbAnhLc3XIvULHhWHY541PiR7hfkXRCVrJ3Mq0w7b7pn+YIJvofSJan9kCfRT3P+9+3c6mM4lHfln9pTqgn/wpgAgRgYU8ncC2cWwQR56b4anSZXaNjYePAggp+mZdXgwJJ0vHDWYa6RasZgkLlI/ZVi0raPJ7RmTJiP1GDhuaOhg/BkxxzL4fgNOqm73OQuY/EeNCqp6DZWsC638iGw7HmOg4Wb3B5605ZKBWC13hHVpT76dOx7ldkS7O5h056ccyoj5SUSsG3xb0virwMX8yr2MNiaqNF4iHGkECpzZDFmCw/98xZK1yK3xDgSkAs1c63YCxCvSOatHRwW2mWFzVPiPmzG/OfErUQC9fh3k8Vx1khQVNXzAZaabl6v4WAF6sUO8rAPwL9SI=

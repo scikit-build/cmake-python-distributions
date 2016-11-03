@@ -33,11 +33,14 @@ environment:
       SKIP: "0"
       BLOCK: "0"
 
+  GIRDER_TOKEN:
+    secure: qVsf5rslUEw6KTjGI+uF4hEtP9xkBzZiRmLGsBZN5I32/hNccjih53ydb4tegdnK
+
 cache:
   - C:\\cmake-3.6.2
 
 init:
-  - python -m pip install scikit-ci==0.9.0 scikit-ci-addons==0.7.0
+  - python -m pip install scikit-ci==0.10.0 scikit-ci-addons==0.7.0
   - python -m ci_addons --install ../addons
 
   - ps: ../addons/appveyor/rolling-build.ps1
@@ -56,10 +59,6 @@ after_test:
 
 on_finish:
   - ps: ../addons/appveyor/enable-worker-remote-access.ps1 -check_for_block
-
-artifacts:
-  # Archive the generated packages in the ci.appveyor.com build report.
-  - path: dist\*
 
 matrix:
   fast_finish: false
