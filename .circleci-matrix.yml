@@ -9,4 +9,4 @@ env:
   - MANYLINUX_IMAGE=manylinux-x86 MANYLINUX_PYTHON=cp35-cp35m
 command:
   - docker run dockcross/$MANYLINUX_IMAGE > dockcross && chmod +x ./dockcross
-  - MANYLINUX_RUN_ENV=./dockcross MANYLINUX_PYTHON=$MANYLINUX_PYTHON ci --clear-cached-env
+  - MANYLINUX_RUN_ENV="./dockcross sudo" MANYLINUX_PYTHON=$MANYLINUX_PYTHON ci --clear-cached-env
