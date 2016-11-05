@@ -16,8 +16,9 @@ before_install:
 
   circle:
     environment:
-      PYTHON: /opt/python/$<MANYLINUX_PYTHON>/bin/python
-      RUN_ENV: $<MANYLINUX_RUN_ENV>
+      PATH: /opt/python/$<MANYLINUX_PYTHON>/bin:$<PATH>
+    commands:
+      - rm -rf dist/*
 
   travis:
     osx:
@@ -38,13 +39,11 @@ before_build:
 
 build:
   commands:
-    - $<RUN_ENV> $<PYTHON> setup.py --hide-listing build
+    - $<RUN_ENV> $<PYTHON> setup.py --hide-listing sdist
+    - $<RUN_ENV> $<PYTHON> setup.py --hide-listing bdist_wheel
 
 after_test:
   commands:
-    - $<RUN_ENV> $<PYTHON> setup.py --hide-listing sdist
-    - $<RUN_ENV> $<PYTHON> setup.py --hide-listing bdist_wheel
-    - $<RUN_ENV> $<PYTHON> setup.py clean
     - python -m pip install girder-client==2.0.0
     - python: |
               import girder_client, os, subprocess
@@ -54,3 +53,6 @@ after_test:
                     "python -m girder_client --api-url https://data.kitware.com/api/v1 --api-key {token} \
                       upload --parent-type collection --reuse 5817c33a8d777f10f26ee3a7 ./dist/".format(token=token),
                     shell=True)
+              else:
+                  print("Skipping upload: GIRDER_TOKEN environment variable is not set")
+    - $<RUN_ENV> $<PYTHON> setup.py clean
