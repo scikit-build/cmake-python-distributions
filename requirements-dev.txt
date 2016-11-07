@@ -1,1 +1,2 @@
-scikit-build==0.3.0
+flake8==3.0.4
+scikit-build==0.4.0

@@ -1,11 +1,14 @@
 #!/usr/bin/env python
 
+import versioneer
+
 from skbuild import setup
 
 setup(
     name='cmake',
 
-    version='0.1.0',
+    version=versioneer.get_version(),
+    cmdclass=versioneer.get_cmdclass(),
 
     author='Jean-Christophe Fillion-Robin',
     author_email='jchris.fillionr@kitware.com',
@@ -14,8 +17,11 @@ setup(
 
     cmake_install_dir='cmake/data',
 
-    entry_points={'console_scripts':
-      ['cmake=cmake:cmake', 'cpack=cmake:cpack', 'ctest=cmake:ctest']},
+    entry_points={
+        'console_scripts': [
+            'cmake=cmake:cmake', 'cpack=cmake:cpack', 'ctest=cmake:ctest'
+        ]
+    },
 
     url=r'http://cmake.org/',
     download_url=r'https://cmake.org/download',

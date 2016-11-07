@@ -1,0 +1,57 @@
+schema_version: "0.5.0"
+
+before_install:
+
+  environment:
+    PYTHON: python
+
+  appveyor:
+    environment:
+      PYTHON: $<PYTHON_DIR>\\python.exe
+      RUN_ENV: .\\..\\addons\\appveyor\\run-with-visual-studio.cmd
+    commands:
+      - python ../addons/appveyor/patch_vs2008.py
+      - python ../addons/appveyor/install_cmake.py 3.6.2
+
+  circle:
+    environment:
+      PATH: /opt/python/$<MANYLINUX_PYTHON>/bin:$<PATH>
+    commands:
+      - rm -rf dist/*
+
+  travis:
+    osx:
+      environment:
+        RUN_ENV: ../addons/travis/run-with-pyenv.sh
+      commands:
+        - python ../addons/travis/install_pyenv.py
+        - python ../addons/travis/install_cmake.py 3.6.2
+
+install:
+  commands:
+    - $<RUN_ENV> $<PYTHON> -m pip install --disable-pip-version-check --upgrade pip
+    - $<RUN_ENV> $<PYTHON> -m pip install -r requirements-dev.txt
+
+before_build:
+  commands:
+    - $<RUN_ENV> $<PYTHON> -m flake8
+
+build:
+  commands:
+    - $<RUN_ENV> $<PYTHON> setup.py --hide-listing sdist
+    - $<RUN_ENV> $<PYTHON> setup.py --hide-listing bdist_wheel
+
+after_test:
+  commands:
+    - python -m pip install girder-client==2.0.0
+    - python: |
+              import girder_client, os, subprocess
+              if 'GIRDER_TOKEN' in os.environ:
+                  token = os.environ['GIRDER_TOKEN']
+                  subprocess.check_call(
+                    "python -m girder_client --api-url https://data.kitware.com/api/v1 --api-key {token} \
+                      upload --parent-type collection --reuse 5817c33a8d777f10f26ee3a7 ./dist/".format(token=token),
+                    shell=True)
+              else:
+                  print("Skipping upload: GIRDER_TOKEN environment variable is not set")
+    - $<RUN_ENV> $<PYTHON> setup.py clean

@@ -1,10 +1,21 @@
 import os
+import platform
 import subprocess
 import sys
 
-CMAKE_BIN_DIR = os.path.join(os.path.dirname(__file__), 'data', 'bin')
-CMAKE_DOC_DIR = os.path.join(os.path.dirname(__file__), 'data', 'doc')
-CMAKE_SHARE_DIR = os.path.join(os.path.dirname(__file__), 'data', 'share')
+from ._version import get_versions
+
+__version__ = get_versions()['version']
+del get_versions
+
+CMAKE_DATA = os.path.join(os.path.dirname(__file__), 'data')
+
+if platform.system().lower() == "darwin":
+    CMAKE_DATA = os.path.join(CMAKE_DATA, 'CMake.app', 'Contents')
+
+CMAKE_BIN_DIR = os.path.join(CMAKE_DATA, 'bin')
+CMAKE_DOC_DIR = os.path.join(CMAKE_DATA, 'doc')
+CMAKE_SHARE_DIR = os.path.join(CMAKE_DATA, 'share')
 
 
 def _program(name, args):

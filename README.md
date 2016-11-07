@@ -23,7 +23,7 @@ Build the CMake Python wheel with the following command:
 
 ```
 mkvirtualenv build-cmake
-pip install -r requirements.txt
+pip install -r requirements-dev.txt
 python setup.py bdist_wheel
 ```
 
