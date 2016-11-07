@@ -10,5 +10,5 @@ env:
 command:
   - docker run dockcross/$MANYLINUX_IMAGE > ~/bin/dockcross && chmod +x ~/bin/dockcross
   - |
-    DOCKER_ARGS="-e MANYLINUX_PYTHON -e GIRDER_TOKEN"
+    DOCKER_ARGS="-e CIRCLECI -e MANYLINUX_PYTHON -e GIRDER_TOKEN"
     dockcross -a "$DOCKER_ARGS" bash -c "/opt/python/${MANYLINUX_PYTHON}/bin/pip install scikit-ci==0.11.0 && /opt/python/${MANYLINUX_PYTHON}/bin/ci"
