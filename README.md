@@ -1,5 +1,9 @@
 # CMake Python Distributions
 
+[![Build status](https://ci.appveyor.com/api/projects/status/439ila0jk7v6uqrr/branch/master?svg=true)](https://ci.appveyor.com/project/scikit-build/cmake-python-distributions-f3rbb/branch/master)
+[![CircleCI](https://circleci.com/gh/scikit-build/cmake-python-distributions.svg?style=svg)](https://circleci.com/gh/scikit-build/cmake-python-distributions)
+[![Build Status](https://travis-ci.org/scikit-build/cmake-python-distributions.svg?branch=master)](https://travis-ci.org/scikit-build/cmake-python-distributions)
+
 This project provides a `setup.py` script that build CMake Python wheel. 
 
 [CMake](http://www.cmake.org) is used to control the software compilation
