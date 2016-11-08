@@ -9,7 +9,7 @@ dependencies:
   override:
     - curl -fsSL https://git.io/v2Ifs -o ~/bin/circleci-matrix
     - chmod +x ~/bin/circleci-matrix
-    - pip install scikit-ci-addons==0.8.0
+    - pip install scikit-ci-addons==0.9.0
     - ci_addons docker load-pull-save dockcross/manylinux-x64
     - ci_addons docker load-pull-save dockcross/manylinux-x86
 
