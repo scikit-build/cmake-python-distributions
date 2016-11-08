@@ -29,6 +29,12 @@ install:
     - python --version
     - python -m pip install --disable-pip-version-check --upgrade pip
     - $<RUN_ENV> pip install -r requirements-dev.txt
+  travis:
+    osx:
+      commands:
+        - ls $<HOME>/.pyenv/versions/$<PYTHONVERSION>/bin/
+        - $<HOME>/.pyenv/versions/$<PYTHONVERSION>/bin/python --version
+        - export
 
 before_build:
   commands:
