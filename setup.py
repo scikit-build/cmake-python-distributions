@@ -2,7 +2,14 @@
 
 import versioneer
 
+from pip.req import parse_requirements
 from skbuild import setup
+
+
+def _parse_requirements(filename):
+    return [str(ir.req) for ir in parse_requirements(filename, session=False)]
+
+dev_requirements = _parse_requirements('requirements-dev.txt')
 
 setup(
     name='cmake',
@@ -54,6 +61,6 @@ setup(
 
     keywords='CMake build c++ fortran cross-platform cross-compilation',
 
-    install_requires=[
-    ]
+    install_requires=[],
+    tests_require=dev_requirements,
     )
