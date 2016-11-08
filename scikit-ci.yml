@@ -39,8 +39,13 @@ build:
     - python setup.py --hide-listing sdist
     - $<RUN_ENV> python setup.py --hide-listing bdist_wheel
 
+test:
+  commands:
+    - python setup.py test
+
 after_test:
   commands:
+    - codecov -X gcov --required --file ./tests/coverage.xml
     - pip install girder-client==2.0.0
     - python: |
               import girder_client, os, subprocess
