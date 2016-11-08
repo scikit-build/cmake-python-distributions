@@ -8,10 +8,11 @@ DIST_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../dist'))
 
 
 def test_command_line(virtualenv, tmpdir):
-    assert len(Path(DIST_DIR).files(pattern="*.whl")) == 1
+    wheels = Path(DIST_DIR).files(pattern="*.whl")
+    assert len(wheels) == 1
 
     virtualenv.install_package("coverage==4.2")
-    virtualenv.run("pip install %s/*" % DIST_DIR)
+    virtualenv.run("pip install %s" % wheels[0])
 
     expected_version = "3.6.2"
 
@@ -26,4 +27,4 @@ def test_command_line(virtualenv, tmpdir):
     """))
 
     output = virtualenv.run("cmake -P %s" % str(test_script), capture=True)
-    assert output.startswith(virtualenv.virtualenv)
+    assert output.startswith(virtualenv.virtualenv.replace(os.sep, "/"))

@@ -5,5 +5,5 @@ pytest==3.0.3
 pytest-cov==2.4.0
 pytest-runner==2.9
 git+https://github.com/jcfr/pytest-plugins@pytest-shutil-2016-11-08-c50ac56#egg=pytest-shutil
-pytest-virtualenv==1.2.2
+git+https://github.com/jcfr/pytest-plugins@pytest-virtualenv-2016-11-08-c0dd757#egg=pytest-virtualenv
 scikit-build==0.4.0
