@@ -2,12 +2,9 @@ schema_version: "0.5.0"
 
 before_install:
 
-  environment:
-    PYTHON: python
-
   appveyor:
     environment:
-      PYTHON: $<PYTHON_DIR>\\python.exe
+      PATH: $<PYTHON_DIR>;$<PYTHON_DIR>\\Scripts;$<PATH>
       RUN_ENV: .\\..\\addons\\appveyor\\run-with-visual-studio.cmd
     commands:
       - python ../addons/appveyor/patch_vs2008.py
@@ -22,28 +19,29 @@ before_install:
   travis:
     osx:
       environment:
-        RUN_ENV: ../addons/travis/run-with-pyenv.sh
+        PATH: $<HOME>/.pyenv/versions/$<PYTHONVERSION>/bin:$<PATH>
       commands:
         - python ../addons/travis/install_pyenv.py
         - python ../addons/travis/install_cmake.py 3.6.2
 
 install:
   commands:
-    - $<RUN_ENV> $<PYTHON> -m pip install --disable-pip-version-check --upgrade pip
-    - $<RUN_ENV> $<PYTHON> -m pip install -r requirements-dev.txt
+    - python --version
+    - python -m pip install --disable-pip-version-check --upgrade pip
+    - $<RUN_ENV> pip install -r requirements-dev.txt
 
 before_build:
   commands:
-    - $<RUN_ENV> $<PYTHON> -m flake8
+    - flake8
 
 build:
   commands:
-    - $<RUN_ENV> $<PYTHON> setup.py --hide-listing sdist
-    - $<RUN_ENV> $<PYTHON> setup.py --hide-listing bdist_wheel
+    - python setup.py --hide-listing sdist
+    - $<RUN_ENV> python setup.py --hide-listing bdist_wheel
 
 after_test:
   commands:
-    - python -m pip install girder-client==2.0.0
+    - pip install girder-client==2.0.0
     - python: |
               import girder_client, os, subprocess
               if 'GIRDER_TOKEN' in os.environ:
@@ -54,4 +52,4 @@ after_test:
                     shell=True)
               else:
                   print("Skipping upload: GIRDER_TOKEN environment variable is not set")
-    - $<RUN_ENV> $<PYTHON> setup.py clean
+    - python setup.py clean
