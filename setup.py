@@ -7,6 +7,13 @@ from pip.req import parse_requirements
 from skbuild import setup
 
 
+with open('README.rst', 'r') as fp:
+    readme = fp.read()
+
+with open('HISTORY.rst', 'r') as fp:
+    history = fp.read().replace('.. :changelog:', '')
+
+
 def _parse_requirements(filename):
     return [str(ir.req) for ir in parse_requirements(filename, session=False)]
 
@@ -45,13 +52,7 @@ setup(
     description=r'CMake is an open-source, cross-platform family of \
     tools designed to build, test and package software',
 
-    long_description='CMake is used to control the software compilation  \
-    process using simple platform and compiler independent configuration \
-    files, and generate native makefiles and workspaces that can be used \
-    in the compiler environment of your choice. The suite of CMake tools \
-    were created by Kitware in response to the need for a powerful,      \
-    cross-platform build environment for open-source projects such as    \
-    ITK and VTK.',
+    long_description=readme + '\n\n' + history,
 
     classifiers=[
         'License :: OSI Approved :: Apache Software License',
