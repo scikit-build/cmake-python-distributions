@@ -15,6 +15,8 @@ The suite of CMake tools were created by Kitware in response to the need
 for a powerful, cross-platform build environment for open-source projects
 such as ITK and VTK.
 
+The CMake python wheels provide `CMake 3.6.2 <https://cmake.org/cmake/help/v3.6/index.html>`_.
+
 .. toctree::
    :maxdepth: 2
    :caption: User guide
