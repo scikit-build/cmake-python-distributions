@@ -11,6 +11,11 @@ matrix:
     - os: osx
       language: generic
       env:
+        - PYTHONVERSION=3.5.2
+
+    - os: osx
+      language: generic
+      env:
         - PYTHONVERSION=3.4.5
 
     - os: osx
@@ -25,6 +30,7 @@ matrix:
 
 cache:
   directories:
+    - $HOME/.pyenv/versions/3.5.2
     - $HOME/.pyenv/versions/3.4.5
     - $HOME/.pyenv/versions/3.3.6
     - $HOME/.pyenv/versions/2.7.12
