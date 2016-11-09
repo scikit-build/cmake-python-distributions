@@ -7,3 +7,4 @@ pytest-runner==2.9
 git+https://github.com/jcfr/pytest-plugins@pytest-shutil-2016-11-08-c50ac56#egg=pytest-shutil
 git+https://github.com/jcfr/pytest-plugins@pytest-virtualenv-2016-11-08-c0dd757#egg=pytest-virtualenv
 scikit-build==0.4.0
+virtualenv==15.0.3
