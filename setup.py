@@ -1,8 +1,24 @@
 #!/usr/bin/env python
 
+import sys
 import versioneer
 
+from pip.req import parse_requirements
 from skbuild import setup
+
+
+def _parse_requirements(filename):
+    return [str(ir.req) for ir in parse_requirements(filename, session=False)]
+
+requirements = []
+dev_requirements = _parse_requirements('requirements-dev.txt')
+
+# Require pytest-runner only when running tests
+pytest_runner = (['pytest-runner>=2.0,<3dev']
+                 if any(arg in sys.argv for arg in ('pytest', 'test'))
+                 else [])
+
+setup_requires = pytest_runner
 
 setup(
     name='cmake',
@@ -54,6 +70,7 @@ setup(
 
     keywords='CMake build c++ fortran cross-platform cross-compilation',
 
-    install_requires=[
-    ]
+    install_requires=requirements,
+    tests_require=dev_requirements,
+    setup_requires=setup_requires
     )

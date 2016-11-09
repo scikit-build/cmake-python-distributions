@@ -10,6 +10,13 @@ del get_versions
 
 CMAKE_DATA = os.path.join(os.path.dirname(__file__), 'data')
 
+# Support running tests from the source tree
+if not os.path.exists(CMAKE_DATA):
+    _cmake_data = os.path.abspath(os.path.join(
+        os.path.dirname(__file__), '../_skbuild/cmake-install/cmake/data'))
+    if os.path.exists(_cmake_data):
+        CMAKE_DATA = _cmake_data
+
 if platform.system().lower() == "darwin":
     CMAKE_DATA = os.path.join(CMAKE_DATA, 'CMake.app', 'Contents')
 

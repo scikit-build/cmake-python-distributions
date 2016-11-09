@@ -1,0 +1,7 @@
+[run]
+branch = True
+include = cmake/*.py
+omit = cmake/_version.py
+
+[xml]
+output = tests/coverage.xml
