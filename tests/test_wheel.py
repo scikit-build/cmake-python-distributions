@@ -27,4 +27,5 @@ def test_command_line(virtualenv, tmpdir):
     """))
 
     output = virtualenv.run("cmake -P %s" % str(test_script), capture=True)
-    assert output.startswith(virtualenv.virtualenv.replace(os.sep, "/"))
+    assert output.startswith(
+        os.path.realpath(virtualenv.virtualenv).replace(os.sep, "/"))
