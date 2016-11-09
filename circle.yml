@@ -13,6 +13,12 @@ dependencies:
     - ci_addons docker load-pull-save dockcross/manylinux-x64
     - ci_addons docker load-pull-save dockcross/manylinux-x86
 
+checkout:
+  post:
+    # See https://discuss.circleci.com/t/clearing-the-source-cache/2771
+    - git tag -d 0.1.0 || true
+    - git fetch origin tag 0.1.0 || true
+
 test:
   override:
      - circleci-matrix:
