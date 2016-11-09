@@ -13,5 +13,5 @@ command:
   - docker run dockcross/$MANYLINUX_IMAGE > ~/bin/dockcross && chmod +x ~/bin/dockcross
   - |
     CI_ENV=`bash <(curl -s https://codecov.io/env)`
-    DOCKER_ARGS="-e CIRCLECI -e MANYLINUX_PYTHON=$MANYLINUX_PYTHON -e GIRDER_TOKEN $CI_ENV"
+    DOCKER_ARGS="-e CI -e CIRCLECI -e MANYLINUX_PYTHON=$MANYLINUX_PYTHON -e GIRDER_TOKEN $CI_ENV"
     dockcross -a "$DOCKER_ARGS" bash -c "/opt/python/${MANYLINUX_PYTHON}/bin/pip install scikit-ci==0.12.0 && /opt/python/${MANYLINUX_PYTHON}/bin/ci --clear-cached-env"
