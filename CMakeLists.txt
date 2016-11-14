@@ -34,28 +34,29 @@ if(CMakePythonDistributions_SUPERBUILD)
 
   #-----------------------------------------------------------------------------
   # CMake sources
-  set(unix_source_url       "https://cmake.org/files/v3.6/cmake-3.6.2.tar.gz")
-  set(unix_source_sha256    "189ae32a6ac398bb2f523ae77f70d463a6549926cde1544cd9cc7c6609f8b346")
+  set(unix_source_url       "https://cmake.org/files/v3.7/cmake-3.7.0.tar.gz")
+  set(unix_source_sha256    "ed63e05c41aeb6c036e503114ab15847f29c312f9f21f5f1a7060a4b4ec2fb31")
 
-  set(windows_source_url    "https://cmake.org/files/v3.6/cmake-3.6.2.zip")
-  set(windows_source_sha256 "ccf93db0527c35676ab74319bb3ef1ef4f5149d3b09aab1a58559143c1f4f673")
+  set(windows_source_url    "https://cmake.org/files/v3.7/cmake-3.7.0.zip")
+  set(windows_source_sha256 "e147c8f95b31b8cb0ef903b39ac21c9f07faf1c2131f7ec54a55e664d70224e7")
 
   #-----------------------------------------------------------------------------
   # CMake binaries
-  set(linux32_binary_url    "https://cmake.org/files/v3.6/cmake-3.6.2-Linux-i386.tar.gz")
-  set(linux32_binary_sha256 "26c2c86ddd54fd143594b6801a677f0a75bbacf7bb006a274d2854d0004f2749")
 
-  set(linux64_binary_url    "https://cmake.org/files/v3.6/cmake-3.6.2-Linux-x86_64.tar.gz")
-  set(linux64_binary_sha256 "5df4b69d9e85093ae78b1070d5cb9f824ce0bdd02528948c3f6a740e240083e5")
+  set(linux32_binary_url    "NA")  # Linux 32-bit binaries not available
+  set(linux32_binary_sha256 "NA")
 
-  set(macosx_binary_url    "https://cmake.org/files/v3.6/cmake-3.6.2-Darwin-x86_64.tar.gz")
-  set(macosx_binary_sha256 "e3ac82120298095245c9948eb11ddfb4b552f5f056ce0ec3c82e3f3a15c53752")
+  set(linux64_binary_url    "https://cmake.org/files/v3.7/cmake-3.7.0-Linux-x86_64.tar.gz")
+  set(linux64_binary_sha256 "e075f63e6a9104b1c3d11666ae9546bc8812f7e791a49c4ce11effc063141b2a")
 
-  set(win32_binary_url    "https://cmake.org/files/v3.6/cmake-3.6.2-win32-x86.zip")
-  set(win32_binary_sha256 "613eec5a8b2e2c49826e0e8e18f516b6f2b481309ae55925d226ce8ab78b0fba")
+  set(macosx_binary_url    "https://cmake.org/files/v3.7/cmake-3.7.0-Darwin-x86_64.tar.gz")
+  set(macosx_binary_sha256 "38ea6955fb8c120eada1ff7985389b61ad5ca60a90a51025024638d92bfb43cf")
 
-  set(win64_binary_url    "https://cmake.org/files/v3.6/cmake-3.6.2-win64-x64.zip")
-  set(win64_binary_sha256 "61337a0528fc3902d7f2f7594959aa6aa48a52863dd2da335a0e248b5eb8acaf")
+  set(win32_binary_url    "https://cmake.org/files/v3.7/cmake-3.7.0-win32-x86.zip")
+  set(win32_binary_sha256 "26dc1e0c4e9ba6021ed171463f7c99b241c1c8f8ada4ea652f031ff835c6b928")
+
+  set(win64_binary_url    "https://cmake.org/files/v3.7/cmake-3.7.0-win64-x64.zip")
+  set(win64_binary_sha256 "11a2f8c4d52c5dbb6708a80f54d782fdfb2f5cd96c091ac51500c5607534e660")
 
   #-----------------------------------------------------------------------------
   # Which archives ?
@@ -210,6 +211,10 @@ if(CMakePythonDistributions_SUPERBUILD)
     #
     # CMakeProject_BINARY_DISTRIBUTION_DIR
     #
+
+    if(${binary_archive}_sha256 STREQUAL "NA")
+      message(FATAL_ERROR "Pre-built archives not available for '${binary_archive}'. Consider setting BUILD_CMAKE_FROM_SOURCE to ON.")
+    endif()
 
     set(CMakeProject_BINARY_DISTRIBUTION_DIR "${CMAKE_BINARY_DIR}/CMakeProject-binary-distribution")
 
