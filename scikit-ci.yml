@@ -19,7 +19,7 @@ before_install:
   travis:
     osx:
       environment:
-        PATH: $<HOME>/.pyenv/versions/$<PYTHONVERSION>/bin:$<PATH>
+        PATH: $<HOME>/.pyenv/versions/$<PYTHON_VERSION>/bin:$<PATH>
       commands:
         - python ../addons/travis/install_pyenv.py
         - python ../addons/travis/install_cmake.py 3.6.2
