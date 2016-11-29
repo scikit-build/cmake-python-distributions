@@ -107,7 +107,6 @@ if(CMakePythonDistributions_SUPERBUILD)
       CONFIGURE_COMMAND ""
       BUILD_COMMAND ""
       BUILD_IN_SOURCE 1
-      BUILD_ALWAYS 1
       INSTALL_COMMAND ""
       ${depends_args}
       )
@@ -178,6 +177,7 @@ if(CMakePythonDistributions_SUPERBUILD)
         BINARY_DIR ${CMakeProject_BINARY_DIR}
         DOWNLOAD_COMMAND ""
         UPDATE_COMMAND ""
+        BUILD_ALWAYS 1
         CMAKE_CACHE_ARGS
           -DBUILD_CursesDialog:BOOL=OFF
           -DCMAKE_USE_OPENSSL:BOOL=ON
