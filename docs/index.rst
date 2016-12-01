@@ -32,6 +32,7 @@ The CMake python wheels provide `CMake 3.7.0 <https://cmake.org/cmake/help/v3.6/
    :maxdepth: 2
    :caption: For maintainers
 
+   update_cmake_version
    make_a_release
 
 
