@@ -174,5 +174,6 @@ def main():
     update_docs(args.cmake_version)
     update_tests(args.cmake_version)
 
+
 if __name__ == "__main__":
     main()

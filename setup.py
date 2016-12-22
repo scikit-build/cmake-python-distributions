@@ -17,6 +17,7 @@ with open('HISTORY.rst', 'r') as fp:
 def _parse_requirements(filename):
     return [str(ir.req) for ir in parse_requirements(filename, session=False)]
 
+
 requirements = []
 dev_requirements = _parse_requirements('requirements-dev.txt')
 
