@@ -17,6 +17,7 @@ with open('HISTORY.rst', 'r') as fp:
 def _parse_requirements(filename):
     return [str(ir.req) for ir in parse_requirements(filename, session=False)]
 
+
 requirements = []
 dev_requirements = _parse_requirements('requirements-dev.txt')
 
@@ -39,6 +40,7 @@ setup(
     packages=['cmake'],
 
     cmake_install_dir='cmake/data',
+    cmake_with_sdist=True,
 
     entry_points={
         'console_scripts': [
