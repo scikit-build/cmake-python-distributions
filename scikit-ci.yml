@@ -27,7 +27,7 @@ install:
   commands:
     - python --version
     - python -m pip install --disable-pip-version-check --upgrade pip
-    - $<RUN_ENV> pip install -r requirements-dev.txt
+    - $<RUN_ENV> pip install -U -r requirements-dev.txt
 
 before_build:
   commands:
