@@ -49,6 +49,16 @@ environment:
       PYTHON_ARCH: "64"
       BLOCK: "0"
 
+    - PYTHON_DIR: "C:\\Python36"
+      PYTHON_VERSION: "3.6.x"
+      PYTHON_ARCH: "32"
+      BLOCK: "0"
+
+    - PYTHON_DIR: "C:\\Python36-x64"
+      PYTHON_VERSION: "3.6.x"
+      PYTHON_ARCH: "64"
+      BLOCK: "0"
+
   GIRDER_TOKEN:
     secure: qVsf5rslUEw6KTjGI+uF4hEtP9xkBzZiRmLGsBZN5I32/hNccjih53ydb4tegdnK
 

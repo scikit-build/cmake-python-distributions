@@ -9,6 +9,8 @@ env:
   - MANYLINUX_IMAGE=manylinux-x86 MANYLINUX_PYTHON=cp34-cp34m
   - MANYLINUX_IMAGE=manylinux-x64 MANYLINUX_PYTHON=cp35-cp35m
   - MANYLINUX_IMAGE=manylinux-x86 MANYLINUX_PYTHON=cp35-cp35m
+  - MANYLINUX_IMAGE=manylinux-x64 MANYLINUX_PYTHON=cp36-cp36m
+  - MANYLINUX_IMAGE=manylinux-x86 MANYLINUX_PYTHON=cp36-cp36m
 command:
   - docker run dockcross/$MANYLINUX_IMAGE > ~/bin/dockcross && chmod +x ~/bin/dockcross
   - |

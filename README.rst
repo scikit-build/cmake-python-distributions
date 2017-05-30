@@ -20,7 +20,7 @@ The suite of CMake tools were created by Kitware in response to the need
 for a powerful, cross-platform build environment for open-source projects
 such as ITK and VTK.
 
-The CMake python wheels provide `CMake 3.7.1 <https://cmake.org/cmake/help/v3.7/index.html>`_.
+The CMake python wheels provide `CMake 3.8.0 <https://cmake.org/cmake/help/v3.8/index.html>`_.
 
 This project is maintained by Jean-Christophe Fillion-Robin from Kitware Inc.
 It is covered by the `Apache License, Version 2.0 <http://www.apache.org/licenses/LICENSE-2.0>`_.
