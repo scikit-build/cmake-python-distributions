@@ -44,7 +44,9 @@ setup(
 
     entry_points={
         'console_scripts': [
-            'cmake=cmake:cmake', 'cpack=cmake:cpack', 'ctest=cmake:ctest'
+            'cmake=cmake:_entrypoint_cmake',
+            'cpack=cmake:_entrypoint_cpack',
+            'ctest=cmake:_entrypoint_ctest'
         ]
     },
 

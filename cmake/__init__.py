@@ -29,13 +29,25 @@ def _program(name, args):
     return subprocess.call([os.path.join(CMAKE_BIN_DIR, name)] + args)
 
 
-def cmake():
-    raise SystemExit(_program('cmake', sys.argv[1:]))
+def cmake(args):
+    raise _program('cmake', args)
 
 
-def cpack():
-    raise SystemExit(_program('cpack', sys.argv[1:]))
+def cpack(args=None):
+    raise _program('cpack', args)
 
 
-def ctest():
-    raise SystemExit(_program('ctest', sys.argv[1:]))
+def ctest(args=None):
+    raise _program('ctest', args)
+
+
+def _entrypoint_cmake():
+    raise SystemExit(cmake(sys.argv[1:]))
+
+
+def _entrypoint_cpack():
+    raise SystemExit(cpack(sys.argv[1:]))
+
+
+def _entrypoint_ctest():
+    raise SystemExit(ctest(sys.argv[1:]))
