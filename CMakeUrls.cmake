@@ -1,11 +1,11 @@
 
 #-----------------------------------------------------------------------------
 # CMake sources
-set(unix_source_url       "https://cmake.org/files/v3.9/cmake-3.9.0.tar.gz")
-set(unix_source_sha256    "167701525183dbb722b9ffe69fb525aa2b81798cf12f5ce1c020c93394dfae0f")
+set(unix_source_url       "https://cmake.org/files/v3.9/cmake-3.9.4.tar.gz")
+set(unix_source_sha256    "b5d86f12ae0072db520fdbdad67405f799eb728b610ed66043c20a92b4906ca1")
 
-set(windows_source_url    "https://cmake.org/files/v3.9/cmake-3.9.0.zip")
-set(windows_source_sha256 "4bb61705fb183ed3cfeba5548930a2f09737e3969b01565af4a0768463c94966")
+set(windows_source_url    "https://cmake.org/files/v3.9/cmake-3.9.4.zip")
+set(windows_source_sha256 "e19c36de1cabc242e78cbf93782b70904e192c6288db6a3d6606423ff944a674")
 
 #-----------------------------------------------------------------------------
 # CMake binaries
@@ -13,14 +13,14 @@ set(windows_source_sha256 "4bb61705fb183ed3cfeba5548930a2f09737e3969b01565af4a07
 set(linux32_binary_url    "NA")  # Linux 32-bit binaries not available
 set(linux32_binary_sha256 "NA")
 
-set(linux64_binary_url    "https://cmake.org/files/v3.9/cmake-3.9.0-Linux-x86_64.tar.gz")
-set(linux64_binary_sha256 "e714ddd55ab9be7ec5e4d30ca1ceee5e23406d7d3bf14457a67180cf54d9834a")
+set(linux64_binary_url    "https://cmake.org/files/v3.9/cmake-3.9.4-Linux-x86_64.tar.gz")
+set(linux64_binary_sha256 "6d8573377fc7fca86ed1952b76f62880e2159a3de6508761dd0d619a8e96551b")
 
-set(macosx_binary_url    "https://cmake.org/files/v3.9/cmake-3.9.0-Darwin-x86_64.tar.gz")
-set(macosx_binary_sha256 "9587e4b54fce34c6c14df563d409389e59c8e7e240f4f191590fd098d83d6562")
+set(macosx_binary_url    "https://cmake.org/files/v3.9/cmake-3.9.4-Darwin-x86_64.tar.gz")
+set(macosx_binary_sha256 "4d1356623e4e83c497d44b4601e24e39dd5c6a9594a2b042a9107319254fac0d")
 
-set(win32_binary_url    "https://cmake.org/files/v3.9/cmake-3.9.0-win32-x86.zip")
-set(win32_binary_sha256 "9d593839f64b94718a1b75b8519b56ecb959e4d37d406bf2a087e2c1f7a6b89c")
+set(win32_binary_url    "https://cmake.org/files/v3.9/cmake-3.9.4-win32-x86.zip")
+set(win32_binary_sha256 "8214df1ff51f9a6a1f0e27f9bd18f402b1749c5b645fbf6e401bcb00047171cd")
 
-set(win64_binary_url    "https://cmake.org/files/v3.9/cmake-3.9.0-win64-x64.zip")
-set(win64_binary_sha256 "584f5c58f322481f29fee482b7627751917ec916fd312de7ced6b046bd55c2f5")
+set(win64_binary_url    "https://cmake.org/files/v3.9/cmake-3.9.4-win64-x64.zip")
+set(win64_binary_sha256 "63b74a0685b2dd1c5d76428fd915539db6353dd8804aed5683a533ee1a08196d")
