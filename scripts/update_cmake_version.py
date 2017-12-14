@@ -148,7 +148,7 @@ def _update_file(filepath, regex, replacement):
 
 def update_docs(version):
     pattern = re.compile(
-        r"CMake \d.\d.\d <https://cmake.org/cmake/help/v\d.\d/index.html>")
+        r"CMake \d.(\d)+.\d <https://cmake.org/cmake/help/v\d.(\d)+/index.html>")
     replacement = (
         "CMake %s <https://cmake.org/cmake/help/v%s/index.html>" % (
             version, _major_minor(version)))
@@ -157,7 +157,7 @@ def update_docs(version):
 
 
 def update_tests(version):
-    pattern = re.compile(r'expected_version = "\d.\d.\d"')
+    pattern = re.compile(r'expected_version = "\d.(\d)+.\d"')
     replacement = 'expected_version = "%s"' % version
     _update_file(os.path.join(
         ROOT_DIR, "tests/test_wheel.py"), pattern, replacement)
