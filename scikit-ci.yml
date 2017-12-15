@@ -49,22 +49,22 @@ build:
             rm $whl
         done
 
-test:
-  commands:
-    - python setup.py test
+#test:
+#  commands:
+#    - python setup.py test
 
-after_test:
-  commands:
-    - codecov -X gcov --required --file ./tests/coverage.xml
-    - pip install girder-client==2.0.0
-    - python: |
-              import girder_client, os, subprocess
-              if 'GIRDER_TOKEN' in os.environ:
-                  token = os.environ['GIRDER_TOKEN']
-                  subprocess.check_call(
-                    "python -m girder_client --api-url https://data.kitware.com/api/v1 --api-key {token} \
-                      upload --parent-type collection --reuse 5817c33a8d777f10f26ee3a7 ./dist/".format(token=token),
-                    shell=True)
-              else:
-                  print("Skipping upload: GIRDER_TOKEN environment variable is not set")
-    - python setup.py clean
+#after_test:
+#  commands:
+#    - codecov -X gcov --required --file ./tests/coverage.xml
+#    - pip install girder-client==2.0.0
+#    - python: |
+#              import girder_client, os, subprocess
+#              if 'GIRDER_TOKEN' in os.environ:
+#                  token = os.environ['GIRDER_TOKEN']
+#                  subprocess.check_call(
+#                    "python -m girder_client --api-url https://data.kitware.com/api/v1 --api-key {token} \
+#                      upload --parent-type collection --reuse 5817c33a8d777f10f26ee3a7 ./dist/".format(token=token),
+#                    shell=True)
+#              else:
+#                  print("Skipping upload: GIRDER_TOKEN environment variable is not set")
+#    - python setup.py clean
