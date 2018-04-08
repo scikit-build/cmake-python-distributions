@@ -13,7 +13,7 @@ def test_command_line(virtualenv, tmpdir):
 
     virtualenv.run("pip install %s" % wheels[0])
 
-    expected_version = "3.10.1"
+    expected_version = "3.11.0"
 
     for executable_name in ["cmake", "cpack", "ctest"]:
         output = virtualenv.run(

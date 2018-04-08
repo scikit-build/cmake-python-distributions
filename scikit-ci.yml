@@ -19,7 +19,7 @@ before_install:
     osx:
       environment:
         PATH: $<HOME>/.pyenv/versions/$<PYTHON_VERSION>/bin:$<PATH>
-        SETUP_ARGS: --plat-name macosx-10.6-x86_64 -- -DCMAKE_OSX_DEPLOYMENT_TARGET:STRING=10.6 -DCMAKE_OSX_ARCHITECTURES:STRING=x86_64 -DCMAKE_OSX_SYSROOT:PATH=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk
+        SETUP_ARGS: --plat-name macosx-10.6-x86_64 -- -DCMAKE_OSX_DEPLOYMENT_TARGET:STRING=10.6 -DCMAKE_OSX_ARCHITECTURES:STRING=x86_64 -DCMAKE_OSX_SYSROOT:PATH=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk
       commands:
         - python ../addons/travis/install_pyenv.py
         - python ../addons/travis/install_cmake.py 3.6.2
