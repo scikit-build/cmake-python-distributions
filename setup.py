@@ -3,7 +3,7 @@
 import sys
 import versioneer
 
-from pip.req import parse_requirements
+from distutils.text_file import TextFile
 from skbuild import setup
 
 
@@ -14,12 +14,13 @@ with open('HISTORY.rst', 'r') as fp:
     history = fp.read().replace('.. :changelog:', '')
 
 
-def _parse_requirements(filename):
-    return [str(ir.req) for ir in parse_requirements(filename, session=False)]
+def parse_requirements(filename):
+    with open(filename, 'r') as file:
+        return TextFile(filename, file).readlines()
 
 
 requirements = []
-dev_requirements = _parse_requirements('requirements-dev.txt')
+dev_requirements = parse_requirements('requirements-dev.txt')
 
 # Require pytest-runner only when running tests
 pytest_runner = (['pytest-runner>=2.0,<3dev']

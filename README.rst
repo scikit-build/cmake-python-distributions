@@ -12,7 +12,7 @@ CMake Python Distributions
     :target: https://travis-ci.org/scikit-build/cmake-python-distributions
 
 `CMake <http://www.cmake.org>`_ is used to control the software compilation
-process using simple platform and compiler independent configuration files, 
+process using simple platform and compiler independent configuration files,
 and generate native makefiles and workspaces that can be used in the
 compiler environment of your choice.
 
@@ -20,7 +20,7 @@ The suite of CMake tools were created by Kitware in response to the need
 for a powerful, cross-platform build environment for open-source projects
 such as ITK and VTK.
 
-The CMake python wheels provide `CMake 3.11.0 <https://cmake.org/cmake/help/v3.11/index.html>`_.
+The CMake python wheels provide `CMake 3.11.2 <https://cmake.org/cmake/help/v3.11/index.html>`_.
 
 This project is maintained by Jean-Christophe Fillion-Robin from Kitware Inc.
 It is covered by the `Apache License, Version 2.0 <http://www.apache.org/licenses/LICENSE-2.0>`_.
