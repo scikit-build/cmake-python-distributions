@@ -1,0 +1,85 @@
+ci-steps: &ci-steps
+  working_directory: /work
+  steps:
+  - checkout
+  - run:
+      name:
+      command: |
+        export MANYLINUX_PYTHON=$(echo ${CIRCLE_JOB} | cut -d"_" -f2)
+        echo "MANYLINUX_PYTHON [${MANYLINUX_PYTHON}]"
+        /opt/python/${MANYLINUX_PYTHON}/bin/pip install scikit-ci
+        /opt/python/${MANYLINUX_PYTHON}/bin/ci
+
+version: 2
+jobs:
+  #
+  # x64
+  #
+  manylinux-x64_cp27-cp27m:
+    docker:
+      - image: dockcross/manylinux-x64
+    <<: *ci-steps
+
+  manylinux-x64_cp27-cp27mu:
+    docker:
+      - image: dockcross/manylinux-x64
+    <<: *ci-steps
+
+  manylinux-x64_cp34-cp34m:
+    docker:
+      - image: dockcross/manylinux-x64
+    <<: *ci-steps
+
+  manylinux-x64_cp35-cp35m:
+    docker:
+      - image: dockcross/manylinux-x64
+    <<: *ci-steps
+
+  manylinux-x64_cp36-cp36m:
+    docker:
+      - image: dockcross/manylinux-x64
+    <<: *ci-steps
+  #
+  # x86
+  #
+  manylinux-x86_cp27-cp27m:
+    docker:
+      - image: dockcross/manylinux-x86
+    <<: *ci-steps
+
+  manylinux-x86_cp27-cp27mu:
+    docker:
+      - image: dockcross/manylinux-x86
+    <<: *ci-steps
+
+  manylinux-x86_cp34-cp34m:
+    docker:
+      - image: dockcross/manylinux-x86
+    <<: *ci-steps
+
+  manylinux-x86_cp35-cp35m:
+    docker:
+      - image: dockcross/manylinux-x86
+    <<: *ci-steps
+
+  manylinux-x86_cp36-cp36m:
+    docker:
+      - image: dockcross/manylinux-x86
+    <<: *ci-steps
+
+
+workflows:
+  version: 2
+  build-test-deploy:
+    jobs:
+      - manylinux-x64_cp27-cp27m
+      - manylinux-x64_cp27-cp27mu
+      - manylinux-x64_cp34-cp34m
+      - manylinux-x64_cp35-cp35m
+      - manylinux-x64_cp36-cp36m
+
+      - manylinux-x86_cp27-cp27m
+      - manylinux-x86_cp27-cp27mu
+      - manylinux-x86_cp34-cp34m
+      - manylinux-x86_cp35-cp35m
+      - manylinux-x86_cp36-cp36m

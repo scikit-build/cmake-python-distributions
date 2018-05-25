@@ -148,6 +148,14 @@ if(CMakePythonDistributions_SUPERBUILD)
     if(NOT DEFINED CMakeProject_BINARY_DIR)
       set(CMakeProject_BINARY_DIR ${CMAKE_BINARY_DIR}/CMakeProject-build)
 
+      set(_cmake_cache_args)
+      if(DEFINED OPENSSL_ROOT_DIR)
+        list(APPEND _cmake_cache_args
+          -DOPENSSL_ROOT_DIR:PATH=${OPENSSL_ROOT_DIR}
+          )
+        message(STATUS "SuperBuild -   CMakeProject-build - OPENSSL_ROOT_DIR: ${OPENSSL_ROOT_DIR}")
+      endif()
+
       ExternalProject_add(CMakeProject-build
         SOURCE_DIR ${CMakeProject_SOURCE_DIR}
         BINARY_DIR ${CMakeProject_BINARY_DIR}
@@ -160,6 +168,7 @@ if(CMakePythonDistributions_SUPERBUILD)
           -DBUILD_TESTING:BOOL=OFF
           -DCMake_INSTALL_DEPENDENCIES:BOOL=ON
           -DCMAKE_INSTALL_MESSAGE:STRING=NEVER
+          ${_cmake_cache_args}
         USES_TERMINAL_CONFIGURE 1
         USES_TERMINAL_BUILD 1
         ${ep_log_configure_build_args}

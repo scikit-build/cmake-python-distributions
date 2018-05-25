@@ -12,6 +12,7 @@ before_install:
   circle:
     environment:
       PATH: /opt/python/$<MANYLINUX_PYTHON>/bin:$<PATH>
+      SETUP_ARGS: -- -DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl
     commands:
       - rm -rf dist/*
 
@@ -26,7 +27,7 @@ before_install:
 
 install:
   commands:
-    - python --version
+    - python -c "import sys; print(sys.version)"
     - python -m pip install --disable-pip-version-check --upgrade pip
     - pip install -U setuptools
     - $<RUN_ENV> pip install -U -r requirements-dev.txt
@@ -37,7 +38,7 @@ before_build:
 
 build:
   commands:
-    - python setup.py --hide-listing sdist
+    - python setup.py --hide-listing sdist $<SETUP_ARGS>
     - $<RUN_ENV> python setup.py --hide-listing bdist_wheel $<SETUP_ARGS>
 
   circle:
