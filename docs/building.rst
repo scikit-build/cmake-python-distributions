@@ -44,7 +44,7 @@ can successfully glob the source files.
 The source distribution is generated using the following
 command::
 
-    python setup.pt sdist
+    python setup.py sdist
 
 
 Binary distribution (build, bdist, bdist_wheel)
@@ -58,13 +58,13 @@ The project has two mode of operations:
 The binary distribution is generated using the following
 command::
 
-    python setup.pt bdist_wheel
+    python setup.py bdist_wheel
 
 
 Changing the default mode is achieved by explicitly passing the option
 to CMake::
 
- python setup.pt bdist_wheel -- -DBUILD_CMAKE_FROM_SOURCE:BOOL=ON
+ python setup.py bdist_wheel -- -DBUILD_CMAKE_FROM_SOURCE:BOOL=ON
 
 
 Default value for ``BUILD_CMAKE_FROM_SOURCE``
