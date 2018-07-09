@@ -1,8 +1,9 @@
 # This project
-cmake/resources/*
-src
 archive-cache
+cmake/resources/*
+env.json
 skbuild
+src
 standalone-build
 standalone-x86-build
 standalone-x64-build
