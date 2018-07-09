@@ -52,8 +52,8 @@ setup(
     url=r'http://cmake.org/',
     download_url=r'https://cmake.org/download',
 
-    description=r'CMake is an open-source, cross-platform family of \
-    tools designed to build, test and package software',
+    description=r'CMake is an open-source, cross-platform family of '
+                r'tools designed to build, test and package software',
 
     long_description=readme + '\n\n' + history,
 
