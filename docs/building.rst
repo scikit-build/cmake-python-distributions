@@ -77,6 +77,27 @@ different default:
 - MacOSX: OFF
 - Windows: OFF
 
+Controlling verbosity
+---------------------
+
+configure and build output
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+By default, the output associated to the configure and build steps of the
+`CMakeProject-build` external project are logged into files. This can be
+changed by setting the ``BUILD_VERBOSE`` option::
+
+    python setup.py bdist_wheel -- -DBUILD_VERBOSE:BOOL=1
+
+list of files copied into the distributions
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+By default, the complete list of files copied into the distributions are
+reported. This can be changed passing the ``--hide-listing`` option::
+
+    python setup.py --hide-listing sdist
+    python setup.py --hide-listing bdist_wheel
+
 Optimizations
 -------------
 
