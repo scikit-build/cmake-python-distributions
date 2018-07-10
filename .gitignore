@@ -1,6 +1,6 @@
 # This project
 archive-cache
-cmake/resources/*
+cmake/data/*
 env.json
 skbuild
 src

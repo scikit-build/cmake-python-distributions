@@ -41,7 +41,6 @@ setup(
     packages=['cmake'],
 
     cmake_install_dir='cmake/data',
-    cmake_with_sdist=True,
 
     entry_points={
         'console_scripts': [
