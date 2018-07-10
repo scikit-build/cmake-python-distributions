@@ -1,4 +1,22 @@
 #!/bin/bash
+
+#
+# Warning: This script is not tested and is kept here for convenience.
+#
+
+#
+# Usage:
+#
+#    docker pull dockcross/manylinux-x64
+#    docker run dockcross/manylinux-x64 > ~/bin/dockcross-manylinux-x64
+#    chmod u+x ~/bin/dockcross-manylinux-x64
+#
+#    git clone git://github.com/scikit-build/cmake-python-distributions.git
+#    cd cmake-python-distributions
+#
+#    dockcross-manylinux-x64 ./scripts/manylinux-build-wheels.sh
+#
+
 set -e -x
 
 # i686 or x86_64 ?
