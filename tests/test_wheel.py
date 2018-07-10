@@ -1,5 +1,6 @@
 
 import os
+import pytest
 import textwrap
 
 from path import Path
@@ -7,8 +8,11 @@ from path import Path
 DIST_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../dist'))
 
 
-def test_command_line(virtualenv, tmpdir):
+@pytest.mark.skipif(not Path(DIST_DIR).exists(), reason="dist directory does not exist")
+def test_wheel(virtualenv, tmpdir):
     wheels = Path(DIST_DIR).files(pattern="*.whl")
+    if not wheels:
+        pytest.skip("no wheel available")
     assert len(wheels) == 1
 
     virtualenv.run("pip install %s" % wheels[0])
