@@ -160,7 +160,7 @@ def update_tests(version):
     pattern = re.compile(r'expected_version = "\d.(\d)+.\d"')
     replacement = 'expected_version = "%s"' % version
     _update_file(os.path.join(
-        ROOT_DIR, "tests/test_wheel.py"), pattern, replacement)
+        ROOT_DIR, "tests/test_distribution.py"), pattern, replacement)
 
 
 def main():
