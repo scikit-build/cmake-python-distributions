@@ -1,8 +1,13 @@
 include CMakeLists.txt
+include CMakeUrls.cmake
 include requirements-dev.txt
 include HISTORY.rst
 include README.rst
+include LICENSE_Apache_20
+include LICENSE_BSD_3
 
-recursive-include src *
+recursive-exclude _skbuild *
+recursive-exclude src *
+
 include versioneer.py
 include cmake/_version.py

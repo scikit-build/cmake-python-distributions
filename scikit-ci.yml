@@ -39,7 +39,7 @@ before_build:
 
 build:
   commands:
-    - python setup.py --hide-listing sdist -- $<SETUP_CMAKE_ARGS>
+    - python setup.py --hide-listing sdist
     - $<RUN_ENV> python setup.py --hide-listing bdist_wheel $<SETUP_BDIST_WHEEL_ARGS> -- $<SETUP_CMAKE_ARGS>
 
   circle:
