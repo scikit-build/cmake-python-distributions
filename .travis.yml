@@ -1,4 +1,3 @@
-
 branches:
  only:
   - master
@@ -44,7 +43,7 @@ cache:
 
 before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then mkdir $HOME/bin; ln -s $(which pip2) $HOME/bin/pip; fi
-  - pip install scikit-ci==0.13.0 scikit-ci-addons==0.11.0
+  - pip install -U scikit-ci scikit-ci-addons
   - ci_addons --install ../addons
 
 install:
@@ -55,6 +54,26 @@ script:
 
 after_success:
   - ci after_test
+
+deploy:
+  # deploy-release
+  - provider: script
+    script: pwd && ls dist;echo "deploy-release" && pip install twine && twine upload -u $PYPI_USER -p $PYPI_PASSWORD dist/*
+    skip_cleanup: true
+    on:
+      repo: ${TRAVIS_REPO_SLUG}
+      tags: true
+  # deploy-master
+  - provider: script
+    script: pwd && ls dist;echo "deploy-master" && echo "not implemented"
+    skip_cleanup: true
+    on:
+      repo: ${TRAVIS_REPO_SLUG}
+      branch: master
+
 env:
   global:
-    secure: YL5nQR6pOBSC99JH4v7hBX0AE3Qd90b0TaWkReDNVK31eKsasS9FEuamj+BolSu3n3cjcjDa1nWb007KUCC5LoxWQZw4yWyWWaucRewi6xcKnTifidDvchuw/z7B0KNVh3hraetE3kYsPgp/45bwM3889Q/7/HHDfa3iE0q5d3cgKfSbv/MhV5mTuikiogDvJu9v7gvOfnH+tX4QDcR4YMSN57kJfhG0qWrqAmiYuwe95Nzgj/WeWYxo40ULCYISY1lExZOxBtZpjQJeeGW2bnqfHeUYgrSbAnhLc3XIvULHhWHY541PiR7hfkXRCVrJ3Mq0w7b7pn+YIJvofSJan9kCfRT3P+9+3c6mM4lHfln9pTqgn/wpgAgRgYU8ncC2cWwQR56b4anSZXaNjYePAggp+mZdXgwJJ0vHDWYa6RasZgkLlI/ZVi0raPJ7RmTJiP1GDhuaOhg/BkxxzL4fgNOqm73OQuY/EeNCqp6DZWsC638iGw7HmOg4Wb3B5605ZKBWC13hHVpT76dOx7ldkS7O5h056ccyoj5SUSsG3xb0virwMX8yr2MNiaqNF4iHGkECpzZDFmCw/98xZK1yK3xDgSkAs1c63YCxCvSOatHRwW2mWFzVPiPmzG/OfErUQC9fh3k8Vx1khQVNXzAZaabl6v4WAF6sUO8rAPwL9SI=
+    # PYPI_USER
+    - secure: "Xejg5qGnAyo3G+/TaaAr1uHzDv9GLo3mxi6Aw/hZc9gF9lYix1TvkfE6GEBKdPgSLJSqF9NJrwKTt37XH1DjSRLG+qw6Bt1goi5Bkugdk+SC5qmMkvAoG0EKyD119WS4ObrpzqAFcOQqG+4F6iDkSuJLA+dzA3yAzTME4pkhr/2dn0krOSqIcTlgifPwhEaMgo//WRT2dEBM5dWoehXsEMD7VMOUyC0DlV15lKTPKSzTrDEUPU7UFnXgIqZM/brEPbWPQr5Jzgu7BeBk6bmPiiYeh28Cq2juzOzA+JWcGgJmXOfsImYwYuAWZrf0pkE0uQjLySvIBKT7phJv05eNqIxmv/wHK1BPcyMV+2IgFR4+f5ty6C4VUV0hT0HvHr3pMa/8A/5wSNCShEAMTHrwPM5VPWFJtUKTtS5+wwNQDI39MLk/vr9ZTo+y3WJHPaRR0nRpbA3nXFHSqoJJunoMyeI8x9cXZvJ9IENMxGuo3CfBT5RGZamfqSTgn6NjL51ArIMKpvUfm3tXTtlvCHenED1ZQeJI1nWZEalxl8pTyAZoA8S1+h8wraZrUPzhM0QuVpw7vZQeOYu2VSdHO46yxUWoQyb+JWrDTN7EC8vOl7QQzIQlqOWJB5uDJD7UlKKtneTHJrdfXvGxS/hf+Y+hFZK7r+/PDPS6aQjSNDyy+js="
+    # PYPI_PASSWORD
+    - secure: "iEHYaOC/yivDupsbRzohWYCwFMZbCfT2hYOM96akQtOfd1d37rqFCFjDKr3BNyvHyHzj+uNQ7IblynWAqu3cax2Z8b9YuIFXFAslD76IIgeIhxmi8jPtamMK0NBXam/LEL49EIVXUnwVZrWjnLcJxVaBHGS/9Ft3zWP5Gspa4G1yAJDhNfs+jrFipxO4DOBie9mGI2jFdbFRgcCYoY6Jo4y95zxUG1YF5e+8sUobLoBgVqyaJP4SP/Zu/4CEWMfJev8EjLBzzkoPwOU+hC09qwf2FQCvBXFrudpjPpY23WDFeKf+LcMoW9tIoUmP6UJcQibqHeidimrbo9jST0+wTo1NYjrvriKrlMho/QS4iYkd5N6DGUrhSXEMSiqfdMjVGDZ00wvCsT3DwqE9eG7K+Kw09enchjcZcggZIt9crqZPJg3GMdSwPYTlRpf2OQmE4OHL3pN5dSH5Es/sb0X1G6JQgB/2Ia9Aks2ywYEdzUZhbMqfLVx75bVS4bLfYMAMhE/j7NxpYaUlVkFhz3srLhnrYyAcvCQ6XF4cSeFfxD1ie62/qFIF/QH5u76t91uURHygvNdyJCNHhVJnnWgN9kPsJxfyfdOC2Dnrz/jJcw5irsgQVO2/K4iyGyBVoOqwwpymjoCkxB8capEoLRNLcwyQqCTBnMtGykyRYF2I7FA="

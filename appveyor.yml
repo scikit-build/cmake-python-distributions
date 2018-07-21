@@ -59,8 +59,10 @@ environment:
       PYTHON_ARCH: "64"
       BLOCK: "0"
 
-  GIRDER_TOKEN:
-    secure: qVsf5rslUEw6KTjGI+uF4hEtP9xkBzZiRmLGsBZN5I32/hNccjih53ydb4tegdnK
+  PYPI_USER:
+    secure: j/nubIi1eucjCtYuwpykWg==
+  PYPI_PASSWORD:
+    secure: qDoPKmtLMdcKUKRHuTlfaajjzO4Q4yu25FM5JuB7z84=
 
 cache:
   - C:\\cmake-3.6.2
@@ -85,6 +87,18 @@ after_test:
 
 on_finish:
   - ps: ../addons/appveyor/enable-worker-remote-access.ps1 -check_for_block
+
+deploy_script:
+  - ps: |
+      if ($env:appveyor_repo_tag -eq $true -and $env:appveyor_repo_tag_name –match "^[0-9]+(\.[0-9]+)*") {
+        Write-Host "deploy release"
+        pip install twine
+        twine upload -u %PYPI_USER% -p %PYPI_PASSWORD% dist/*
+      } elseif ($env:appveyor_repo_branch -eq "master") {
+         Write-Host "deploy master (not implemented)"
+      } else {
+        Write-Host "nothing to deploy"
+      }
 
 matrix:
   fast_finish: false
