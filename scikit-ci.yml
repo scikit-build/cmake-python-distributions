@@ -26,8 +26,7 @@ install:
   commands:
     - python -c "import sys; print(sys.version)"
     - python -m pip install --disable-pip-version-check --upgrade pip
-    - pip install -U setuptools
-    - pip install -U -r requirements-dev.txt
+    - pip install -r requirements-dev.txt
 
 before_build:
   commands:
@@ -37,14 +36,15 @@ build:
   commands:
     # Source distribution
     - python setup.py --hide-listing sdist
+    # Built distribution (wheel)
+    - python setup.py --hide-listing bdist_wheel $<SETUP_BDIST_WHEEL_ARGS> -- $<SETUP_CMAKE_ARGS>
+    # Cleanup
     - python: |
               import glob, os
               if os.environ.get("UPLOAD_SDIST", "") == "":
                   sdist=(glob.glob("dist/*.tar.gz") + glob.glob("dist/*.zip"))[0]
                   print("Deleting [%s]" % sdist)
                   os.remove(sdist)
-    # Built distribution (wheel)
-    - python setup.py --hide-listing bdist_wheel $<SETUP_BDIST_WHEEL_ARGS> -- $<SETUP_CMAKE_ARGS>
 
   circle:
     commands:
@@ -63,4 +63,3 @@ test:
 after_test:
   commands:
     - codecov -X gcov --required --file ./tests/coverage.xml
-    - python setup.py clean
