@@ -1,6 +1,8 @@
-====================
-Update CMake version
-====================
+.. _updating_cmake_version:
+
+==========================
+Updating the CMake version
+==========================
 
 A developer should use the following steps to update the version ``X.Y.Z``
 of CMake associated with the current CMake python distributions.
@@ -27,9 +29,15 @@ Available CMake archives can be found at https://cmake.org/files.
     Updating tests/test_wheel.py
     Updating tests/test_wheel.py - done
 
-3. Create a topic named `update-to-cmake-X.Y.Z` and commit the changes
+3. Create a topic named `update-to-cmake-X.Y.Z` and commit the changes.
+   For example::
 
-4. Create a `Pull Request`.
+    release=3.7.1
+    git checkout -b update-to-cmake-${release}
+    git add CMakeUrls.cmake docs/index.rst README.rst tests/test_wheel.py
+    git commit -m "Update to CMake ${release}"
+
+4. Push the topic and create a `Pull Request`.
 
 5. If all CI tests are passing, merge the topic and consider :doc:`making a new
    release </make_a_release>`.
