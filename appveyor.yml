@@ -1,7 +1,7 @@
-
 branches:
- only:
-  - master
+  only:
+    - master
+    - /^[0-9]+(\.[0-9]+)*/
 
 version: "0.0.1.{build}"
 
@@ -93,7 +93,7 @@ deploy_script:
       if ($env:appveyor_repo_tag -eq $true -and $env:appveyor_repo_tag_name –match "^[0-9]+(\.[0-9]+)*") {
         Write-Host "deploy release"
         pip install twine
-        twine upload -u %PYPI_USER% -p %PYPI_PASSWORD% dist/*
+        twine upload -u $env:PYPI_USER -p $env:PYPI_PASSWORD dist/*
       } elseif ($env:appveyor_repo_branch -eq "master") {
          Write-Host "deploy master (not implemented)"
       } else {
