@@ -17,24 +17,25 @@ Available CMake archives can be found at https://cmake.org/files.
 2. Execute `scripts/update_cmake_version.py` command line tool with the desired
    ``X.Y.Z`` CMake version available for download. For example::
 
-    $ python scripts/update_cmake_version.py 3.7.1
-    Collecting URLs and SHA256s from 'https://cmake.org/files/v3.7'
-    Collecting URLs and SHA256s from 'https://cmake.org/files/v3.7' - done
-    Updating 'CMakeUrls.cmake' with CMake version 3.7.1
-    Updating 'CMakeUrls.cmake' with CMake version 3.7.1 - done
+    $ release=3.11.4
+    $ python scripts/update_cmake_version.py ${release}
+    Collecting URLs and SHA256s from 'https://cmake.org/files/v3.11'
+    Collecting URLs and SHA256s from 'https://cmake.org/files/v3.11' - done
+    Updating 'CMakeUrls.cmake' with CMake version 3.11.0
+    Updating 'CMakeUrls.cmake' with CMake version 3.11.0 - done
     Updating docs/index.rst
     Updating docs/index.rst - done
     Updating README.rst
     Updating README.rst - done
-    Updating tests/test_wheel.py
-    Updating tests/test_wheel.py - done
+    Updating tests/test_distribution.py
+    Updating tests/test_distribution.py - done
 
 3. Create a topic named `update-to-cmake-X.Y.Z` and commit the changes.
    For example::
 
-    release=3.7.1
+    release=3.11.4
     git checkout -b update-to-cmake-${release}
-    git add CMakeUrls.cmake docs/index.rst README.rst tests/test_wheel.py
+    git add CMakeUrls.cmake docs/index.rst README.rst tests/test_distribution.py
     git commit -m "Update to CMake ${release}"
 
 4. Push the topic and create a `Pull Request`.
