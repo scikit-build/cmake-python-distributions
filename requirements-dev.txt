@@ -1,6 +1,7 @@
 codecov>=2.0.5
 coverage>=4.2
 flake8>=3.0.4
+packaging
 pytest>=3.0.3
 pytest-cov>=2.4.0
 pytest-runner>=2.9

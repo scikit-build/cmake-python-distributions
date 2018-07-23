@@ -78,6 +78,29 @@ def _win64_binaries_expected(version):
     return Version(version) >= Version("3.6")
 
 
+def _darwin64_binary_package_arch(version):
+    """Given a string of the form ``X.Y.Z``, return the architecture
+    identifier found in Darwin binary package of the form
+    ``cmake-X.Y.Z-Darwin<identifier>.tar.gz``.
+
+    .. warning:: CMake version < 2.4 are not supported.
+
+    .. note::
+
+        * CMake version <= 2.2 did not have any identifier.
+        * Identifier ``-universal`` was used in CMake >= 2.4 and <= 2.8.5.
+        * Identifier ``64-universal`` was used in CMake >= 2.8.6 and < 3.1.
+        * identifier ``-x86_64`` was introduced in CMake 3.1 and is
+          currently used.
+    """
+    if Version(version) >= Version("3.1"):
+        return "-x86_64"
+    elif Version(version) >= Version("2.8.6"):
+        return "64-universal"
+    else:
+        return "-universal"
+
+
 def _has_sha256(version):
     """Given a string of the form ``X.Y.Z``, return True if the corresponding
     CMake version is expected to have SHA-256 files available.
@@ -99,7 +122,8 @@ def get_cmake_archive_urls_and_sha256s(version, verbose=False):  # noqa: C901
         expected_files = {
             "cmake-%s.tar.gz" % version:               "unix_source",
             "cmake-%s.zip" % version:                  "win_source",
-            "cmake-%s-Darwin-x86_64.tar.gz" % version: "macosx_binary",
+            "cmake-%s-Darwin%s.tar.gz" % (version, _darwin64_binary_package_arch(version)):
+                "macosx_binary",
             "cmake-%s-win32-x86.zip" % version:        "win32_binary",
         }
         if _win64_binaries_expected(version):
