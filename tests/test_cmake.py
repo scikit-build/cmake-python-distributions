@@ -5,6 +5,7 @@ import pytest
 
 import cmake
 
+from packaging.version import parse as parse_version
 from packaging.version import Version
 
 from . import build_from_source, push_argv
@@ -24,10 +25,16 @@ def test_cmake_module():
     _run("ctest", ["--version"])
 
 
+print(">>>>>>>>>>>>>>>>>>>> build_from_source [%s]" % build_from_source())
+print(">>>>>>>>>>>>>>>>>>>> cmake_version [%s]" % cmake.__version__)
+print(">>>>>>>>>>>>>>>>>>>> plat [%s]" % platform.system().lower())
+print(">>>>>>>>>>>>>>>>>>>> version_cmp [%s]" % (parse_version(cmake.__version__) < Version("3.7.2")))
+
+
 @pytest.mark.skipif(
     (not build_from_source()
      and platform.system().lower() == "darwin"
-     and Version(cmake.__version__) < Version("3.7.2")),
+     and parse_version(cmake.__version__) < Version("3.7.2")),
     reason="SSL support is broken in macOS CMake binaries <= 3.7.1"
 )
 def test_cmake_https(tmpdir):

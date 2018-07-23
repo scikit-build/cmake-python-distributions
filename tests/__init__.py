@@ -3,6 +3,7 @@ import os
 import sys
 
 from contextlib import contextmanager
+from skbuild.constants import CMAKE_BUILD_DIR
 
 
 @contextmanager
@@ -15,5 +16,5 @@ def push_argv(argv):
 
 def build_from_source():
     """Return True if CMake was built from source."""
-    src_marker = os.path.join(os.path.dirname(__file__), "../src/CMakeLists.txt")
-    return os.path.exists(src_marker)
+    marker = os.path.join(os.path.dirname(__file__), "..", CMAKE_BUILD_DIR, "CMakeProject-build")
+    return os.path.exists(marker)
