@@ -10,9 +10,9 @@ of CMake associated with the current CMake python distributions.
 Available CMake archives can be found at https://cmake.org/files.
 
 
-1. Install `requests` and `beautifulsoup4`::
+1. Install `packaging`, `requests` and `beautifulsoup4`::
 
-    $ pip install requests beautifulsoup4
+    $ pip install packaging requests beautifulsoup4
 
 2. Execute `scripts/update_cmake_version.py` command line tool with the desired
    ``X.Y.Z`` CMake version available for download. For example::

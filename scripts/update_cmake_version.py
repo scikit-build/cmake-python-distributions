@@ -11,6 +11,14 @@ import textwrap
 from pprint import pformat
 
 try:
+    from packaging.version import Version
+except ImportError:
+    raise SystemExit(
+        "packaging.version not available: "
+        "consider installing it running 'pip install packaging'"
+    )
+
+try:
     import requests
 except ImportError:
     raise SystemExit(
@@ -43,6 +51,15 @@ def _major_minor(version):
     return ".".join(version.split(".")[:2])
 
 
+def _win64_binaries_expected(version):
+    """Given a string of the form ``X.Y.Z``, return True if windows 64-bit
+    binaries should be expected.
+
+    .. note:: Windows 64-bit binaries were introduced in CMake 3.6.
+    """
+    return Version(version) >= Version("3.6")
+
+
 def get_cmake_archive_urls_and_sha256s(version, verbose=False):
     files_base_url = "https://cmake.org/files/v%s" % _major_minor(version)
 
@@ -58,8 +75,9 @@ def get_cmake_archive_urls_and_sha256s(version, verbose=False):
             "cmake-%s-Linux-x86_64.tar.gz" % version:  "linux64_binary",
             "cmake-%s-Darwin-x86_64.tar.gz" % version: "macosx_binary",
             "cmake-%s-win32-x86.zip" % version:        "win32_binary",
-            "cmake-%s-win64-x64.zip" % version:        "win64_binary",
         }
+        if _win64_binaries_expected(version):
+            expected_files["cmake-%s-win64-x64.zip" % version] = "win64_binary"
 
         expected = list(expected_files.keys())
         expected.append(sha_256_file)
@@ -88,6 +106,9 @@ def get_cmake_archive_urls_and_sha256s(version, verbose=False):
                 identifier = expected_files[file]
                 urls[identifier] = (files_base_url + "/" + file, sha256)
         assert len(urls) == len(expected_files)
+
+        if not _win64_binaries_expected(version):
+            urls["win64_binary"] = urls["win32_binary"]
 
         if verbose:
             for identifier, (url, sha256) in urls.items():
