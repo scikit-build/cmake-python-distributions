@@ -78,7 +78,16 @@ def _win64_binaries_expected(version):
     return Version(version) >= Version("3.6")
 
 
-def get_cmake_archive_urls_and_sha256s(version, verbose=False):
+def _has_sha256(version):
+    """Given a string of the form ``X.Y.Z``, return True if the corresponding
+    CMake version is expected to have SHA-256 files available.
+
+    .. note:: SHA-256 were introduced starting with CMake 2.8.8
+    """
+    return Version(version) >= Version("2.8.8")
+
+
+def get_cmake_archive_urls_and_sha256s(version, verbose=False):  # noqa: C901
     files_base_url = "https://cmake.org/files/v%s" % _major_minor(version)
 
     with _log("Collecting URLs and SHA256s from '%s'" % files_base_url):
@@ -101,7 +110,8 @@ def get_cmake_archive_urls_and_sha256s(version, verbose=False):
             expected_files["cmake-%s-Linux-i386.tar.gz" % version] = "linux32_binary"
 
         expected = list(expected_files.keys())
-        expected.append(sha_256_file)
+        if _has_sha256(version):
+            expected.append(sha_256_file)
 
         # Check that (1) "a" text matches "href" value and (2) that all expected
         # files are listed on the page.
@@ -119,14 +129,18 @@ def get_cmake_archive_urls_and_sha256s(version, verbose=False):
 
         # Get SHA256s and URLs
         urls = {}
-        sha_256_url = files_base_url + "/" + sha_256_file
-        for line in requests.get(sha_256_url).text.splitlines():
-            file = line.split()[1].strip()
-            if file in expected_files:
-                sha256 = line.split()[0].strip()
-                identifier = expected_files[file]
-                urls[identifier] = (files_base_url + "/" + file, sha256)
-        assert len(urls) == len(expected_files)
+        if _has_sha256(version):
+            sha_256_url = files_base_url + "/" + sha_256_file
+            for line in requests.get(sha_256_url).text.splitlines():
+                file = line.split()[1].strip()
+                if file in expected_files:
+                    sha256 = line.split()[0].strip()
+                    identifier = expected_files[file]
+                    urls[identifier] = (files_base_url + "/" + file, sha256)
+            assert len(urls) == len(expected_files)
+        else:
+            urls = {identifier: (files_base_url + "/" + file, "NA")
+                    for file, identifier in expected_files.items()}
 
         if not _win64_binaries_expected(version):
             urls["win64_binary"] = urls["win32_binary"]

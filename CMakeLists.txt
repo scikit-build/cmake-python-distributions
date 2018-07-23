@@ -122,11 +122,16 @@ if(CMakePythonDistributions_SUPERBUILD)
   if(NOT DEFINED CMakeProject_SOURCE_DIR)
     set(CMakeProject_SOURCE_DIR "${CMAKE_SOURCE_DIR}/src")
 
+    set(url_hash_args "")
+    if(NOT "${${src_archive}_sha256}" STREQUAL "NA")
+      set(url_hash_args URL_HASH SHA256=${${src_archive}_sha256})
+    endif()
+
     # Download selected source archive
     ExternalProject_add(CMakeProject-src-download
       SOURCE_DIR ${CMakeProject_SOURCE_DIR}
       URL ${${src_archive}_url}
-      URL_HASH SHA256=${${src_archive}_sha256}
+      ${url_hash_args}
       DOWNLOAD_DIR ${CMakePythonDistributions_ARCHIVE_DOWNLOAD_DIR}
       USES_TERMINAL_DOWNLOAD 1
       CONFIGURE_COMMAND ""
@@ -233,11 +238,16 @@ if(CMakePythonDistributions_SUPERBUILD)
 
     set(CMakeProject_BINARY_DISTRIBUTION_DIR "${CMAKE_BINARY_DIR}/CMakeProject-binary-distribution")
 
+    set(url_hash_args "")
+    if(NOT "${${binary_archive}_sha256}" STREQUAL "NA")
+      set(url_hash_args URL_HASH SHA256=${${binary_archive}_sha256})
+    endif()
+
     # Download selected binary archive
     ExternalProject_add(CMakeProject-binary-download
       SOURCE_DIR ${CMakeProject_BINARY_DISTRIBUTION_DIR}
       URL ${${binary_archive}_url}
-      URL_HASH SHA256=${${binary_archive}_sha256}
+      ${url_hash_args}
       DOWNLOAD_DIR ${CMakePythonDistributions_ARCHIVE_DOWNLOAD_DIR}
       USES_TERMINAL_DOWNLOAD 1
       CONFIGURE_COMMAND ""
