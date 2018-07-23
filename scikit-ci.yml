@@ -24,6 +24,7 @@ before_install:
 
 install:
   commands:
+    - git fetch --tags
     - python -c "import sys; print(sys.version)"
     - python -m pip install --disable-pip-version-check --upgrade pip
     - pip install -r requirements-dev.txt
@@ -58,7 +59,7 @@ build:
 
 test:
   commands:
-    - python setup.py test
+    - pytest -k https -sv
 
 after_test:
   commands:
