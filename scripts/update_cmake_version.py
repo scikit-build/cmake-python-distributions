@@ -51,6 +51,24 @@ def _major_minor(version):
     return ".".join(version.split(".")[:2])
 
 
+def _linux64_binaries_expected(version):
+    """Given a string of the form ``X.Y.Z``, return True if linux 64-bit
+    binaries should be expected.
+
+    .. note:: Linux 64-bit binaries were introduced in CMake 3.1.
+    """
+    return Version(version) >= Version("3.1")
+
+
+def _linux32_binaries_expected(version):
+    """Given a string of the form ``X.Y.Z``, return True if linux 32-bit
+    binaries should be expected.
+
+    .. note:: Linux 32-bit binaries were retired started with CMake 3.7.
+    """
+    return Version(version) < Version("3.7")
+
+
 def _win64_binaries_expected(version):
     """Given a string of the form ``X.Y.Z``, return True if windows 64-bit
     binaries should be expected.
@@ -72,12 +90,15 @@ def get_cmake_archive_urls_and_sha256s(version, verbose=False):
         expected_files = {
             "cmake-%s.tar.gz" % version:               "unix_source",
             "cmake-%s.zip" % version:                  "win_source",
-            "cmake-%s-Linux-x86_64.tar.gz" % version:  "linux64_binary",
             "cmake-%s-Darwin-x86_64.tar.gz" % version: "macosx_binary",
             "cmake-%s-win32-x86.zip" % version:        "win32_binary",
         }
         if _win64_binaries_expected(version):
             expected_files["cmake-%s-win64-x64.zip" % version] = "win64_binary"
+        if _linux64_binaries_expected(version):
+            expected_files["cmake-%s-Linux-x86_64.tar.gz" % version] = "linux64_binary"
+        if _linux32_binaries_expected(version):
+            expected_files["cmake-%s-Linux-i386.tar.gz" % version] = "linux32_binary"
 
         expected = list(expected_files.keys())
         expected.append(sha_256_file)
@@ -109,6 +130,10 @@ def get_cmake_archive_urls_and_sha256s(version, verbose=False):
 
         if not _win64_binaries_expected(version):
             urls["win64_binary"] = urls["win32_binary"]
+        if not _linux64_binaries_expected(version):
+            urls["linux64_binary"] = ("NA", "NA")
+        if not _linux32_binaries_expected(version):
+            urls["linux32_binary"] = ("NA", "NA")
 
         if verbose:
             for identifier, (url, sha256) in urls.items():
@@ -137,8 +162,8 @@ def generate_cmake_variables(urls_and_sha256s):
       #-----------------------------------------------------------------------------
       # CMake binaries
 
-      set(linux32_binary_url    "NA")  # Linux 32-bit binaries not available
-      set(linux32_binary_sha256 "NA")
+      set(linux32_binary_url    "${linux32_binary_url}")
+      set(linux32_binary_sha256 "${linux32_binary_sha256}")
 
       set(linux64_binary_url    "{linux64_binary_url}")
       set(linux64_binary_sha256 "{linux64_binary_sha256}")
