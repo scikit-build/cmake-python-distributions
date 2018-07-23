@@ -8,6 +8,8 @@ import os
 import re
 import textwrap
 
+from pprint import pformat
+
 try:
     import requests
 except ImportError:
@@ -41,7 +43,7 @@ def _major_minor(version):
     return ".".join(version.split(".")[:2])
 
 
-def get_cmake_archive_urls_and_sha256s(version):
+def get_cmake_archive_urls_and_sha256s(version, verbose=False):
     files_base_url = "https://cmake.org/files/v%s" % _major_minor(version)
 
     with _log("Collecting URLs and SHA256s from '%s'" % files_base_url):
@@ -50,7 +52,7 @@ def get_cmake_archive_urls_and_sha256s(version):
 
         sha_256_file = "cmake-%s-SHA-256.txt" % version
 
-        expected = {
+        expected_files = {
             "cmake-%s.tar.gz" % version:               "unix_source",
             "cmake-%s.zip" % version:                  "win_source",
             "cmake-%s-Linux-x86_64.tar.gz" % version:  "linux64_binary",
@@ -59,25 +61,37 @@ def get_cmake_archive_urls_and_sha256s(version):
             "cmake-%s-win64-x64.zip" % version:        "win64_binary",
         }
 
+        expected = list(expected_files.keys())
+        expected.append(sha_256_file)
+
         # Check that (1) "a" text matches "href" value and (2) that all expected
         # files are listed on the page.
-        found = 0
+        found = []
         for a in soup.find_all('a'):
-            if a.text in expected or a.text == sha_256_file:
-                found += 1
+            if a.text in expected_files or a.text == sha_256_file:
+                found.append(a.get("href"))
                 assert a.text == a.get("href")
-        assert len(expected) + 1 == found
+
+        if verbose:
+            print("Expected:\n%s" % pformat(sorted(expected)))
+            print("Found:\n%s:" % pformat(sorted(found)))
+
+        assert len(expected) == len(found)
 
         # Get SHA256s and URLs
         urls = {}
         sha_256_url = files_base_url + "/" + sha_256_file
         for line in requests.get(sha_256_url).text.splitlines():
             file = line.split()[1].strip()
-            if file in expected:
+            if file in expected_files:
                 sha256 = line.split()[0].strip()
-                identifier = expected[file]
+                identifier = expected_files[file]
                 urls[identifier] = (files_base_url + "/" + file, sha256)
-        assert len(urls) == len(expected)
+        assert len(urls) == len(expected_files)
+
+        if verbose:
+            for identifier, (url, sha256) in urls.items():
+                print("[%s]\n%s\n%s\n" % (identifier, url, sha256))
 
         return urls
 
@@ -169,10 +183,17 @@ def main():
         'cmake_version', metavar='CMAKE_VERSION', type=str,
         help='CMake version of the form X.Y.Z'
     )
+    parser.add_argument(
+        '--collect-only', action='store_true',
+        help='If specified, only display the archive URLs and associated hashsums'
+    )
     args = parser.parse_args()
-    update_cmake_urls_script(args.cmake_version)
-    update_docs(args.cmake_version)
-    update_tests(args.cmake_version)
+    if args.collect_only:
+        get_cmake_archive_urls_and_sha256s(args.cmake_version, verbose=True)
+    else:
+        update_cmake_urls_script(args.cmake_version)
+        update_docs(args.cmake_version)
+        update_tests(args.cmake_version)
 
 
 if __name__ == "__main__":
