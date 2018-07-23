@@ -57,6 +57,7 @@ options and describes the role of each one:
             ask_build [label = "Build from Source ?", shape = diamond, description = "Answer based on option ``BUILD_CMAKE_FROM_SOURCE``"];
             download_binaries[label = "CMakeProject-binary-download", description = "External project downloading pre-built binary archives from https://cmake.org/files/."]
             build_cmake[label = "CMakeProject-build", description = "External project building CMake from source."]
+            strip_executables[label = "Strip executables", description = "If possible, reduce wheel size stripping cmake, cpack and ctest executables"]
 
             // connections
             group{
@@ -64,9 +65,10 @@ options and describes the role of each one:
                 color = "#E7CA92";
                 ask_build -> download_binaries [label = "no"];
                 ask_build -> build_cmake [label = "yes"];
+                build_cmake -> strip_executables
             }
             download_binaries -> ask_inner_build
-            build_cmake -> ask_inner_build
+            strip_executables -> ask_inner_build
 
             // properties
             ask_inner_build [label = "Which files to install?", shape = diamond, description = "Answer based on option ``BUILD_CMAKE_FROM_SOURCE``"];
