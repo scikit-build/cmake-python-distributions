@@ -176,6 +176,22 @@ if(CMakePythonDistributions_SUPERBUILD)
         DEPENDS
           CMakeProject-src-download
         )
+
+        find_program(STRIP_EXECUTABLE strip)
+        if(STRIP_EXECUTABLE)
+
+          set(cmake_executable "${CMakeProject_BINARY_DIR}/bin/cmake")
+          set(cpack_executable "${CMakeProject_BINARY_DIR}/bin/cpack")
+          set(ctest_executable "${CMakeProject_BINARY_DIR}/bin/ctest")
+
+          ExternalProject_Add_Step(CMakeProject-build strip_executables
+            DEPENDEES build
+            COMMENT "Stripping CMake executables"
+            COMMAND ${STRIP_EXECUTABLE} ${cmake_executable}
+            COMMAND ${STRIP_EXECUTABLE} ${cpack_executable}
+            COMMAND ${STRIP_EXECUTABLE} ${ctest_executable}
+            )
+        endif()
     else()
       cpd_ExternalProject_Add_Empty(CMakeProject-build "CMakeProject-src-download")
     endif()
