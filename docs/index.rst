@@ -24,6 +24,7 @@ The CMake python wheels provide `CMake 3.11.4 <https://cmake.org/cmake/help/v3.1
    installation
    usage
    building
+   build_system
    contributing
    authors
    history

@@ -18,7 +18,7 @@ Prerequisites
 -------------
 
 In addition of ``Git``, ``Python`` and `CMake <https://cmake.org>`_, building
-the wheel with ``BUILD_CMAKE_FROM_SOURCE`` set to ``OFF`` also requires a
+the wheel with ``BUILD_CMAKE_FROM_SOURCE`` set to ``ON`` also requires a
 ``C++ Compiler``.
 
 
@@ -102,8 +102,8 @@ Optimizations
 -------------
 
 On a given platform, when building different "flavor" of CMake python wheels (one
-for each ``<python tag>-<abi>`` tag), the whole process can be made faster can
-be optimized in two ways.
+for each ``<python tag>-<abi>`` tag), the whole process can be made faster in two
+ways.
 
 Caching downloads
 ^^^^^^^^^^^^^^^^^

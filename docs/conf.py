@@ -23,6 +23,11 @@ sys.path.insert(0, os.path.abspath('..'))
 
 import cmake
 
+
+# -- Options for blockdiag extension --------------------------------------
+
+blockdiag_antialias = True
+
 # -- General configuration ------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
@@ -32,7 +37,7 @@ import cmake
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = []
+extensions = ['sphinxcontrib.blockdiag']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
