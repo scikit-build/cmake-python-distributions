@@ -24,6 +24,29 @@ before_install:
 
 install:
   commands:
+    - python: |
+              import os, subprocess
+              branch = os.environ.get("CIRCLE_BRANCH", None)
+
+              if branch is None:
+                  branch = os.environ.get("TRAVIS_PULL_REQUEST_BRANCH", None)
+
+              if branch is None:
+                  branch = os.environ.get("APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH", None)
+
+              print("branch [%s]" % branch)
+
+              # Create test tag "X.Y.Z" if branch is named "update-to-cmake-X.Y.Z"
+              create_test_tag = branch.startswith("update-to-cmake-")
+              print("create_test_tag [%s]" % create_test_tag)
+
+              if create_test_tag:
+                  tag = branch.split("-")[3]
+                  print("tag [%s]" % tag)
+
+                  subprocess.check_call(['git', 'config', 'user.email', 'test@test'])
+                  subprocess.check_call(['git', 'config', 'user.name', 'test'])
+                  subprocess.check_call(['git', 'tag', '-m', 'test tag %s' % tag, tag])
     - python -c "import sys; print(sys.version)"
     - python -m pip install --disable-pip-version-check --upgrade pip
     - pip install -r requirements-dev.txt
