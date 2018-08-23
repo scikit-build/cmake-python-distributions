@@ -174,6 +174,16 @@ if(CMakePythonDistributions_SUPERBUILD)
         list(APPEND _cmake_cache_args
           -DOPENSSL_ROOT_DIR:PATH=${OPENSSL_ROOT_DIR}
           )
+        if((CMakeProject_VERSION VERSION_LESS "3.5.2" OR CMakeProject_VERSION VERSION_EQUAL "3.5.2")
+            AND CMakeProject_VERSION VERSION_GREATER "3.5.1")
+          # Explicitly enable any of the hash support for CMake <= 3.5.2 and > 3.5.1
+          # This ensures that "include_directories(${OPENSSL_INCLUDE_DIR})" is called
+          # after "find_package(OpenSSL)" in "Utilities/cmlibarchive/CMakeLists.txt"
+          # For reference, see e9bc469 and dbc9f73
+          list(APPEND _cmake_cache_args
+            -DARCHIVE_CRYPTO_MD5_OPENSSL:BOOL=1
+            )
+        endif()
         message(STATUS "SuperBuild -   CMakeProject-build - OPENSSL_ROOT_DIR: ${OPENSSL_ROOT_DIR}")
       endif()
 
