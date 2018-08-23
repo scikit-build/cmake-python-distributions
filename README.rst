@@ -13,6 +13,18 @@ such as ITK and VTK.
 
 The CMake python wheels provide `CMake 3.12.0 <https://cmake.org/cmake/help/v3.12/index.html>`_.
 
+Latest Release
+--------------
+
+.. table::
+
+  +----------------------------------------------------------------------+---------------------------------------------------------------------------+
+  | Versions                                                             | Downloads                                                                 |
+  +======================================================================+===========================================================================+
+  | .. image:: https://img.shields.io/pypi/v/cmake.svg                   | .. image:: https://img.shields.io/badge/downloads-440k%20total-green.svg  |
+  |     :target: https://pypi.python.org/pypi/cmake                      |     :target: https://pypi.python.org/pypi/cmake                           |
+  +----------------------------------------------------------------------+---------------------------------------------------------------------------+
+
 Build Status
 ------------
 
