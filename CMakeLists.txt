@@ -6,6 +6,15 @@ cmake_minimum_required(VERSION 3.6)
 
 project(CMakePythonDistributions NONE)
 
+# Set a default build type if none was specified
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+  message(STATUS "Setting build type to 'Release' as none was specified.")
+  set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build." FORCE)
+  mark_as_advanced(CMAKE_BUILD_TYPE)
+  # Set the possible values of build type for cmake-gui
+  set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
+endif()
+
 if(NOT DEFINED CMakePythonDistributions_SUPERBUILD)
   set(CMakePythonDistributions_SUPERBUILD 1)
 endif()
@@ -149,6 +158,11 @@ if(CMakePythonDistributions_SUPERBUILD)
       set(CMakeProject_BINARY_DIR ${CMAKE_BINARY_DIR}/CMakeProject-build)
 
       set(_cmake_cache_args)
+      if(DEFINED CMAKE_BUILD_TYPE)
+        list(APPEND _cmake_cache_args
+          -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
+          )
+      endif()
       if(DEFINED OPENSSL_ROOT_DIR)
         list(APPEND _cmake_cache_args
           -DOPENSSL_ROOT_DIR:PATH=${OPENSSL_ROOT_DIR}
