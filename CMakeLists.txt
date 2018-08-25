@@ -136,6 +136,12 @@ if(CMakePythonDistributions_SUPERBUILD)
       ${url_hash_args}
       DOWNLOAD_DIR ${CMakePythonDistributions_ARCHIVE_DOWNLOAD_DIR}
       USES_TERMINAL_DOWNLOAD 1
+      # Since the CheckTypeSize module is provided by CMake >= 2.8.2, let's remove
+      # it from curl to avoid issue when building version of CMake < 2.8.2.
+      # See https://github.com/Kitware/CMake/commit/93407682fe0092e8fc24e83f6be8f2706c9d31ae
+      PATCH_COMMAND ${CMAKE_COMMAND} -E remove
+        ${CMakeProject_SOURCE_DIR}/Utilities/cmcurl/CMake/CheckTypeSize.c
+        ${CMakeProject_SOURCE_DIR}/Utilities/cmcurl/CMake/CheckTypeSize.cmake
       CONFIGURE_COMMAND ""
       BUILD_COMMAND ""
       BUILD_IN_SOURCE 1
