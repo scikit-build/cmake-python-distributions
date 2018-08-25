@@ -106,12 +106,12 @@ if(CMakePythonDistributions_SUPERBUILD)
 
   set(${PROJECT_NAME}_CMAKE_CACHE_ARG)
 
-  set(ep_download_no_progress_args)
+  set(ep_download_no_progress_args
+    DOWNLOAD_NO_PROGRESS 1
+    )
+
   set(ep_log_configure_build_args)
   if(NOT BUILD_VERBOSE)
-    set(ep_download_no_progress_args
-      DOWNLOAD_NO_PROGRESS 1
-      )
     set(ep_log_configure_build_args
       LOG_CONFIGURE 1
       LOG_BUILD 1
