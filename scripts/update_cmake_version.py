@@ -180,8 +180,8 @@ def get_cmake_archive_urls_and_sha256s(version, verbose=False):  # noqa: C901
         return urls
 
 
-def generate_cmake_variables(urls_and_sha256s):
-    template_inputs = {}
+def generate_cmake_variables(cmake_version, urls_and_sha256s):
+    template_inputs = {"version": cmake_version}
 
     # Get SHA256s and URLs
     for var_prefix, urls_and_sha256s in urls_and_sha256s.items():
@@ -189,6 +189,10 @@ def generate_cmake_variables(urls_and_sha256s):
         template_inputs["%s_sha256" % var_prefix] = urls_and_sha256s[1]
 
     cmake_variables = textwrap.dedent("""
+
+      #-----------------------------------------------------------------------------
+      set(CMakeProject_VERSION "{version}")
+
       #-----------------------------------------------------------------------------
       # CMake sources
       set(unix_source_url       "{unix_source_url}")
@@ -221,7 +225,7 @@ def generate_cmake_variables(urls_and_sha256s):
 
 def update_cmake_urls_script(version):
     content = generate_cmake_variables(
-        get_cmake_archive_urls_and_sha256s(version))
+        version, get_cmake_archive_urls_and_sha256s(version))
     cmake_urls_filename = "CMakeUrls.cmake"
     cmake_urls_filepath = os.path.join(ROOT_DIR, cmake_urls_filename)
 

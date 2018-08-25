@@ -1,5 +1,8 @@
 
 #-----------------------------------------------------------------------------
+set(CMakeProject_VERSION  "3.12.0")
+
+#-----------------------------------------------------------------------------
 # CMake sources
 set(unix_source_url       "https://cmake.org/files/v3.12/cmake-3.12.0.tar.gz")
 set(unix_source_sha256    "d0781a90f6cdb9049d104ac16a150f9350b693498b9dea8a0331e799db6b9d69")

@@ -42,6 +42,8 @@ if(CMakePythonDistributions_SUPERBUILD)
   message(STATUS "***************************************************")
 
   include(${CMAKE_CURRENT_SOURCE_DIR}/CMakeUrls.cmake)
+  message(STATUS "CMakeProject_VERSION   : ${CMakeProject_VERSION}")
+  message(STATUS "***************************************************")
 
   #-----------------------------------------------------------------------------
   # Which archives ?
