@@ -20,7 +20,7 @@ before_install:
         SETUP_BDIST_WHEEL_ARGS: --plat-name macosx-10.6-x86_64
       commands:
         - python ../addons/travis/install_pyenv.py
-        - python ../addons/travis/install_cmake.py 3.6.2
+        - python ../addons/travis/install_cmake.py 3.11.0
 
 install:
   commands:
