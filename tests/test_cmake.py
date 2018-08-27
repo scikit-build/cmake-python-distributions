@@ -31,6 +31,10 @@ def test_cmake_module():
      and parse_version(cmake.__version__) < Version("3.7.2")),
     reason="SSL support is broken in macOS CMake binaries <= 3.7.1"
 )
+@pytest.mark.skipif(
+    parse_version(cmake.__version__) < Version("2.6.0"),
+    reason="file DOWNLOAD sub-command not available in CMake <= 2.6.0"
+)
 def test_cmake_https(tmpdir):
     test_script = tmpdir.join("cmake-test-https-download.cmake")
     test_script.write(textwrap.dedent(
