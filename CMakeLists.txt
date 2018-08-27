@@ -24,24 +24,8 @@ if(CMakePythonDistributions_SUPERBUILD)
   enable_language(CXX)
 
   #-----------------------------------------------------------------------------
-  # Options
-  set(default ON)
-  if(WIN32 OR APPLE)
-    set(default OFF)
-  endif()
-  option(BUILD_CMAKE_FROM_SOURCE "Build CMake from source" ${default})
-
-  option(BUILD_VERBOSE "Build reporting additional information (e.g download progress, ...)" OFF)
-
-  set(CMakePythonDistributions_ARCHIVE_DOWNLOAD_DIR "${CMAKE_BINARY_DIR}"
-    CACHE PATH "Directory where to download archives"
-    )
-
-  message(STATUS "***************************************************")
-  message(STATUS "Build CMake from source: ${BUILD_CMAKE_FROM_SOURCE}")
-  message(STATUS "***************************************************")
-
   include(${CMAKE_CURRENT_SOURCE_DIR}/CMakeUrls.cmake)
+  message(STATUS "***************************************************")
   message(STATUS "CMakeProject_VERSION   : ${CMakeProject_VERSION}")
   message(STATUS "***************************************************")
 
@@ -77,6 +61,25 @@ if(CMakePythonDistributions_SUPERBUILD)
     endif()
   endif()
   check_archive_var("${binary_archive}")
+
+
+  #-----------------------------------------------------------------------------
+  # Options
+  set(default ON)
+  if((APPLE OR WIN32) AND NOT "${${binary_archive}_url}" STREQUAL "NA")
+    set(default OFF)
+  endif()
+  option(BUILD_CMAKE_FROM_SOURCE "Build CMake from source" ${default})
+
+  option(BUILD_VERBOSE "Build reporting additional information (e.g download progress, ...)" OFF)
+
+  set(CMakePythonDistributions_ARCHIVE_DOWNLOAD_DIR "${CMAKE_BINARY_DIR}"
+    CACHE PATH "Directory where to download archives"
+    )
+
+  message(STATUS "***************************************************")
+  message(STATUS "Build CMake from source: ${BUILD_CMAKE_FROM_SOURCE}")
+  message(STATUS "***************************************************")
 
   #-----------------------------------------------------------------------------
   include(ExternalProject)
