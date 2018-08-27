@@ -204,8 +204,8 @@ def generate_cmake_variables(cmake_version, urls_and_sha256s):
       #-----------------------------------------------------------------------------
       # CMake binaries
 
-      set(linux32_binary_url    "${linux32_binary_url}")
-      set(linux32_binary_sha256 "${linux32_binary_sha256}")
+      set(linux32_binary_url    "{linux32_binary_url}")
+      set(linux32_binary_sha256 "{linux32_binary_sha256}")
 
       set(linux64_binary_url    "{linux64_binary_url}")
       set(linux64_binary_sha256 "{linux64_binary_sha256}")
