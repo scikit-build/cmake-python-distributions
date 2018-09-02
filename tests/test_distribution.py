@@ -11,7 +11,7 @@ DIST_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../dist'))
 
 
 def _check_cmake_install(virtualenv, tmpdir):
-    expected_version = "3.12.0"
+    expected_version = "2.4.8"
     # Expected output for CMake < 2.8.0 (see https://github.com/Kitware/CMake/commit/98c51ff)
     if parse_version(expected_version) < Version("2.8.0"):
         expected_version = "%s.%s-patch %s" % tuple(expected_version.split("."))
