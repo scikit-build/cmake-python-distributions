@@ -28,7 +28,7 @@ def _check_cmake_install(virtualenv, tmpdir):
 
 @pytest.mark.skipif(not Path(DIST_DIR).exists(), reason="dist directory does not exist")
 def test_wheel(virtualenv, tmpdir):
-    wheels = Path(DIST_DIR).files(pattern="*.whl")
+    wheels = Path(DIST_DIR).files(match="*.whl")
     if not wheels:
         pytest.skip("no wheel available")
     assert len(wheels) == 1
