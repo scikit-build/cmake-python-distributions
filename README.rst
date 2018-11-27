@@ -21,7 +21,7 @@ Latest Release
   +----------------------------------------------------------------------+---------------------------------------------------------------------------+
   | Versions                                                             | Downloads                                                                 |
   +======================================================================+===========================================================================+
-  | .. image:: https://img.shields.io/pypi/v/cmake.svg                   | .. image:: https://img.shields.io/badge/downloads-440k%20total-green.svg  |
+  | .. image:: https://img.shields.io/pypi/v/cmake.svg                   | .. image:: https://img.shields.io/badge/downloads-693k%20total-green.svg  |
   |     :target: https://pypi.python.org/pypi/cmake                      |     :target: https://pypi.python.org/pypi/cmake                           |
   +----------------------------------------------------------------------+---------------------------------------------------------------------------+
 
