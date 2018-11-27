@@ -9,7 +9,7 @@ DIST_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../dist'))
 
 
 def _check_cmake_install(virtualenv, tmpdir):
-    expected_version = "3.12.0"
+    expected_version = "3.13.0"
 
     for executable_name in ["cmake", "cpack", "ctest"]:
         output = virtualenv.run(
@@ -28,7 +28,7 @@ def _check_cmake_install(virtualenv, tmpdir):
 
 @pytest.mark.skipif(not Path(DIST_DIR).exists(), reason="dist directory does not exist")
 def test_wheel(virtualenv, tmpdir):
-    wheels = Path(DIST_DIR).files(pattern="*.whl")
+    wheels = Path(DIST_DIR).files(match="*.whl")
     if not wheels:
         pytest.skip("no wheel available")
     assert len(wheels) == 1
