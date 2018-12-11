@@ -8,22 +8,12 @@ import os
 import re
 import textwrap
 
-from pprint import pformat
-
 try:
     import requests
 except ImportError:
     raise SystemExit(
         "requests not available: "
         "consider installing it running 'pip install requests'"
-    )
-
-try:
-    from bs4 import BeautifulSoup
-except ImportError:
-    raise SystemExit(
-        "BeautifulSoup not available: "
-        "consider installing it running 'pip install beautifulsoup4'"
     )
 
 ROOT_DIR = os.path.join(os.path.dirname(__file__), "..")
@@ -44,11 +34,11 @@ def _major_minor(version):
 
 
 def get_cmake_archive_urls_and_sha256s(version, verbose=False):
-    files_base_url = "https://cmake.org/files/v%s" % _major_minor(version)
+    files_base_url = "https://api.github.com/repos/Kitware/CMake/releases/tags/v%s" % version
 
     with _log("Collecting URLs and SHA256s from '%s'" % files_base_url):
 
-        soup = BeautifulSoup(requests.get(files_base_url).text, 'html.parser')
+        assets = requests.get(files_base_url).json()['assets']
 
         sha_256_file = "cmake-%s-SHA-256.txt" % version
 
@@ -61,39 +51,39 @@ def get_cmake_archive_urls_and_sha256s(version, verbose=False):
             "cmake-%s-win64-x64.zip" % version:        "win64_binary",
         }
 
-        expected = list(expected_files.keys())
-        expected.append(sha_256_file)
+        # Get SHA256s for each asset
+        shas = {}
+        for asset in assets:
+            if asset['name'] == sha_256_file:
+                sha_256_url = asset['browser_download_url']
+                for line in requests.get(sha_256_url).text.splitlines():
+                    file = line.split()[1].strip()
+                    if file in expected_files:
+                        sha256 = line.split()[0].strip()
+                        identifier = expected_files[file]
+                        shas[identifier] = sha256
+        assert len(shas) == len(expected_files)
 
-        # Check that (1) "a" text matches "href" value and (2) that all expected
-        # files are listed on the page.
-        found = []
-        for a in soup.find_all('a'):
-            if a.text in expected_files or a.text == sha_256_file:
-                found.append(a.get("href"))
-                assert a.text == a.get("href")
-
-        if verbose:
-            print("Expected:\n%s" % pformat(sorted(expected)))
-            print("Found:\n%s:" % pformat(sorted(found)))
-
-        assert len(expected) == len(found)
-
-        # Get SHA256s and URLs
+        # Get download URLs for each asset
         urls = {}
-        sha_256_url = files_base_url + "/" + sha_256_file
-        for line in requests.get(sha_256_url).text.splitlines():
-            file = line.split()[1].strip()
-            if file in expected_files:
-                sha256 = line.split()[0].strip()
-                identifier = expected_files[file]
-                urls[identifier] = (files_base_url + "/" + file, sha256)
+        for asset in assets:
+            if asset['name'] in expected_files:
+                identifier = expected_files[asset['name']]
+                urls[identifier] = asset['browser_download_url']
         assert len(urls) == len(expected_files)
 
+        # combine the URLs and SHA256s into a single dictionary
+        zipped = {}
+        for value in expected_files.values():
+            print("[%s]\n%s\n%s\n" % (value, urls[value], shas[value]))
+            zipped[value] = (urls[value], shas[value])
+        assert len(zipped) == len(expected_files)
+
         if verbose:
-            for identifier, (url, sha256) in urls.items():
+            for identifier, (url, sha256) in zipped.items():
                 print("[%s]\n%s\n%s\n" % (identifier, url, sha256))
 
-        return urls
+        return zipped
 
 
 def generate_cmake_variables(urls_and_sha256s):
