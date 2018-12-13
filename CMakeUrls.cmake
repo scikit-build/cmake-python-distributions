@@ -1,11 +1,11 @@
 
 #-----------------------------------------------------------------------------
 # CMake sources
-set(unix_source_url       "https://github.com/Kitware/CMake/releases/download/v3.13.1/cmake-3.13.1.tar.gz")
-set(unix_source_sha256    "befe1ce6d672f2881350e94d4e3cc809697dd2c09e5b708b76c1dae74e1b2210")
+set(unix_source_url       "https://github.com/Kitware/CMake/releases/download/v3.12.2/cmake-3.12.2.tar.gz")
+set(unix_source_sha256    "0f97485799e51a7070cc11494f3e02349b0fc3a24cc12b082e737bf67a0581a4")
 
-set(windows_source_url    "https://github.com/Kitware/CMake/releases/download/v3.13.1/cmake-3.13.1.zip")
-set(windows_source_sha256 "53c016acf1c17dfe322d34a347863a8170484a50edc35f40096f8d8e91739dc6")
+set(windows_source_url    "https://github.com/Kitware/CMake/releases/download/v3.12.2/cmake-3.12.2.zip")
+set(windows_source_sha256 "7212130c7798c994fe22ed5cbf5fa454cdaea636b07d1571c015606929f92c9a")
 
 #-----------------------------------------------------------------------------
 # CMake binaries
@@ -13,14 +13,14 @@ set(windows_source_sha256 "53c016acf1c17dfe322d34a347863a8170484a50edc35f40096f8
 set(linux32_binary_url    "NA")  # Linux 32-bit binaries not available
 set(linux32_binary_sha256 "NA")
 
-set(linux64_binary_url    "https://github.com/Kitware/CMake/releases/download/v3.13.1/cmake-3.13.1-Linux-x86_64.tar.gz")
-set(linux64_binary_sha256 "89c5af93a7e699ed025e96c8a5f857d9498a54f49c87cb9c76f4ce9cb3be92a4")
+set(linux64_binary_url    "https://github.com/Kitware/CMake/releases/download/v3.12.2/cmake-3.12.2-Linux-x86_64.tar.gz")
+set(linux64_binary_sha256 "5bd6e37590b929e26e67fbbff1278e77858ab40430f103ea20a9928435e64662")
 
-set(macosx_binary_url    "https://github.com/Kitware/CMake/releases/download/v3.13.1/cmake-3.13.1-Darwin-x86_64.tar.gz")
-set(macosx_binary_sha256 "2a444bb6c254abd29519649f4fe702b85b532941890ab837bd5b0a843c107864")
+set(macosx_binary_url    "https://github.com/Kitware/CMake/releases/download/v3.12.2/cmake-3.12.2-Darwin-x86_64.tar.gz")
+set(macosx_binary_sha256 "6911bd5efb954b918806ca193bad15935a22a1fecc2f6a381824cc20a08155ee")
 
-set(win32_binary_url    "https://github.com/Kitware/CMake/releases/download/v3.13.1/cmake-3.13.1-win32-x86.zip")
-set(win32_binary_sha256 "514c8cea597623f25347c40d44c0333df5fb8deb669cc4dffaed966ec3b89bef")
+set(win32_binary_url    "https://github.com/Kitware/CMake/releases/download/v3.12.2/cmake-3.12.2-win32-x86.zip")
+set(win32_binary_sha256 "fde814282b798a8064aab8c44ddf2f7a25e1139b5a2b3a255adedacfca5706cd")
 
-set(win64_binary_url    "https://github.com/Kitware/CMake/releases/download/v3.13.1/cmake-3.13.1-win64-x64.zip")
-set(win64_binary_sha256 "7f25650d02482705dd98e02d975144d6d60ad7909471c751a37d71f42c978ebf")
+set(win64_binary_url    "https://github.com/Kitware/CMake/releases/download/v3.12.2/cmake-3.12.2-win64-x64.zip")
+set(win64_binary_sha256 "25c8dbe3e81095463b0d6ccefd836275791299502e3ed5eccf695e118a6d031b")
