@@ -70,7 +70,12 @@ def get_cmake_archive_urls_and_sha256s(version, verbose=False):
             if asset['name'] in expected_files:
                 identifier = expected_files[asset['name']]
                 urls[identifier] = asset['browser_download_url']
-        assert len(urls) == len(expected_files)
+        if len(urls) != len(expected_files):
+            expected_files_by_identifier = {value: key for key, value in expected_files.items()}
+            missing_files = []
+            for identifier in set(expected_files.values()) - set(urls.keys()):
+                missing_files.append(expected_files_by_identifier[identifier])
+            raise RuntimeError("Couldn't find %s at %s" % (missing_files, files_base_url))
 
         # combine the URLs and SHA256s into a single dictionary
         zipped = {}
