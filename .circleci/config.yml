@@ -56,6 +56,8 @@ jobs:
     <<: *x64_build_job
   manylinux-x64_cp37-cp37m_upload-sdist:
     <<: *x64_build_job
+  manylinux-x64_cp38-cp38m:
+    <<: *x64_build_job
 
   # x86
   manylinux-x86_cp27-cp27m:
@@ -69,6 +71,8 @@ jobs:
   manylinux-x86_cp36-cp36m:
     <<: *x86_build_job
   manylinux-x86_cp37-cp37m:
+    <<: *x86_build_job
+  manylinux-x86_cp38-cp38m:
     <<: *x86_build_job
 
   deploy-master:
@@ -115,6 +119,8 @@ workflows:
           <<: *no_filters
       - manylinux-x64_cp37-cp37m_upload-sdist:
           <<: *no_filters
+      - manylinux-x64_cp38-cp38m:
+          <<: *no_filters
       # x86
       - manylinux-x86_cp27-cp27m:
           <<: *no_filters
@@ -128,6 +134,8 @@ workflows:
           <<: *no_filters
       - manylinux-x86_cp37-cp37m:
           <<: *no_filters
+      - manylinux-x86_cp38-cp38m:
+          <<: *no_filters
 
       - deploy-master:
           requires:
@@ -138,6 +146,7 @@ workflows:
             - manylinux-x64_cp35-cp35m
             - manylinux-x64_cp36-cp36m
             - manylinux-x64_cp37-cp37m_upload-sdist
+            - manylinux-x64_cp38-cp38m
             # x86
             - manylinux-x86_cp27-cp27m
             - manylinux-x86_cp27-cp27mu
@@ -145,6 +154,7 @@ workflows:
             - manylinux-x86_cp35-cp35m
             - manylinux-x86_cp36-cp36m
             - manylinux-x86_cp37-cp37m
+            - manylinux-x86_cp38-cp38m
           filters:
             branches:
               only: master
@@ -157,12 +167,14 @@ workflows:
             - manylinux-x64_cp35-cp35m
             - manylinux-x64_cp36-cp36m
             - manylinux-x64_cp37-cp37m_upload-sdist
+            - manylinux-x64_cp38-cp38m
             # x86
             - manylinux-x86_cp27-cp27m
             - manylinux-x86_cp27-cp27mu
             - manylinux-x86_cp34-cp34m
             - manylinux-x86_cp35-cp35m
             - manylinux-x86_cp36-cp36m
+            - manylinux-x86_cp37-cp37m
             - manylinux-x86_cp37-cp37m
           filters:
             tags:
