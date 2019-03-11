@@ -112,7 +112,6 @@ if(CMakePythonDistributions_SUPERBUILD)
       )
     set(ep_log_configure_build_args
       LOG_CONFIGURE 1
-      LOG_BUILD 1
       )
   endif()
 
