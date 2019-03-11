@@ -63,9 +63,6 @@ environment:
   PYPI_PASSWORD:
     secure: qDoPKmtLMdcKUKRHuTlfaajjzO4Q4yu25FM5JuB7z84=
 
-cache:
-  - C:\\cmake-3.6.2
-
 init:
   - python -m pip install -U scikit-ci scikit-ci-addons
   - python -m ci_addons --install ../addons
