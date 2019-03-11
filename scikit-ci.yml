@@ -26,6 +26,7 @@ install:
   commands:
     - python -c "import sys; print(sys.version)"
     - python -m pip install --disable-pip-version-check --upgrade pip
+    - pip install pytest-virtualenv -f https://github.com/jcfr/pytest-plugins/releases/tag/v1.7.0.dev15 --pre
     - pip install -r requirements-dev.txt
 
 before_build:
