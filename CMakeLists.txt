@@ -31,7 +31,7 @@ if(CMakePythonDistributions_SUPERBUILD)
   endif()
   option(BUILD_CMAKE_FROM_SOURCE "Build CMake from source" ${default})
 
-  option(BUILD_VERBOSE "Build reporting additional information (e.g download progress, ...)" OFF)
+  option(BUILD_VERBOSE "Build reporting additional information (e.g download progress, ...)" ON)
 
   set(CMakePythonDistributions_ARCHIVE_DOWNLOAD_DIR "${CMAKE_BINARY_DIR}"
     CACHE PATH "Directory where to download archives"
