@@ -11,7 +11,7 @@ before_install:
   circle:
     environment:
       PATH: /opt/python/$<MANYLINUX_PYTHON>/bin:$<PATH>
-      SETUP_CMAKE_ARGS: -DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl
+      SETUP_CMAKE_ARGS: -DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl '-DCMAKE_JOB_POOLS:STRING=compile=4;link=3' -DCMAKE_JOB_POOL_COMPILE:STRING=compile -DCMAKE_JOB_POOL_LINK:STRING=link
 
   travis:
     osx:

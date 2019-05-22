@@ -169,6 +169,19 @@ if(CMakePythonDistributions_SUPERBUILD)
           )
         message(STATUS "SuperBuild -   CMakeProject-build - OPENSSL_ROOT_DIR: ${OPENSSL_ROOT_DIR}")
       endif()
+      foreach(var_name IN ITEMS
+        CMAKE_BUILD_PARALLEL_LEVEL
+        CMAKE_JOB_POOLS
+        CMAKE_JOB_POOL_COMPILE
+        CMAKE_JOB_POOL_LINK
+        )
+        if(DEFINED ${var_name})
+          list(APPEND _cmake_cache_args
+            -D${var_name}:STRING=${${var_name}}
+            )
+          message(STATUS "SuperBuild -   CMakeProject-build - ${var_name}: ${${var_name}}")
+        endif()
+      endforeach()
 
       ExternalProject_add(CMakeProject-build
         SOURCE_DIR ${CMakeProject_SOURCE_DIR}
