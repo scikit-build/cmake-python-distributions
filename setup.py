@@ -4,8 +4,7 @@ import sys
 import versioneer
 
 from distutils.text_file import TextFile
-from skbuild import setup
-
+from setuptools import setup
 
 with open('README.rst', 'r') as fp:
     readme = fp.read()
@@ -39,8 +38,6 @@ setup(
     author_email='jchris.fillionr@kitware.com',
 
     packages=['cmake'],
-
-    cmake_install_dir='cmake/data',
 
     entry_points={
         'console_scripts': [

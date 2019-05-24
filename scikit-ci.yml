@@ -11,7 +11,6 @@ before_install:
   circle:
     environment:
       PATH: /opt/python/$<MANYLINUX_PYTHON>/bin:$<PATH>
-      SETUP_CMAKE_ARGS: -DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl
 
   travis:
     osx:
@@ -35,9 +34,9 @@ before_build:
 build:
   commands:
     # Source distribution
-    - python setup.py --hide-listing sdist
+    - python setup.py sdist
     # Built distribution (wheel)
-    - python setup.py --hide-listing bdist_wheel $<SETUP_BDIST_WHEEL_ARGS> -- $<SETUP_CMAKE_ARGS>
+    - python setup.py bdist_wheel $<SETUP_BDIST_WHEEL_ARGS>
     # Cleanup
     - python: |
               import glob, os

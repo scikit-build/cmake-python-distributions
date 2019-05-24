@@ -89,15 +89,6 @@ changed by setting the ``BUILD_VERBOSE`` option::
 
     python setup.py bdist_wheel -- -DBUILD_VERBOSE:BOOL=1
 
-list of files copied into the distributions
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-By default, the complete list of files copied into the distributions are
-reported. This can be changed passing the ``--hide-listing`` option::
-
-    python setup.py --hide-listing sdist
-    python setup.py --hide-listing bdist_wheel
-
 Optimizations
 -------------
 
