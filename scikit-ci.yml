@@ -11,7 +11,7 @@ before_install:
   circle:
     environment:
       PATH: /opt/python/$<MANYLINUX_PYTHON>/bin:$<PATH>
-      SETUP_CMAKE_ARGS: -DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl
+      SETUP_CMAKE_ARGS: -DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl '-DCMAKE_JOB_POOLS:STRING=compile=4;link=3' -DCMAKE_JOB_POOL_COMPILE:STRING=compile -DCMAKE_JOB_POOL_LINK:STRING=link
 
   travis:
     osx:
@@ -26,6 +26,7 @@ install:
   commands:
     - python -c "import sys; print(sys.version)"
     - python -m pip install --disable-pip-version-check --upgrade pip
+    - pip install pytest-virtualenv -f https://github.com/jcfr/pytest-plugins/releases/tag/v1.7.0.dev15 --pre
     - pip install -r requirements-dev.txt
 
 before_build:
@@ -50,9 +51,10 @@ build:
     commands:
       - |
         # Since there are no external shared libraries to bundle into the wheels
-        # this step will fixup the wheel switching from 'linux' to 'manylinux1' tag
-        for whl in dist/*$(python -c "import wheel.pep425tags as w; print(w.get_platform())").whl; do
-            auditwheel repair $whl -w ./dist/
+        # this step will fixup the wheel switching from 'linux' to 'manylinux2010' tag
+        arch=$(python -c "import sys;print('x86_64' if sys.maxsize > 2**32 else 'i686')")
+        for whl in dist/*linux_${arch}.whl; do
+            auditwheel repair --plat "manylinux2010_${arch}" $whl -w ./dist/
             rm $whl
         done
 
