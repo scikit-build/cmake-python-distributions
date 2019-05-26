@@ -60,6 +60,14 @@ build:
 
 test:
   commands:
+    # Convert to generic platform wheel
+    - python: |
+              import glob, sys
+              sys.path.insert(0, "./scripts")
+              from convert_to_generic_platform_wheel import convert_to_generic_platform_wheel
+              wheels = glob.glob("dist/*.whl")
+              for wheel in wheels:
+                  convert_to_generic_platform_wheel(wheel, remove_original=True)
     - python setup.py test
 
 after_test:
