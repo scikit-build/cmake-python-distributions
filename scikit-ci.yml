@@ -68,8 +68,8 @@ test:
               wheels = glob.glob("dist/*.whl")
               for wheel in wheels:
                   convert_to_generic_platform_wheel(wheel, remove_original=True)
-    - python setup.py test
+#    - python setup.py test
 
-after_test:
-  commands:
-    - codecov -X gcov --required --file ./tests/coverage.xml
+#after_test:
+#  commands:
+#    - codecov -X gcov --required --file ./tests/coverage.xml
