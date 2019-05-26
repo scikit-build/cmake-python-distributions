@@ -1,6 +1,5 @@
 
 import argparse
-import glob
 import logging
 import os
 import sys
@@ -8,27 +7,23 @@ import sys
 from itertools import product
 from os.path import (abspath, basename, dirname, isfile, join as pjoin, splitext)
 
+try:
+    from wheel.install import WheelFile
+except ImportError:  # As of Wheel 0.32.0
+    from wheel.wheelfile import WheelFile
 from wheel.pkginfo import read_pkg_info, write_pkg_info
-from wheel.install import WHEEL_INFO_RE
 from wheeltools.tools import unique_by_index
-from wheeltools.wheeltools import InWheelCtx, WheelToolsError
+from wheeltools.wheeltools import InWheelCtx
 
 logger = logging.getLogger(splitext(basename(__file__))[0])
 
 
-def _dist_info_dir(bdist_dir):
-    """Get the .dist-info directort from an unpacked wheel
-
-    Parameters
-    ----------
-    bdist_dir : str
-        Path of unpacked wheel file
-    """
-
-    info_dirs = glob.glob(pjoin(bdist_dir, '*.dist-info'))
-    if len(info_dirs) != 1:
-        raise WheelToolsError("Should be exactly one `*.dist_info` directory")
-    return info_dirs[0]
+def _get_wheelinfo_name(wheelfile):
+    # Work round wheel API compatibility
+    try:
+        return wheelfile.wheelinfo_name
+    except AttributeError:
+        return wheelfile.dist_info_path + "/WHEEL"
 
 
 def _to_generic_pyver(pyver_tags):
@@ -60,7 +55,8 @@ def _convert_to_generic_platform_wheel(wheel_ctx):
 
     abi_tags = ['none']
 
-    info_fname = pjoin(_dist_info_dir(wheel_ctx.wheel_path), 'WHEEL')
+    wf = WheelFile(wheel_ctx.in_wheel)
+    info_fname = _get_wheelinfo_name(wf)
     info = read_pkg_info(info_fname)
 
     # Check what tags we have
@@ -72,8 +68,7 @@ def _convert_to_generic_platform_wheel(wheel_ctx):
         wheel_fname = basename(wheel_ctx.in_wheel)
 
     # Update wheel filename
-    parsed_fname = WHEEL_INFO_RE(wheel_fname)
-    fparts = parsed_fname.groupdict()
+    fparts = wf.parsed_filename.groupdict()
     original_platform_tags = fparts['plat'].split('.')
 
     original_abi_tags = fparts['abi'].split('.')
