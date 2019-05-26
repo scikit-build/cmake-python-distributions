@@ -1,5 +1,6 @@
 
 import argparse
+import glob
 import logging
 import os
 import sys
@@ -7,12 +8,27 @@ import sys
 from itertools import product
 from os.path import (abspath, basename, dirname, isfile, join as pjoin, splitext)
 
-from auditwheel.tools import unique_by_index
-from auditwheel.wheeltools import _dist_info_dir, InWheelCtx
 from wheel.pkginfo import read_pkg_info, write_pkg_info
 from wheel.install import WHEEL_INFO_RE
+from wheeltools.tools import unique_by_index
+from wheeltools.wheeltools import InWheelCtx, WheelToolsError
 
 logger = logging.getLogger(splitext(basename(__file__))[0])
+
+
+def _dist_info_dir(bdist_dir):
+    """Get the .dist-info directort from an unpacked wheel
+
+    Parameters
+    ----------
+    bdist_dir : str
+        Path of unpacked wheel file
+    """
+
+    info_dirs = glob.glob(pjoin(bdist_dir, '*.dist-info'))
+    if len(info_dirs) != 1:
+        raise WheelToolsError("Should be exactly one `*.dist_info` directory")
+    return info_dirs[0]
 
 
 def _to_generic_pyver(pyver_tags):
@@ -44,7 +60,7 @@ def _convert_to_generic_platform_wheel(wheel_ctx):
 
     abi_tags = ['none']
 
-    info_fname = pjoin(_dist_info_dir(wheel_ctx.path), 'WHEEL')
+    info_fname = pjoin(_dist_info_dir(wheel_ctx.wheel_path), 'WHEEL')
     info = read_pkg_info(info_fname)
 
     # Check what tags we have
