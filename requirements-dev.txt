@@ -11,4 +11,4 @@ setuptools>=28.0.0
 twine
 virtualenv>=15.0.3
 wheel
-git+https://github.com/jcfr/wheeltools.git@wheeltools-2018-10-28-a2f174d0e
+wheeltools
