@@ -11,7 +11,7 @@ matrix:
     - os: osx
       language: generic
       env:
-        - PYTHON_VERSION=3.7.2
+        - PYTHON_VERSION=3.7.4
 
     - os: osx
       language: generic
@@ -20,12 +20,13 @@ matrix:
 
 cache:
   directories:
-    - $HOME/.pyenv/versions/3.7.2
+    - $HOME/.pyenv/versions/3.7.4
     - $HOME/.pyenv/versions/2.7.15
     - $HOME/downloads
 
 before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then mkdir $HOME/bin; ln -s $(which pip2) $HOME/bin/pip; ln -s $(which python2) $HOME/bin/python; fi
+  - python scripts/ssl-check.py
   - python -m pip install --disable-pip-version-check --upgrade pip
   - pip install -U scikit-ci scikit-ci-addons
   - ci_addons --install ../addons
