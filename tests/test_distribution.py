@@ -32,6 +32,7 @@ def test_wheel(virtualenv, tmpdir):
     if not wheels:
         pytest.skip("no wheel available")
     assert len(wheels) == 1
+    print(wheels)
 
     virtualenv.run("pip install %s" % wheels[0])
 
