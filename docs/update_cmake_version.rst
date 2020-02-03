@@ -18,7 +18,7 @@ Available CMake archives can be found at https://cmake.org/files.
    ``X.Y.Z`` CMake version available for download. For example::
 
     $ release=3.14.4
-    $ python scripts/update_cmake_version.py ${release}
+    $ python scripts/update_cmake_version.py $release
     Collecting URLs and SHA256s from 'https://api.github.com/repos/Kitware/CMake/releases/tags/v3.14.4'
     [...]
     Collecting URLs and SHA256s from 'https://api.github.com/repos/Kitware/CMake/releases/tags/v3.14.4' - done
@@ -35,9 +35,9 @@ Available CMake archives can be found at https://cmake.org/files.
    For example::
 
     release=3.14.4
-    git checkout -b update-to-cmake-${release}
+    git checkout -b update-to-cmake-$release
     git add CMakeUrls.cmake docs/index.rst README.rst tests/test_distribution.py
-    git commit -m "Update to CMake ${release}"
+    git commit -m "Update to CMake $release"
 
 4. Push the topic and create a `Pull Request`.
 
