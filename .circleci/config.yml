@@ -28,13 +28,13 @@ references:
 
   x64_build_job: &x64_build_job
     docker:
-      - image: dockcross/manylinux2010-x64
+      - image: dockcross/manylinux1-x64
     <<: *ci_steps
 
-#  x86_build_job: &x86_build_job
-#    docker:
-#      - image: dockcross/manylinux2010-x86
-#    <<: *ci_steps
+  x86_build_job: &x86_build_job
+    docker:
+      - image: dockcross/manylinux1-x86
+    <<: *ci_steps
 
   no_filters: &no_filters
     filters:
@@ -50,10 +50,10 @@ jobs:
     <<: *x64_build_job
 
   # x86
-#  manylinux-x86_cp27-cp27mu:
-#    <<: *x86_build_job
-#  manylinux-x86_cp37-cp37m:
-#    <<: *x86_build_job
+  manylinux-x86_cp27-cp27mu:
+    <<: *x86_build_job
+  manylinux-x86_cp37-cp37m:
+    <<: *x86_build_job
 
   deploy-master:
     docker:
@@ -92,10 +92,10 @@ workflows:
       - manylinux-x64_cp37-cp37m_upload-sdist:
           <<: *no_filters
       # x86
-#      - manylinux-x86_cp27-cp27mu:
-#          <<: *no_filters
-#      - manylinux-x86_cp37-cp37m:
-#          <<: *no_filters
+      - manylinux-x86_cp27-cp27mu:
+          <<: *no_filters
+      - manylinux-x86_cp37-cp37m:
+          <<: *no_filters
 
       - deploy-master:
           requires:
@@ -103,8 +103,8 @@ workflows:
             - manylinux-x64_cp27-cp27mu
             - manylinux-x64_cp37-cp37m_upload-sdist
             # x86
-#            - manylinux-x86_cp27-cp27mu
-#            - manylinux-x86_cp37-cp37m
+            - manylinux-x86_cp27-cp27mu
+            - manylinux-x86_cp37-cp37m
           filters:
             branches:
               only: master
@@ -114,8 +114,8 @@ workflows:
             - manylinux-x64_cp27-cp27mu
             - manylinux-x64_cp37-cp37m_upload-sdist
             # x86
-#            - manylinux-x86_cp27-cp27mu
-#            - manylinux-x86_cp37-cp37m
+            - manylinux-x86_cp27-cp27mu
+            - manylinux-x86_cp37-cp37m
           filters:
             tags:
               only: /^[0-9]+(\.[0-9]+)*(\.post[0-9]+)?$/
