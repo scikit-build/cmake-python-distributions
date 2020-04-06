@@ -208,6 +208,7 @@ set(CMAKE_EXE_LINKER_FLAGS \"-static-libstdc++ -static-libgcc -lrt\" CACHE STRIN
           CMAKE_CACHE_ARGS
             ${_common_cache_args}
             -DCMAKE_INSTALL_PREFIX:PATH=${LibUV_INSTALL_DIR}
+            -DCMAKE_INSTALL_LIBDIR:STRING=lib
           USES_TERMINAL_CONFIGURE 1
           USES_TERMINAL_BUILD 1
           ${ep_log_configure_build_args}
@@ -215,7 +216,7 @@ set(CMAKE_EXE_LINKER_FLAGS \"-static-libstdc++ -static-libgcc -lrt\" CACHE STRIN
           )
         list(APPEND _cmake_cache_args
           -DCMAKE_USE_SYSTEM_LIBRARY_LIBUV:BOOL=ON
-          -DLibUV_LIBRARY:FILEPATH=${LibUV_INSTALL_DIR}/lib64/libuv_a.a
+          -DLibUV_LIBRARY:FILEPATH=${LibUV_INSTALL_DIR}/lib/libuv_a.a
           -DLibUV_INCLUDE_DIR:PATH=${LibUV_INSTALL_DIR}/include
           )
       else()
