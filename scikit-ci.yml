@@ -12,6 +12,8 @@ before_install:
     environment:
       PATH: /opt/python/$<MANYLINUX_PYTHON>/bin:$<PATH>
       SETUP_CMAKE_ARGS: -DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl '-DCMAKE_JOB_POOLS:STRING=compile=4;link=3' -DCMAKE_JOB_POOL_COMPILE:STRING=compile -DCMAKE_JOB_POOL_LINK:STRING=link
+      # Required to build cryptography wheel from source for cp37-cp37 when using manylinux-x86
+      CFLAGS: -I/usr/local/ssl/include -L/usr/local/ssl/lib
 
   travis:
     osx:
@@ -53,10 +55,10 @@ build:
     commands:
       - |
         # Since there are no external shared libraries to bundle into the wheels
-        # this step will fixup the wheel switching from 'linux' to 'manylinux2010' tag
+        # this step will fixup the wheel switching from 'linux' to 'manylinux1' tag
         arch=$(python -c "import sys;print('x86_64' if sys.maxsize > 2**32 else 'i686')")
         for whl in dist/*linux_${arch}.whl; do
-            auditwheel repair --plat "manylinux2010_${arch}" $whl -w ./dist/
+            auditwheel repair --plat "manylinux1_${arch}" $whl -w ./dist/
             rm $whl
         done
 
