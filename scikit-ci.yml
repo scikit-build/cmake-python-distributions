@@ -12,6 +12,8 @@ before_install:
     environment:
       PATH: /opt/python/$<MANYLINUX_PYTHON>/bin:$<PATH>
       SETUP_CMAKE_ARGS: -DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl '-DCMAKE_JOB_POOLS:STRING=compile=4;link=3' -DCMAKE_JOB_POOL_COMPILE:STRING=compile -DCMAKE_JOB_POOL_LINK:STRING=link
+      # Required to build cryptography wheel from source for cp37-cp37 when using manylinux-x86
+      CFLAGS: -I/usr/local/ssl/include -L/usr/local/ssl/lib
 
   travis:
     osx:
