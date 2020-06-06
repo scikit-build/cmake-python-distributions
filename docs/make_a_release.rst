@@ -95,7 +95,7 @@ Setting up environment
       expression: ``^[0-9]+(\.[0-9]+)*(\.post[0-9]+)?$``.
 
 
-5. In `README.rst`, update `PyPI`_ download count after running `this big table query <https://console.cloud.google.com/bigquery?sq=280188050539:4b7913483ff948bda5ba7aeca8314b30>`_
+5. In `README.rst`, update `PyPI`_ download count after running ``pypistats overall cmake``
    and commit the changes.
 
   .. code::
@@ -105,7 +105,7 @@ Setting up environment
 
   ..  note::
 
-    To learn more about `pypi-stats`, see `How to get PyPI download statistics <https://kirankoduru.github.io/python/pypi-stats.html>`_.
+    To learn more about `pypistats`, see https://pypi.org/project/pypistats/
 
 
 5. Tag the release
