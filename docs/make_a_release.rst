@@ -108,7 +108,7 @@ Setting up environment
     To learn more about `pypistats`, see https://pypi.org/project/pypistats/
 
 
-5. Tag the release
+6. Tag the release
 
   .. code::
 
@@ -120,7 +120,7 @@ Setting up environment
       to sign the tag.
 
 
-6. Publish the release tag
+7. Publish the release tag
 
   .. code::
 
@@ -129,11 +129,11 @@ Setting up environment
   .. note:: This will trigger builds on each CI services and automatically upload the wheels \
             and source distribution on `PyPI`_.
 
-7. Check the status of the builds on `AppVeyor`_, `CircleCI`_ and `Travis CI`_.
+8. Check the status of the builds on `AppVeyor`_, `CircleCI`_ and `Travis CI`_.
 
-8. Once the builds are completed, check that the distributions are available on `PyPI`_.
+9. Once the builds are completed, check that the distributions are available on `PyPI`_.
 
-9. Create a clean testing environment to test the installation
+10. Create a clean testing environment to test the installation
 
   .. code::
 
@@ -147,7 +147,7 @@ Setting up environment
       If the ``mkvirtualenv`` command is not available, this means you do not have `virtualenvwrapper`_
       installed, in that case, you could either install it or directly use `virtualenv`_ or `venv`_.
 
-10. Cleanup
+11. Cleanup
 
   .. code::
 
