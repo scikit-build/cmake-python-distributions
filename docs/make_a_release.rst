@@ -101,7 +101,7 @@ Setting up environment
   .. code::
 
     $ git add README.rst && \
-      git commit -m "README: Update download stats [ci skip]"
+      git commit -m "README: Update download stats"
 
   ..  note::
 
@@ -112,7 +112,7 @@ Setting up environment
 
   .. code::
 
-    $ git tag --sign -m "cmake-python-distributions ${release}" ${release} origin/master
+    $ git tag --sign -m "cmake-python-distributions ${release}" ${release} master
 
   .. warning::
 
@@ -155,6 +155,12 @@ Setting up environment
       deactivate  && \
       rm -rf dist/* && \
       rmvirtualenv cmake-${release}-install-test
+
+12. Publish master branch
+
+  .. code::
+
+    $ git push origin master
 
 
 .. _virtualenvwrapper: https://virtualenvwrapper.readthedocs.io/
