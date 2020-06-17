@@ -26,6 +26,9 @@ before_install:
                 # SETUP_CMAKE_ARGS
                 if arch in ["x86", "x64"]:
                     os.environ["SETUP_CMAKE_ARGS"] = "-DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl " + os.environ["SETUP_CMAKE_ARGS"]
+                # SETUP_BDIST_WHEEL_ARGS
+                if arch == "aarch64":
+                    os.environ["SETUP_BDIST_WHEEL_ARGS"] = "--plat-name %s" % os.environ["AUDITWHEEL_PLAT"]
                 ci.driver.Driver.save_env(os.environ)
 
   travis:
@@ -69,9 +72,9 @@ build:
       - |
         # Since there are no external shared libraries to bundle into the wheels
         # this step will fixup the wheel switching from 'linux' to 'manylinux1' tag
-        arch=$(python -c "import sys;print('x86_64' if sys.maxsize > 2**32 else 'i686')")
+        arch=${AUDITWHEEL_ARCH}
         for whl in dist/*linux_${arch}.whl; do
-            auditwheel repair --plat "manylinux1_${arch}" $whl -w ./dist/
+            auditwheel repair --plat ${AUDITWHEEL_PLAT} $whl -w ./dist/
             rm $whl
         done
 
