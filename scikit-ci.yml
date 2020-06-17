@@ -11,9 +11,22 @@ before_install:
   circle:
     environment:
       PATH: /opt/python/$<MANYLINUX_PYTHON>/bin:$<PATH>
-      SETUP_CMAKE_ARGS: -DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl '-DCMAKE_JOB_POOLS:STRING=compile=4;link=3' -DCMAKE_JOB_POOL_COMPILE:STRING=compile -DCMAKE_JOB_POOL_LINK:STRING=link
-      # Required to build cryptography wheel from source for cp37-cp37 when using manylinux-x86
-      CFLAGS: -I/usr/local/ssl/include -L/usr/local/ssl/lib
+      SETUP_CMAKE_ARGS: -DCMAKE_JOB_POOL_COMPILE:STRING=compile -DCMAKE_JOB_POOL_LINK:STRING=link '-DCMAKE_JOB_POOLS:STRING=compile=4;link=3'
+    commands:
+      - python: |
+                import ci, os
+                image_name=os.environ["DEFAULT_DOCKCROSS_IMAGE"].split(":")[0].split("/")[1]
+                print("image_name [%s]" % image_name)
+                arch=image_name.split("-")[1]
+                print("arch [%s]" % arch)
+                # CFLAGS
+                if arch == "x86":
+                    # Required to build cryptography wheel from source for cp37-cp37 when using manylinux-x86
+                    os.environ["CFLAGS"] = "-I/usr/local/ssl/include -L/usr/local/ssl/lib"
+                # SETUP_CMAKE_ARGS
+                if arch in ["x86", "x64"]:
+                    os.environ["SETUP_CMAKE_ARGS"] = "-DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl " + os.environ["SETUP_CMAKE_ARGS"]
+                ci.driver.Driver.save_env(os.environ)
 
   travis:
     osx:
