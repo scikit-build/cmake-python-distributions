@@ -86,9 +86,12 @@ build:
   circle:
     commands:
       - |
-        # Since there are no external shared libraries to bundle into the wheels
-        # this step will fixup the wheel switching from 'linux' to 'manylinux1' tag
         arch=${AUDITWHEEL_ARCH}
+        if [[ ${arch} == "aarch64" ]]; then
+            exit
+        fi
+        # Since there are no external shared libraries to bundle into the wheels
+        # this step will fixup the wheel switching from 'linux' to 'manylinux' tag
         for whl in dist/*linux_${arch}.whl; do
             auditwheel repair --plat ${AUDITWHEEL_PLAT} $whl -w ./dist/
             rm $whl
