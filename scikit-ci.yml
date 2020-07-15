@@ -34,6 +34,8 @@ before_install:
                 if arch == "aarch64":
                     os.environ["SETUP_BDIST_WHEEL_ARGS"] = "--plat-name %s" % os.environ["AUDITWHEEL_PLAT"]
                     setup_cmake_args = []
+                    # Remove this after addressing https://github.com/dockcross/dockcross/issues/431
+                    setup_cmake_args.append("-DOPENSSL_ROOT_DIR:PATH=" + os.environ['CROSS_ROOT'] + "/" + os.environ["CROSS_TRIPLE"])
                     setup_cmake_args.append("-DSTRIP_EXECUTABLE:FILEPATH=" + os.environ["CROSS_ROOT"] + "/" + os.environ["CROSS_TRIPLE"] + "/bin/strip")
                     os.environ["SETUP_CMAKE_ARGS"] = " ".join(setup_cmake_args) + " " + os.environ["SETUP_CMAKE_ARGS"]
                 ci.driver.Driver.save_env(os.environ)
