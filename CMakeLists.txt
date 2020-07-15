@@ -163,6 +163,11 @@ if(CMakePythonDistributions_SUPERBUILD)
           -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
           )
       endif()
+      if(DEFINED CMAKE_TOOLCHAIN_FILE)
+        list(APPEND _common_cache_args
+          -DCMAKE_TOOLCHAIN_FILE:STRING=${CMAKE_TOOLCHAIN_FILE}
+          )
+      endif()
       foreach(var_name IN ITEMS
         CMAKE_BUILD_PARALLEL_LEVEL
         CMAKE_JOB_POOLS

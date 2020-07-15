@@ -13,6 +13,10 @@ before_install:
       PATH: /opt/python/$<MANYLINUX_PYTHON>/bin:$<PATH>
       SETUP_CMAKE_ARGS: -DCMAKE_JOB_POOL_COMPILE:STRING=compile -DCMAKE_JOB_POOL_LINK:STRING=link '-DCMAKE_JOB_POOLS:STRING=compile=4;link=3'
     commands:
+      - |
+        if [[ ${DEFAULT_DOCKCROSS_IMAGE} == *"manylinux2014-aarch64"* ]]; then
+          sudo ./scripts/manylinux2014-aarch64-build-and-install-openssl.sh
+        fi
       - python: |
                 import ci, os
                 image_name=os.environ["DEFAULT_DOCKCROSS_IMAGE"].split(":")[0].split("/")[1]
@@ -29,6 +33,9 @@ before_install:
                 # SETUP_BDIST_WHEEL_ARGS
                 if arch == "aarch64":
                     os.environ["SETUP_BDIST_WHEEL_ARGS"] = "--plat-name %s" % os.environ["AUDITWHEEL_PLAT"]
+                    setup_cmake_args = []
+                    setup_cmake_args.append("-DSTRIP_EXECUTABLE:FILEPATH=" + os.environ["CROSS_ROOT"] + "/" + os.environ["CROSS_TRIPLE"] + "/bin/strip")
+                    os.environ["SETUP_CMAKE_ARGS"] = " ".join(setup_cmake_args) + " " + os.environ["SETUP_CMAKE_ARGS"]
                 ci.driver.Driver.save_env(os.environ)
 
   travis:
