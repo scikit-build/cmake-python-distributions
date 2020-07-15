@@ -19,7 +19,9 @@ OPENSSL_HASH=ddb04774f1e32f0c49751e21b67216ac87852ceb056b75209af2443400636d46
 check_var CROSS_ROOT
 check_var CROSS_TRIPLE
 
-OPENSSL_INSTALL_DIR=${CROSS_ROOT}/${CROSS_TRIPLE}
+# OPENSSL_INSTALL_DIR=${CROSS_ROOT}/${CROSS_TRIPLE}
+# Support using older manylinux2014-aarch64 images where 'sudo' is broken
+OPENSSL_INSTALL_DIR=/tmp/openssl-install
 
 cd /tmp
 

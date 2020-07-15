@@ -15,14 +15,21 @@ before_install:
     commands:
       - |
         if [[ ${DEFAULT_DOCKCROSS_IMAGE} == *"manylinux2014-aarch64"* ]]; then
-          sudo ./scripts/manylinux2014-aarch64-build-and-install-openssl.sh
+          ./scripts/manylinux2014-aarch64-build-and-install-openssl.sh
         fi
       - python: |
                 import ci, os
                 image_name=os.environ["DEFAULT_DOCKCROSS_IMAGE"].split(":")[0].split("/")[1]
                 print("image_name [%s]" % image_name)
+                manylinux_version=image_name.split("-")[0]
                 arch=image_name.split("-")[1]
+                manylinux_arch = {"x86": "i686", "x64": "x86_64"}.get(arch, arch)
                 print("arch [%s]" % arch)
+                print("manylinux_version [%s]" % manylinux_version)
+                print("manylinux_arch [%s]" % manylinux_arch)
+                # Support using older manylinux images explicitly setting AUDITWHEEL_*  environment variables
+                os.environ["AUDITWHEEL_ARCH"] = manylinux_arch
+                os.environ["AUDITWHEEL_PLAT"] = manylinux_version + "_" + manylinux_arch
                 # CFLAGS
                 if arch == "x86":
                     # Required to build cryptography wheel from source for cp37-cp37 when using manylinux-x86
@@ -35,7 +42,7 @@ before_install:
                     os.environ["SETUP_BDIST_WHEEL_ARGS"] = "--plat-name %s" % os.environ["AUDITWHEEL_PLAT"]
                     setup_cmake_args = []
                     # Remove this after addressing https://github.com/dockcross/dockcross/issues/431
-                    setup_cmake_args.append("-DOPENSSL_ROOT_DIR:PATH=" + os.environ['CROSS_ROOT'] + "/" + os.environ["CROSS_TRIPLE"])
+                    setup_cmake_args.append("-DOPENSSL_ROOT_DIR:PATH=/tmp/openssl-install")
                     setup_cmake_args.append("-DSTRIP_EXECUTABLE:FILEPATH=" + os.environ["CROSS_ROOT"] + "/" + os.environ["CROSS_TRIPLE"] + "/bin/strip")
                     os.environ["SETUP_CMAKE_ARGS"] = " ".join(setup_cmake_args) + " " + os.environ["SETUP_CMAKE_ARGS"]
                 ci.driver.Driver.save_env(os.environ)
