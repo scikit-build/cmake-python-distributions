@@ -11,9 +11,41 @@ before_install:
   circle:
     environment:
       PATH: /opt/python/$<MANYLINUX_PYTHON>/bin:$<PATH>
-      SETUP_CMAKE_ARGS: -DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl '-DCMAKE_JOB_POOLS:STRING=compile=4;link=3' -DCMAKE_JOB_POOL_COMPILE:STRING=compile -DCMAKE_JOB_POOL_LINK:STRING=link
-      # Required to build cryptography wheel from source for cp37-cp37 when using manylinux-x86
-      CFLAGS: -I/usr/local/ssl/include -L/usr/local/ssl/lib
+      SETUP_CMAKE_ARGS: -DCMAKE_JOB_POOL_COMPILE:STRING=compile -DCMAKE_JOB_POOL_LINK:STRING=link '-DCMAKE_JOB_POOLS:STRING=compile=4;link=3'
+    commands:
+      - |
+        if [[ ${DEFAULT_DOCKCROSS_IMAGE} == *"manylinux2014-aarch64"* ]]; then
+          ./scripts/manylinux2014-aarch64-build-and-install-openssl.sh
+        fi
+      - python: |
+                import ci, os
+                image_name=os.environ["DEFAULT_DOCKCROSS_IMAGE"].split(":")[0].split("/")[1]
+                print("image_name [%s]" % image_name)
+                manylinux_version=image_name.split("-")[0]
+                arch=image_name.split("-")[1]
+                manylinux_arch = {"x86": "i686", "x64": "x86_64"}.get(arch, arch)
+                print("arch [%s]" % arch)
+                print("manylinux_version [%s]" % manylinux_version)
+                print("manylinux_arch [%s]" % manylinux_arch)
+                # Support using older manylinux images explicitly setting AUDITWHEEL_*  environment variables
+                os.environ["AUDITWHEEL_ARCH"] = manylinux_arch
+                os.environ["AUDITWHEEL_PLAT"] = manylinux_version + "_" + manylinux_arch
+                # CFLAGS
+                if arch == "x86":
+                    # Required to build cryptography wheel from source for cp37-cp37 when using manylinux-x86
+                    os.environ["CFLAGS"] = "-I/usr/local/ssl/include -L/usr/local/ssl/lib"
+                # SETUP_CMAKE_ARGS
+                if arch in ["x86", "x64"]:
+                    os.environ["SETUP_CMAKE_ARGS"] = "-DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl " + os.environ["SETUP_CMAKE_ARGS"]
+                # SETUP_BDIST_WHEEL_ARGS
+                if arch == "aarch64":
+                    os.environ["SETUP_BDIST_WHEEL_ARGS"] = "--plat-name %s" % os.environ["AUDITWHEEL_PLAT"]
+                    setup_cmake_args = []
+                    # Remove this after addressing https://github.com/dockcross/dockcross/issues/431
+                    setup_cmake_args.append("-DOPENSSL_ROOT_DIR:PATH=/tmp/openssl-install")
+                    setup_cmake_args.append("-DSTRIP_EXECUTABLE:FILEPATH=" + os.environ["CROSS_ROOT"] + "/" + os.environ["CROSS_TRIPLE"] + "/bin/strip")
+                    os.environ["SETUP_CMAKE_ARGS"] = " ".join(setup_cmake_args) + " " + os.environ["SETUP_CMAKE_ARGS"]
+                ci.driver.Driver.save_env(os.environ)
 
   travis:
     osx:
@@ -54,11 +86,14 @@ build:
   circle:
     commands:
       - |
+        arch=${AUDITWHEEL_ARCH}
+        if [[ ${arch} == "aarch64" ]]; then
+            exit
+        fi
         # Since there are no external shared libraries to bundle into the wheels
-        # this step will fixup the wheel switching from 'linux' to 'manylinux1' tag
-        arch=$(python -c "import sys;print('x86_64' if sys.maxsize > 2**32 else 'i686')")
+        # this step will fixup the wheel switching from 'linux' to 'manylinux' tag
         for whl in dist/*linux_${arch}.whl; do
-            auditwheel repair --plat "manylinux1_${arch}" $whl -w ./dist/
+            auditwheel repair --plat ${AUDITWHEEL_PLAT} $whl -w ./dist/
             rm $whl
         done
 
@@ -72,7 +107,23 @@ test:
               wheels = glob.glob("dist/*.whl")
               for wheel in wheels:
                   convert_to_generic_platform_wheel(wheel, remove_original=True)
-    - python setup.py test
+
+  appveyor:
+    commands:
+      - python setup.py test
+
+  circle:
+    commands:
+      - |
+        if [[ ${AUDITWHEEL_ARCH} == "aarch64" ]]; then
+            exit
+        fi
+        python setup.py test
+
+  travis:
+    osx:
+      commands:
+        - python setup.py test
 
 #after_test:
 #  commands:
