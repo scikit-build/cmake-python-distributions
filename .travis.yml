@@ -11,7 +11,7 @@ matrix:
     - os: osx
       language: generic
       env:
-        - PYTHON_VERSION=3.7.4
+        - PYTHON_VERSION=3.7.8
 
     - os: osx
       language: generic
@@ -20,7 +20,7 @@ matrix:
 
 cache:
   directories:
-    - $HOME/.pyenv/versions/3.7.4
+    - $HOME/.pyenv/versions/3.7.8
     - $HOME/.pyenv/versions/2.7.15
     - $HOME/downloads
 
@@ -30,7 +30,7 @@ before_install:
     #   dyld: Library not loaded: /usr/local/opt/gettext/lib/libintl.8.dylib
     #     Referenced from: /Users/travis/.pyenv/versions/3.7.2/bin/python
     #     Reason: Incompatible library version: python requires version 11.0.0 or later, but libintl.8.dylib provides version 10.0.0
-    if [[ "$TRAVIS_OS_NAME" == "osx" && "${PYTHON_VERSION}" == "3.7.4" ]]; then
+    if [[ "$TRAVIS_OS_NAME" == "osx" && "${PYTHON_VERSION}" == "3.7.8" ]]; then
       brew install gettext
     fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then mkdir $HOME/bin; ln -s $(which pip2) $HOME/bin/pip; ln -s $(which python2) $HOME/bin/python; fi
