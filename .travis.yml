@@ -18,10 +18,20 @@ matrix:
       env:
         - PYTHON_VERSION=2.7.15
 
+before_cache:
+  # Cleanup to avoid the cache to grow indefinitely as new package versions are released
+  # see https://stackoverflow.com/questions/39930171/cache-brew-builds-with-travis-ci
+  - brew cleanup
+
 cache:
   directories:
+    # Cache downloaded bottles
+    - $HOME/Library/Caches/Homebrew
+    # pyenv
+    - $HOME/.pyenv_cache
     - $HOME/.pyenv/versions/3.7.8
     - $HOME/.pyenv/versions/2.7.15
+    # scikit-ci-addons
     - $HOME/downloads
 
 before_install:
