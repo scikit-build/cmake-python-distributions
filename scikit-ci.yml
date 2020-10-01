@@ -56,6 +56,21 @@ before_install:
         - python ../addons/travis/install_pyenv.py
         - python scripts/ssl-check.py
         - python ../addons/travis/install_cmake.py 3.12.0
+    linux:
+      commands:
+        - python: |
+                  import os
+                  import ci
+                  import platform
+                  os.environ["SETUP_BDIST_WHEEL_ARGS"] = "--plat-name %s" % os.environ["AUDITWHEEL_PLAT"]
+                  setup_cmake_args = []
+                  setup_cmake_args.append("-DSTRIP_EXECUTABLE:FILEPATH=/opt/rh/devtoolset-9/root/usr/" + "/bin/strip")
+                  if platform.machine() == "aarch64":
+                      # Remove this after addressing https://github.com/dockcross/dockcross/issues/431
+                      setup_cmake_args.append("-DOPENSSL_ROOT_DIR:PATH=/tmp/openssl-install")
+                  os.environ["SETUP_CMAKE_ARGS"] = " ".join(setup_cmake_args)
+                  os.environ["SETUP_MAKE_ARGS"] = "-j$(nproc)"
+                  ci.driver.Driver.save_env(os.environ)
 
 install:
   commands:
@@ -74,7 +89,7 @@ build:
     # Source distribution
     - python setup.py --hide-listing sdist
     # Built distribution (wheel)
-    - python setup.py --hide-listing bdist_wheel $<SETUP_BDIST_WHEEL_ARGS> -- $<SETUP_CMAKE_ARGS>
+    - python setup.py --hide-listing bdist_wheel $<SETUP_BDIST_WHEEL_ARGS> -- $<SETUP_CMAKE_ARGS> -- $<SETUP_MAKE_ARGS>
     # Cleanup
     - python: |
               import glob, os
@@ -82,6 +97,15 @@ build:
                   sdist=(glob.glob("dist/*.tar.gz") + glob.glob("dist/*.zip"))[0]
                   print("Deleting [%s]" % sdist)
                   os.remove(sdist)
+  travis:
+    linux:
+      commands:
+        - |
+          # Since there are no external shared libraries to bundle into the wheels
+          # this step will fixup the wheel switching from 'linux' to 'manylinux' tag
+          for whl in dist/*linux*_$(arch).whl; do
+              auditwheel repair --plat ${AUDITWHEEL_PLAT} $whl -w ./dist
+          done
 
   circle:
     commands:
