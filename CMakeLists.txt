@@ -188,7 +188,7 @@ if(CMakePythonDistributions_SUPERBUILD)
         # cache file.
         file(WRITE "${CMAKE_BINARY_DIR}/initial-cache.txt"
 "set(CMAKE_C_FLAGS \"-D_POSIX_C_SOURCE=199506L -D_POSIX_SOURCE=1 -D_SVID_SOURCE=1 -D_BSD_SOURCE=1\" CACHE STRING \"Initial cache\" FORCE)
-set(CMAKE_EXE_LINKER_FLAGS \"-static-libstdc++ -static-libgcc -lrt\" CACHE STRING \"Initial cache\" FORCE)
+set(CMAKE_EXE_LINKER_FLAGS \"-lstdc++ -lgcc -lrt\" CACHE STRING \"Initial cache\" FORCE)
 ")
         set(_common_args
           CMAKE_ARGS -C "${CMAKE_BINARY_DIR}/initial-cache.txt"

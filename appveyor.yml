@@ -23,7 +23,7 @@ environment:
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
       PYTHON_DIR: "C:\\Python37"
       PYTHON_VERSION: "3.7.x"
-      PYTHON_ARCH: "64"
+      PYTHON_ARCH: "32"
       BLOCK: "0"
 
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
@@ -38,22 +38,22 @@ environment:
     secure: qDoPKmtLMdcKUKRHuTlfaajjzO4Q4yu25FM5JuB7z84=
 
 init:
-  - python -m pip install -U scikit-ci scikit-ci-addons
-  - python -m ci_addons --install ../addons
+  - "%PYTHON_DIR%\\python.exe -m pip install -U scikit-ci scikit-ci-addons"
+  - "%PYTHON_DIR%\\python.exe -m ci_addons --install ../addons"
 
   - ps: ../addons/appveyor/rolling-build.ps1
 
 install:
-  - python -m ci install
+  - "%PYTHON_DIR%\\python.exe -m ci install"
 
 build_script:
-  - python -m ci build
+  - "%PYTHON_DIR%\\python.exe -m ci build"
 
 test_script:
-  - python -m ci test
+  - "%PYTHON_DIR%\\python.exe -m ci test"
 
 after_test:
-  - python -m ci after_test
+  - "%PYTHON_DIR%\\python.exe -m ci after_test"
 
 on_finish:
   - ps: ../addons/appveyor/enable-worker-remote-access.ps1 -check_for_block
