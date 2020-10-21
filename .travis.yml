@@ -19,7 +19,7 @@ matrix:
         - PYTHON_VERSION=2.7.15
 
     - os: linux
-      arch: arm64
+      arch: arm64-graviton2
       virt: vm
       group: edge
       dist: focal
