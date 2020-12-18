@@ -62,7 +62,7 @@ def get_cmake_archive_urls_and_sha256s(version, verbose=False):
                         sha256 = line.split()[0].strip()
                         identifier = expected_files[file]
                         shas[identifier] = sha256
-        assert len(shas) == len(expected_files)
+        assert len(shas) == len(expected_files), "{} != {}".format(len(shas), len(expected_files))
 
         # Get download URLs for each asset
         urls = {}
