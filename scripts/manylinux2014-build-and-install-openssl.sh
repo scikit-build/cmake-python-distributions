@@ -21,27 +21,37 @@ check_var CROSS_TRIPLE
 
 # OPENSSL_INSTALL_DIR=${CROSS_ROOT}/${CROSS_TRIPLE}
 # Support using older manylinux2014-aarch64 images where 'sudo' is broken
-OPENSSL_INSTALL_DIR=/tmp/openssl-install
+
+OPENSSL_INSTALL_DIR=$1
+shift
 
 cd /tmp
 
 # Download
-wget http://www.openssl.org/source/${OPENSSL_ROOT}.tar.gz
+curl -fsSLO http://www.openssl.org/source/${OPENSSL_ROOT}.tar.gz
 check_sha256sum ${OPENSSL_ROOT}.tar.gz ${OPENSSL_HASH}
 tar -xzf ${OPENSSL_ROOT}.tar.gz
 rm -rf ${OPENSSL_ROOT}.tar.gz
 
+if [ "$(uname -m)" == "s390x" ]; then
+  TARGET=linux64-s390x
+else
+  TARGET=linux-$(uname -m)
+fi
+
 # Configure
 cd ${OPENSSL_ROOT}
 ./Configure \
-  linux-aarch64 \
+  ${TARGET} \
   --cross-compile-prefix= \
   --prefix=${OPENSSL_INSTALL_DIR} \
-  shared
+  $*
 
 # Build
 make -j$(nproc)
 
 # Install
-make install
+make install > /dev/null
 
+cd /tmp
+rm -rf ${OPENSSL_ROOT}

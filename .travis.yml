@@ -3,7 +3,10 @@ branches:
   - master
   - /^[0-9]+(\.[0-9]+)*(\.post[0-9]+)?$/
 
+os: linux
+dist: focal
 language: python
+python: "3.8"
 
 matrix:
   include:
@@ -18,12 +21,14 @@ matrix:
       env:
         - PYTHON_VERSION=2.7.18
 
-    - os: linux
-      arch: arm64-graviton2
+    - arch: arm64-graviton2
       virt: vm
       group: edge
-      dist: focal
-      language: generic
+
+    - arch: ppc64le
+
+    - arch: s390x
+
 
 
 cache:
@@ -63,8 +68,8 @@ before_install:
             -v $(pwd):/io \
             --env TRAVIS=True \
             --env TRAVIS_OS_NAME="${TRAVIS_OS_NAME}" \
-            quay.io/pypa/manylinux2014_aarch64 \
-            /io/scripts/manylinux2014-aarch64-build-and-test-wheel.sh
+            quay.io/pypa/manylinux2014_$(uname -m) \
+            /io/scripts/manylinux2014-build-and-test-wheel.sh
     fi
 
 install:
@@ -72,6 +77,10 @@ install:
     if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
         ci install
     elif [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+        MACHINE=$(uname -m)
+        if [[ "${MACHINE}" == "s390x" ]] || [[ "${MACHINE}" == "ppc64le" ]]; then
+            pip install $(pwd)/cryptography*.whl
+        fi
         pip install twine
     fi
 
