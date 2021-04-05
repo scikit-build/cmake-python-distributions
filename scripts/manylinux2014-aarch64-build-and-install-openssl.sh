@@ -10,10 +10,10 @@ set -o pipefail
 MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 source $MY_DIR/utils.sh
 
-OPENSSL_ROOT=openssl-1.1.1h
+OPENSSL_ROOT=openssl-1.1.1k
 
-# Hash from https://www.openssl.org/source/openssl-1.1.1h.tar.gz.sha256
-OPENSSL_HASH=5c9ca8774bd7b03e5784f26ae9e9e6d749c9da2438545077e6b3d755a06595d9
+# Hash from https://www.openssl.org/source/openssl-1.1.1k.tar.gz.sha256
+OPENSSL_HASH=892a0875b9872acd04a9fde79b1f943075d5ea162415de3047c327df33fbaee5
 
 # Environment variables defined in "dockcross/manylinux2014-aarch64/Dockerfile.in"
 check_var CROSS_ROOT
