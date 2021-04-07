@@ -11,12 +11,12 @@ matrix:
     - os: osx
       language: generic
       env:
-        - PYTHON_VERSION=3.7.8
+        - PYTHON_VERSION=3.7.9
 
     - os: osx
       language: generic
       env:
-        - PYTHON_VERSION=2.7.15
+        - PYTHON_VERSION=2.7.18
 
     - os: linux
       arch: arm64-graviton2
@@ -25,39 +25,37 @@ matrix:
       dist: focal
       language: generic
 
-before_cache:
-  # Cleanup to avoid the cache to grow indefinitely as new package versions are released
-  # see https://stackoverflow.com/questions/39930171/cache-brew-builds-with-travis-ci
-  - |
-    if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-        brew cleanup
-    fi
 
 cache:
   directories:
-    # Cache downloaded bottles
-    - $HOME/Library/Caches/Homebrew
-    # pyenv
-    - $HOME/.pyenv_cache
-    - $HOME/.pyenv/versions/3.7.8
-    - $HOME/.pyenv/versions/2.7.15
     # scikit-ci-addons
     - $HOME/downloads
 
 before_install:
   - |
-    # Workaround the following error occuring because python installation is cached but gettext dependency is not
-    #   dyld: Library not loaded: /usr/local/opt/gettext/lib/libintl.8.dylib
-    #     Referenced from: /Users/travis/.pyenv/versions/3.7.2/bin/python
-    #     Reason: Incompatible library version: python requires version 11.0.0 or later, but libintl.8.dylib provides version 10.0.0
-    if [[ "$TRAVIS_OS_NAME" == "osx" && "${PYTHON_VERSION}" == "3.7.8" ]]; then
-      brew install gettext
+    if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+      # Install official python distribution
+      curl -fsSLo /tmp/Python.pkg "https://www.python.org/ftp/python/${PYTHON_VERSION}/python-${PYTHON_VERSION}-macosx10.9.pkg"
+      sudo installer -pkg /tmp/Python.pkg -target /
+      PYTHON_VERSION2=${PYTHON_VERSION%.*}
+      PYTHON_VERSION1=${PYTHON_VERSION2%.*}
+      python_executable=/Library/Frameworks/Python.framework/Versions/${PYTHON_VERSION2}/bin/python${PYTHON_VERSION1}
+
+      # Install SSL certificates
+      curl -fsSLo /tmp/install_certifi.py https://github.com/joerick/cibuildwheel/raw/v1.10.0/cibuildwheel/resources/install_certifi.py
+      sudo ${python_executable} /tmp/install_certifi.py
+      ${python_executable} scripts/ssl-check.py
+
+      # Install packages
+      ${python_executable} -m pip install --disable-pip-version-check --upgrade pip
+      ${python_executable} -m pip install virtualenv
+
+      # Create and activate virtual environment
+      ${python_executable} -m virtualenv ${HOME}/.pyenv/versions/${PYTHON_VERSION}
+      source ${HOME}/.pyenv/versions/${PYTHON_VERSION}/bin/activate
     fi
   - |
     if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-        mkdir $HOME/bin; ln -s $(which pip2) $HOME/bin/pip; ln -s $(which python2) $HOME/bin/python
-        python scripts/ssl-check.py
-        python -m pip install --disable-pip-version-check --upgrade pip
         pip install -U scikit-ci scikit-ci-addons
         ci_addons --install ../addons
     elif [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
