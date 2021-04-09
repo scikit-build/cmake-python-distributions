@@ -56,7 +56,12 @@ before_install:
                       # Remove this after addressing https://github.com/dockcross/dockcross/issues/431
                       setup_cmake_args.append("-DOPENSSL_ROOT_DIR:PATH=/tmp/openssl-install")
                   os.environ["SETUP_CMAKE_ARGS"] = " ".join(setup_cmake_args)
-                  os.environ["SETUP_MAKE_ARGS"] = "-j$(nproc)"
+                  if platform.machine() in {"ppc64le"}:
+                      # the container sees all 16 threads but building with all of them
+                      # triggers the OoM killer due to RAM limitations
+                      os.environ["SETUP_MAKE_ARGS"] = "-j4"
+                  else:
+                      os.environ["SETUP_MAKE_ARGS"] = "-j$(nproc)"
                   ci.driver.Driver.save_env(os.environ)
 
 install:
