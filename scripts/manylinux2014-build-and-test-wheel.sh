@@ -13,7 +13,7 @@ MACHINE=$(uname -m)
 if [ "${MACHINE}" == "s390x" ] || [ "${MACHINE}" == "ppc64le" ]; then
     # build cryptography from sources
     yum install -y libffi-devel
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
+    curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain stable --profile minimal --no-modify-path
     export PATH=${HOME}/.cargo/bin:${PATH}
     ./scripts/manylinux2014-build-and-install-openssl.sh /tmp/openssl-cryptography no-shared -fPIC
     CFLAGS="-I/tmp/openssl-cryptography/include" LDFLAGS="-L/tmp/openssl-cryptography/lib" ${MANYLINUX_PYTHON_BIN}/pip wheel --no-binary :all: cryptography
