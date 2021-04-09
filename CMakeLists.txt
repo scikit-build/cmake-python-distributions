@@ -183,7 +183,7 @@ if(CMakePythonDistributions_SUPERBUILD)
       endforeach()
 
       set(_common_args )
-      if(UNIX AND NOT APPLE)
+      if(UNIX AND (NOT APPLE AND NOT CMAKE_SYSTEM_NAME STREQUAL "FreeBSD"))
         # Since CMAKE_C_FLAGS and CMAKE_EXE_LINKER_FLAGS arguments contain spaces, we generate an initial
         # cache file.
         file(WRITE "${CMAKE_BINARY_DIR}/initial-cache.txt"
