@@ -48,11 +48,18 @@ setup(
         ]
     },
 
-    url=r'http://cmake.org/',
-    download_url=r'https://cmake.org/download',
+    url='https://cmake.org/',
+    download_url='https://cmake.org/download',
+    project_urls={
+        "Documentation": "https://cmake-python-distributions.readthedocs.io/",
+        "Source Code": "https://github.com/scikit-build/cmake-python-distributions",
+        "Mailing list": "https://groups.google.com/forum/#!forum/scikit-build",
+        "Bug Tracker": "https://github.com/scikit-build/cmake-python-distributions/issues",
+    },
 
-    description=r'CMake is an open-source, cross-platform family of '
-                r'tools designed to build, test and package software',
+
+    description='CMake is an open-source, cross-platform family of '
+                'tools designed to build, test and package software',
 
     long_description=readme + '\n\n' + history,
 
