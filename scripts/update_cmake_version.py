@@ -43,12 +43,13 @@ def get_cmake_archive_urls_and_sha256s(version, verbose=False):
         sha_256_file = "cmake-%s-SHA-256.txt" % version
 
         expected_files = {
-            "cmake-%s.tar.gz" % version:               "unix_source",
-            "cmake-%s.zip" % version:                  "win_source",
-            "cmake-%s-Linux-x86_64.tar.gz" % version:  "linux64_binary",
-            "cmake-%s-Darwin-x86_64.tar.gz" % version: "macosx_binary",
-            "cmake-%s-win32-x86.zip" % version:        "win32_binary",
-            "cmake-%s-win64-x64.zip" % version:        "win64_binary",
+            "cmake-%s.tar.gz" % version:                      "unix_source",
+            "cmake-%s.zip" % version:                         "win_source",
+            "cmake-%s-linux-x86_64.tar.gz" % version:         "linux64_binary",
+            "cmake-%s-macos-universal.tar.gz" % version:      "macos10_13_binary",
+            "cmake-%s-macos10.10-universal.tar.gz" % version: "macos10_10_binary",
+            "cmake-%s-windows-i386.zip" % version:            "win32_binary",
+            "cmake-%s-windows-x86_64.zip" % version:          "win64_binary",
         }
 
         # Get SHA256s for each asset
@@ -102,29 +103,32 @@ def generate_cmake_variables(urls_and_sha256s):
     cmake_variables = textwrap.dedent("""
       #-----------------------------------------------------------------------------
       # CMake sources
-      set(unix_source_url       "{unix_source_url}")
-      set(unix_source_sha256    "{unix_source_sha256}")
+      set(unix_source_url          "{unix_source_url}")
+      set(unix_source_sha256       "{unix_source_sha256}")
 
-      set(windows_source_url    "{win_source_url}")
-      set(windows_source_sha256 "{win_source_sha256}")
+      set(windows_source_url       "{win_source_url}")
+      set(windows_source_sha256    "{win_source_sha256}")
 
       #-----------------------------------------------------------------------------
       # CMake binaries
 
-      set(linux32_binary_url    "NA")  # Linux 32-bit binaries not available
-      set(linux32_binary_sha256 "NA")
+      set(linux32_binary_url       "NA")  # Linux 32-bit binaries not available
+      set(linux32_binary_sha256    "NA")
 
-      set(linux64_binary_url    "{linux64_binary_url}")
-      set(linux64_binary_sha256 "{linux64_binary_sha256}")
+      set(linux64_binary_url       "{linux64_binary_url}")
+      set(linux64_binary_sha256    "{linux64_binary_sha256}")
 
-      set(macosx_binary_url    "{macosx_binary_url}")
-      set(macosx_binary_sha256 "{macosx_binary_sha256}")
+      set(macos10_13_binary_url     "{macos10_13_binary_url}")
+      set(macos10_13_binary_sha256  "{macos10_13_binary_sha256}")
 
-      set(win32_binary_url    "{win32_binary_url}")
-      set(win32_binary_sha256 "{win32_binary_sha256}")
+      set(macos10_10_binary_url    "{macos10_10_binary_url}")
+      set(macos10_10_binary_sha256 "{macos10_10_binary_sha256}")
 
-      set(win64_binary_url    "{win64_binary_url}")
-      set(win64_binary_sha256 "{win64_binary_sha256}")
+      set(win32_binary_url         "{win32_binary_url}")
+      set(win32_binary_sha256      "{win32_binary_sha256}")
+
+      set(win64_binary_url         "{win64_binary_url}")
+      set(win64_binary_sha256      "{win64_binary_sha256}")
     """).format(**template_inputs)
 
     return cmake_variables

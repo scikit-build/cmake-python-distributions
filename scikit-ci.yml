@@ -39,7 +39,7 @@ before_install:
     osx:
       environment:
         PATH: $<HOME>/.pyenv/versions/$<PYTHON_VERSION>/bin:$<PATH>
-        SETUP_BDIST_WHEEL_ARGS: --plat-name macosx-10.6-x86_64
+        SETUP_BDIST_WHEEL_ARGS: --plat-name macosx-$<MACOSX_DEPLOYMENT_TARGET>-x86_64
       commands:
         - python scripts/ssl-check.py
         - python ../addons/travis/install_cmake.py 3.12.0
