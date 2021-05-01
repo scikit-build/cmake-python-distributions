@@ -41,7 +41,7 @@ def _to_generic_pyver(pyver_tags):
     return ['py%s' % tag[2] if tag.startswith('cp') else tag for tag in pyver_tags]
 
 
-def _convert_to_generic_platform_wheel(wheel_ctx):
+def _convert_to_generic_platform_wheel(wheel_ctx, additional_platforms):
     """Switch to generic python tags and remove ABI tags from a wheel
 
     Convert implementation specific python tags to their generic equivalent and
@@ -51,6 +51,8 @@ def _convert_to_generic_platform_wheel(wheel_ctx):
     ----------
     wheel_ctx : InWheelCtx
         An open wheel context
+    additional_platforms : Optional[Iterable[str]]
+        An optional iterable of additional platform to add to the wheel
     """
 
     abi_tags = ['none']
@@ -69,7 +71,14 @@ def _convert_to_generic_platform_wheel(wheel_ctx):
 
     # Update wheel filename
     fparts = wf.parsed_filename.groupdict()
-    original_platform_tags = fparts['plat'].split('.')
+    platform_tags = fparts['plat'].split('.')
+    logger.debug('Previous platform tags: %s', ', '.join(platform_tags))
+    if additional_platforms:
+        platform_tags = list(sorted(set(platform_tags + [p for p in additional_platforms])))
+        fparts['plat'] = '.'.join(platform_tags)
+        logger.debug('New platform tags ....: %s', ', '.join(platform_tags))
+    else:
+        logger.debug('No platform tags change needed.')
 
     original_abi_tags = fparts['abi'].split('.')
     logger.debug('Previous ABI tags: %s', ', '.join(original_abi_tags))
@@ -114,7 +123,7 @@ def _convert_to_generic_platform_wheel(wheel_ctx):
     pyc_apis = unique_by_index(pyc_apis)
 
     # Set tags for each Python version, C-API combination
-    updated_tags = ['-'.join(tup) for tup in product(pyc_apis, original_platform_tags)]
+    updated_tags = ['-'.join(tup) for tup in product(pyc_apis, platform_tags)]
 
     if updated_tags != in_info_tags:
         del info['Tag']
@@ -128,7 +137,8 @@ def _convert_to_generic_platform_wheel(wheel_ctx):
     return out_wheel
 
 
-def convert_to_generic_platform_wheel(wheel_path, out_dir='./dist/', remove_original=False, verbose=0):
+def convert_to_generic_platform_wheel(wheel_path, out_dir='./dist/', remove_original=False, verbose=0,
+                                      additional_platforms=None):
     logging.disable(logging.NOTSET)
     if verbose >= 1:
         logging.basicConfig(level=logging.DEBUG)
@@ -140,7 +150,7 @@ def convert_to_generic_platform_wheel(wheel_path, out_dir='./dist/', remove_orig
 
     with InWheelCtx(wheel_path) as ctx:
         ctx.out_wheel = pjoin(out_dir, wheel_fname)
-        ctx.out_wheel = _convert_to_generic_platform_wheel(ctx)
+        ctx.out_wheel = _convert_to_generic_platform_wheel(ctx, additional_platforms)
 
     if remove_original:
         logger.info('Removed original wheel %s' % wheel_path)

@@ -117,12 +117,25 @@ test:
   commands:
     # Convert to generic platform wheel
     - python: |
-              import glob, sys
+              import glob, os, sys
               sys.path.insert(0, "./scripts")
               from convert_to_generic_platform_wheel import convert_to_generic_platform_wheel
               wheels = glob.glob("dist/*.whl")
+              additional_platforms = []
+              if "MACOSX_DEPLOYMENT_TARGET" in os.environ:
+                  target = tuple(int(p) for p in os.environ["MACOSX_DEPLOYMENT_TARGET"].split("."))
+                  if target == (10, 13):
+                      # let's add universal2 platform for this wheel.
+                      # given pip support for universal2 was added after arm64 introduction
+                      # let's also add arm64 platform.
+                      # They're were also issues with pip not picking up some universal2 wheels, tag twice
+                      additional_platforms = [
+                          "macosx_10_13_universal2",
+                          "macosx_11_0_universal2",
+                          "macosx_11_0_arm64",
+                      ]
               for wheel in wheels:
-                  convert_to_generic_platform_wheel(wheel, remove_original=True)
+                  convert_to_generic_platform_wheel(wheel, remove_original=True, additional_platforms=additional_platforms)
 
   appveyor:
     commands:
