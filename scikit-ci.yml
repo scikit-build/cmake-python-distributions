@@ -59,7 +59,7 @@ before_install:
                   if platform.machine() in {"ppc64le"}:
                       # the container sees all 16 threads but building with all of them
                       # triggers the OoM killer due to RAM limitations
-                      os.environ["SETUP_MAKE_ARGS"] = "-j4"
+                      os.environ["SETUP_MAKE_ARGS"] = "-j2"
                   else:
                       os.environ["SETUP_MAKE_ARGS"] = "-j$(nproc)"
                   ci.driver.Driver.save_env(os.environ)
