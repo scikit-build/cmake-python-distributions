@@ -1283,7 +1283,22 @@ def render_pep440_post(pieces):
     if pieces["closest-tag"]:
         rendered = pieces["closest-tag"]
         if pieces["distance"] or pieces["dirty"]:
-            rendered += ".post%d" % pieces["distance"]
+            if ".post" in rendered:
+                # update the existing post tag
+                start = rendered.index(".post") + 5
+                if len(rendered) == start:
+                    rendered += "%d" % pieces["distance"]
+                else:
+                    end = start + 1
+                    while end <= len(rendered) and rendered[start:end].isdigit():
+                        end += 1
+                    end -= 1
+                    distance = pieces["distance"]
+                    if start != end:
+                        distance += int(rendered[start:end])
+                    rendered = rendered[:start] + "%d" % distance + rendered[end:]
+            else:
+                rendered += ".post%d" % pieces["distance"]
             if pieces["dirty"]:
                 rendered += ".dev0"
             rendered += plus_or_dot(pieces)
