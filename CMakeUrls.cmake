@@ -16,9 +16,6 @@ set(linux32_binary_sha256    "NA")
 set(linux64_binary_url       "https://github.com/Kitware/CMake/releases/download/v3.20.2/cmake-3.20.2-linux-x86_64.tar.gz")
 set(linux64_binary_sha256    "3f827544f9c82e74ddf5016461fdfcfea4ede58a26f82612f473bf6bfad8bfc2")
 
-set(macos10_13_binary_url     "https://github.com/Kitware/CMake/releases/download/v3.20.2/cmake-3.20.2-macos-universal.tar.gz")
-set(macos10_13_binary_sha256  "0100663380a3bd977b001183cd487412db7aad9de6859927bde97e1e6e44e645")
-
 set(macos10_10_binary_url    "https://github.com/Kitware/CMake/releases/download/v3.20.2/cmake-3.20.2-macos10.10-universal.tar.gz")
 set(macos10_10_binary_sha256 "6d9c1c1aecb61d085b1a20503fa94b0c28abae617e20189df61eea4cf876fba0")
 

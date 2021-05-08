@@ -46,7 +46,6 @@ def get_cmake_archive_urls_and_sha256s(version, verbose=False):
             "cmake-%s.tar.gz" % version:                      "unix_source",
             "cmake-%s.zip" % version:                         "win_source",
             "cmake-%s-linux-x86_64.tar.gz" % version:         "linux64_binary",
-            "cmake-%s-macos-universal.tar.gz" % version:      "macos10_13_binary",
             "cmake-%s-macos10.10-universal.tar.gz" % version: "macos10_10_binary",
             "cmake-%s-windows-i386.zip" % version:            "win32_binary",
             "cmake-%s-windows-x86_64.zip" % version:          "win64_binary",
@@ -117,9 +116,6 @@ def generate_cmake_variables(urls_and_sha256s):
 
       set(linux64_binary_url       "{linux64_binary_url}")
       set(linux64_binary_sha256    "{linux64_binary_sha256}")
-
-      set(macos10_13_binary_url     "{macos10_13_binary_url}")
-      set(macos10_13_binary_sha256  "{macos10_13_binary_sha256}")
 
       set(macos10_10_binary_url    "{macos10_10_binary_url}")
       set(macos10_10_binary_sha256 "{macos10_10_binary_sha256}")

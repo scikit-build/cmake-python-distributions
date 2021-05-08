@@ -124,16 +124,20 @@ test:
               additional_platforms = []
               if "MACOSX_DEPLOYMENT_TARGET" in os.environ:
                   target = tuple(int(p) for p in os.environ["MACOSX_DEPLOYMENT_TARGET"].split("."))
-                  if target == (10, 13):
-                      # let's add universal2 platform for this wheel.
-                      # given pip support for universal2 was added after arm64 introduction
-                      # let's also add arm64 platform.
+                  # let's add universal2 platform for this wheel.
+                  additional_platforms = ["macosx_{}_{}_universal2".format(*target)]
+
+                  # given pip support for universal2 was added after arm64 introduction
+                  # let's also add arm64 platform.
+                  arm64_target = target
+                  if arm64_target < (11, 0):
+                      arm64_target = (11, 0)
+                  additional_platforms.append("macosx_{}_{}_arm64".format(*arm64_target))
+
+                  if target < (11, 0):
                       # They're were also issues with pip not picking up some universal2 wheels, tag twice
-                      additional_platforms = [
-                          "macosx_10_13_universal2",
-                          "macosx_11_0_universal2",
-                          "macosx_11_0_arm64",
-                      ]
+                      additional_platforms.append("macosx_11_0_universal2")
+
               for wheel in wheels:
                   convert_to_generic_platform_wheel(wheel, remove_original=True, additional_platforms=additional_platforms)
 
