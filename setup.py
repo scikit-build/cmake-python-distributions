@@ -1,10 +1,16 @@
 #!/usr/bin/env python
 
+import os
 import sys
-import versioneer
 
 from distutils.text_file import TextFile
 from skbuild import setup
+
+# Add current folder to path
+# This is required to import versioneer in an isolated pip build
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
+import versioneer  # noqa: E402
 
 
 with open('README.rst', 'r') as fp:
