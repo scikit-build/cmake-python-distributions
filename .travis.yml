@@ -17,12 +17,6 @@ matrix:
         - PYTHON_VERSION=3.7.9
         - MACOSX_DEPLOYMENT_TARGET=10.10
 
-    - os: osx
-      language: generic
-      env:
-        - PYTHON_VERSION=2.7.18
-        - MACOSX_DEPLOYMENT_TARGET=10.10
-
     - arch: arm64-graviton2
       virt: vm
       group: edge

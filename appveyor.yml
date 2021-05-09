@@ -8,18 +8,6 @@ version: "0.0.1.{build}"
 environment:
   matrix:
 
-    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
-      PYTHON_DIR: "C:\\Python27"
-      PYTHON_VERSION: "2.7.x"
-      PYTHON_ARCH: "32"
-      BLOCK: "0"
-
-    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
-      PYTHON_DIR: "C:\\Python27-x64"
-      PYTHON_VERSION: "2.7.x"
-      PYTHON_ARCH: "64"
-      BLOCK: "0"
-
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
       PYTHON_DIR: "C:\\Python37"
       PYTHON_VERSION: "3.7.x"

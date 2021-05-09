@@ -41,7 +41,7 @@ def _to_generic_pyver(pyver_tags):
     return ['py%s' % tag[2] if tag.startswith('cp') else tag for tag in pyver_tags]
 
 
-def _convert_to_generic_platform_wheel(wheel_ctx, additional_platforms):
+def _convert_to_generic_platform_wheel(wheel_ctx, py2_py3, additional_platforms):
     """Switch to generic python tags and remove ABI tags from a wheel
 
     Convert implementation specific python tags to their generic equivalent and
@@ -51,6 +51,8 @@ def _convert_to_generic_platform_wheel(wheel_ctx, additional_platforms):
     ----------
     wheel_ctx : InWheelCtx
         An open wheel context
+    py2_py3: Bool
+        Wether the pyver tag shall be py2.py3 or just the one inferred from the wheel name
     additional_platforms : Optional[Iterable[str]]
         An optional iterable of additional platform to add to the wheel
     """
@@ -91,6 +93,10 @@ def _convert_to_generic_platform_wheel(wheel_ctx, additional_platforms):
     original_pyver_tags = fparts['pyver'].split('.')
     logger.debug('Previous pyver tags: %s', ', '.join(original_pyver_tags))
     pyver_tags = _to_generic_pyver(original_pyver_tags)
+    if py2_py3:
+        if len(set(["py2", "py3"]) & set(pyver_tags)) == 0:
+            raise ValueError("pyver_tags does not contain py2 nor py3")
+        pyver_tags = list(sorted(set(pyver_tags + ["py2", "py3"])))
     if pyver_tags != original_pyver_tags:
         logger.debug('New pyver tags ....: %s', ', '.join(pyver_tags))
         fparts['pyver'] = '.'.join(pyver_tags)
@@ -115,8 +121,7 @@ def _convert_to_generic_platform_wheel(wheel_ctx, additional_platforms):
 
     # Python version, C-API version combinations
     pyc_apis = []
-    for tag in in_info_tags:
-        py_ver = '.'.join(_to_generic_pyver(tag.split('-')[0].split('.')))
+    for py_ver in pyver_tags:
         abi = 'none'
         pyc_apis.append('-'.join([py_ver, abi]))
     # unique Python version, C-API version combinations
@@ -138,7 +143,7 @@ def _convert_to_generic_platform_wheel(wheel_ctx, additional_platforms):
 
 
 def convert_to_generic_platform_wheel(wheel_path, out_dir='./dist/', remove_original=False, verbose=0,
-                                      additional_platforms=None):
+                                      py2_py3=False, additional_platforms=None):
     logging.disable(logging.NOTSET)
     if verbose >= 1:
         logging.basicConfig(level=logging.DEBUG)
@@ -150,7 +155,7 @@ def convert_to_generic_platform_wheel(wheel_path, out_dir='./dist/', remove_orig
 
     with InWheelCtx(wheel_path) as ctx:
         ctx.out_wheel = pjoin(out_dir, wheel_fname)
-        ctx.out_wheel = _convert_to_generic_platform_wheel(ctx, additional_platforms)
+        ctx.out_wheel = _convert_to_generic_platform_wheel(ctx, py2_py3, additional_platforms)
 
     if remove_original:
         logger.info('Removed original wheel %s' % wheel_path)
@@ -179,13 +184,23 @@ def main():
                    dest='remove_original',
                    action='store_true',
                    help='Remove original wheel')
+    p.add_argument("--py2-py3",
+                   dest='py2_py3',
+                   action='store_true',
+                   help='Remove original wheel')
+    p.add_argument("-p",
+                   "--add-platform",
+                   dest='additional_platforms',
+                   action="append",
+                   help='Add a platform tag')
 
     args = p.parse_args()
 
     if not isfile(args.WHEEL_FILE):
         p.error('cannot access %s. No such file' % args.WHEEL_FILE)
 
-    convert_to_generic_platform_wheel(args.WHEEL_FILE, args.WHEEL_DIR, args.remove_original, args.verbose)
+    convert_to_generic_platform_wheel(args.WHEEL_FILE, args.WHEEL_DIR, args.remove_original, args.verbose,
+                                      args.py2_py3, args.additional_platforms)
 
 
 if __name__ == '__main__':
