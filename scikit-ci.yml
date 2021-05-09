@@ -49,7 +49,6 @@ before_install:
                   import os
                   import ci
                   import platform
-                  os.environ["SETUP_BDIST_WHEEL_ARGS"] = "--plat-name %s" % os.environ["AUDITWHEEL_PLAT"]
                   setup_cmake_args = []
                   setup_cmake_args.append("-DSTRIP_EXECUTABLE:FILEPATH=/opt/rh/devtoolset-9/root/usr/" + "/bin/strip")
                   if platform.machine() in {"aarch64", "ppc64le", "s390x"}:
@@ -95,22 +94,19 @@ build:
         - |
           # Since there are no external shared libraries to bundle into the wheels
           # this step will fixup the wheel switching from 'linux' to 'manylinux' tag
-          for whl in dist/*linux*_$(arch).whl; do
-              auditwheel repair --plat ${AUDITWHEEL_PLAT} $whl -w ./dist
+          for whl in dist/*.whl; do
+              auditwheel repair --plat ${AUDITWHEEL_PLAT} ${whl} -w ./dist/
+              rm ${whl}
           done
 
   circle:
     commands:
       - |
-        arch=${AUDITWHEEL_ARCH}
-        if [[ ${arch} == "aarch64" ]]; then
-            exit
-        fi
         # Since there are no external shared libraries to bundle into the wheels
         # this step will fixup the wheel switching from 'linux' to 'manylinux' tag
-        for whl in dist/*linux_${arch}.whl; do
-            auditwheel repair --plat ${AUDITWHEEL_PLAT} $whl -w ./dist/
-            rm $whl
+        for whl in dist/*.whl; do
+            auditwheel repair --plat ${AUDITWHEEL_PLAT} ${whl} -w ./dist/
+            rm ${whl}
         done
 
 test:
@@ -139,7 +135,9 @@ test:
                       additional_platforms.append("macosx_11_0_universal2")
 
               for wheel in wheels:
-                  convert_to_generic_platform_wheel(wheel, remove_original=True, additional_platforms=additional_platforms)
+                  convert_to_generic_platform_wheel(wheel, remove_original=True, py2_py3=True, additional_platforms=additional_platforms)
+              wheels = glob.glob("dist/*.whl")
+              assert len(wheels) == 1, "There shall be exactly 1 final wheel per build"
 
   appveyor:
     commands:
