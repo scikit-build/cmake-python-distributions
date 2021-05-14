@@ -58,9 +58,25 @@ jobs:
   manylinux-x64_cp27-cp27mu_tests-only:
     <<: *x64_build_job
 
+  check-dist:
+    docker:
+      - image: cimg/python:3.9.5
+    steps:
+      - attach_workspace:
+          at: ./
+      - run:
+          name: Check dist
+          command: |
+            echo "Check dist"
+            ls dist
+            python -m venv ../venv
+            . ../venv/bin/activate
+            pip install twine
+            twine check --strict dist/*
+
   deploy-master:
     docker:
-      - image: circleci/python:3.7.0-stretch
+      - image: cimg/python:3.9.5
     steps:
       - attach_workspace:
           at: ./
@@ -71,7 +87,7 @@ jobs:
 
   deploy-release:
     docker:
-      - image: circleci/python:3.7.0-stretch
+      - image: cimg/python:3.9.5
     steps:
       - attach_workspace:
           at: ./
@@ -100,7 +116,7 @@ workflows:
       - manylinux-x64_cp27-cp27mu_tests-only:
           <<: *no_filters
 
-      - deploy-master:
+      - check-dist:
           requires:
             # x64
             - manylinux-x64_cp37-cp37m_upload-sdist
@@ -108,17 +124,16 @@ workflows:
             - manylinux-x86_cp37-cp37m
             # python 2.7 test
             - manylinux-x64_cp27-cp27mu_tests-only
+
+      - deploy-master:
+          requires:
+            - check-dist
           filters:
             branches:
               only: master
       - deploy-release:
           requires:
-            # x64
-            - manylinux-x64_cp37-cp37m_upload-sdist
-            # x86
-            - manylinux-x86_cp37-cp37m
-            # python 2.7 test
-            - manylinux-x64_cp27-cp27mu_tests-only
+            - check-dist
           filters:
             tags:
               only: /^[0-9]+(\.[0-9]+)*(\.post[0-9]+)?$/

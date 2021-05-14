@@ -85,13 +85,17 @@ script:
     if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
         ci test
     fi
+    pwd
+    ls dist
+    PATH=~/.pyenv/versions/${PYTHON_VERSION}/bin/:$PATH
+    twine --version
+    twine check --strict dist/*
 
 after_success:
   - |
     if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
         ci after_test
     fi
-    pwd && ls dist; PATH=~/.pyenv/versions/${PYTHON_VERSION}/bin/:$PATH && twine --version
 
 deploy:
   # deploy-release

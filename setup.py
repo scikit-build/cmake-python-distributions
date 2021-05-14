@@ -68,6 +68,7 @@ setup(
                 'tools designed to build, test and package software',
 
     long_description=readme + '\n\n' + history,
+    long_description_content_type='text/x-rst',
 
     classifiers=[
         'License :: OSI Approved :: Apache Software License',
