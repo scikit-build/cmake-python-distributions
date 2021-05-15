@@ -1,0 +1,151 @@
+name: Build and upload to PyPI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  flake8:
+    name: flake8
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - run: pipx run flake8
+
+  build_wheels:
+    name: Build ${{ matrix.build }} wheels on ${{ matrix.os }}
+    needs: [flake8]
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-20.04
+            build: "cp39-*x86_64*"
+          - os: ubuntu-20.04
+            build: "cp39-*i686*"
+          - os: windows-2019
+            build: "cp39-*win_amd64*"
+          - os: windows-2019
+            build: "cp39-*win32*"
+          - os: macos-10.15
+            build: "cp39-*x86_64*"
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # required for versioneer to find tags
+
+      - name: Build wheels
+        uses: pypa/cibuildwheel@v1.11.0
+        env:
+          CIBW_BEFORE_ALL: "pipx install cmake && pipx install ninja"
+          CIBW_BEFORE_ALL_LINUX: "pipx install cmake && pipx install ninja && ./scripts/manylinux-build-and-install-openssl.sh"
+          CIBW_BUILD: "${{ matrix.build }}"
+          CIBW_ENVIRONMENT_MACOS: "MACOSX_DEPLOYMENT_TARGET=10.10"
+          CIBW_ENVIRONMENT_LINUX: "SKBUILD_CONFIGURE_OPTIONS='-DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl -DCMAKE_JOB_POOL_COMPILE:STRING=compile -DCMAKE_JOB_POOL_LINK:STRING=link -DCMAKE_JOB_POOLS:STRING=compile=2;link=1'"
+          CIBW_MANYLINUX_X86_64_IMAGE: quay.io/pypa/manylinux1_x86_64:2021-05-16-740a2ec
+          CIBW_MANYLINUX_I686_IMAGE: quay.io/pypa/manylinux1_i686:2021-05-16-740a2ec
+          CIBW_BEFORE_BUILD: "python -m pip install -r requirements-repair.txt"
+          CIBW_REPAIR_WHEEL_COMMAND: "python scripts/repair_wheel.py -w {dest_dir} {wheel}"
+          CIBW_TEST_REQUIRES: "-r requirements-test.txt"
+          CIBW_TEST_COMMAND: "pytest {project}/tests"
+
+      - uses: actions/upload-artifact@v2
+        with:
+          path: ./wheelhouse/*.whl
+
+  build_sdist:
+    name: Build source distribution
+    needs: [flake8]
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # required for versioneer to find tags
+
+      - name: Build SDist
+        run: pipx run build --sdist
+
+      - uses: actions/upload-artifact@v2
+        with:
+          path: dist/*.tar.gz
+
+  test_sdist:
+    name: Test SDist with python ${{ matrix.python }}
+    needs: [build_sdist]
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["2.7", "3.6", "3.10-dev"]
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        name: Install Python ${{ matrix.python }}
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libssl-dev
+          pip install -r requirements-dev.txt
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: artifact
+          path: dist
+
+      - name: Install SDist
+        env:
+          SKBUILD_CONFIGURE_OPTIONS: "-DBUILD_CMAKE_FROM_SOURCE:BOOL=OFF"
+        run: |
+          pip install dist/*.tar.gz
+          rm dist/*.tar.gz
+
+      - name: Test installed SDist
+        run: pytest ./tests
+
+  check_dist:
+    name: Check dist
+    needs: [build_wheels, build_sdist, test_sdist]
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: artifact
+          path: dist
+
+      - run: |
+          pipx install twine
+          twine check --strict dist/*
+
+  upload_pypi:
+    name: Upload to (Test) PyPI
+    needs: [build_wheels, build_sdist, test_sdist, check_dist]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.repository == 'scikit-build/cmake-python-distributions'
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: artifact
+          path: dist
+
+      - name: Upload to Test PyPI
+        uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_TEST_PASSWORD }}
+          skip_existing: true
+          repository_url: https://test.pypi.org/legacy/
+
+      - name: Upload to PyPI
+        # upload to PyPI on every tag
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_RELEASE_PASSWORD }}
+          skip_existing: true
