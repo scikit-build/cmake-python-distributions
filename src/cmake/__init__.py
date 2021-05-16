@@ -20,13 +20,13 @@ if not os.path.exists(CMAKE_DATA):
         # Since building the project specifying --plat-name or CMAKE_OSX_* variables
         # leads to different SKBUILD_DIR, the code below attempt to guess the most
         # likely plat-name.
-        _skbuild_dirs = os.listdir(os.path.join(os.path.dirname(__file__), '..', '_skbuild'))
+        _skbuild_dirs = os.listdir(os.path.join(os.path.dirname(__file__), '..', '..', '_skbuild'))
         if _skbuild_dirs:
             _likely_plat_name = '-'.join(_skbuild_dirs[0].split('-')[:3])
             set_skbuild_plat_name(_likely_plat_name)
 
     _cmake_data = os.path.abspath(os.path.join(
-        os.path.dirname(__file__), '..', SKBUILD_CMAKE_INSTALL_DIR(), 'cmake/data'))
+        os.path.dirname(__file__), '..', '..', SKBUILD_CMAKE_INSTALL_DIR(), 'src/cmake/data'))
     if os.path.exists(_cmake_data):
         CMAKE_DATA = _cmake_data
 

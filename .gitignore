@@ -1,9 +1,9 @@
 # This project
 archive-cache
-cmake/data/*
+src/cmake/data/*
 env.json
 skbuild
-src
+CMake-src
 standalone-build
 standalone-x86-build
 standalone-x64-build

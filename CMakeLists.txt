@@ -124,7 +124,7 @@ if(CMakePythonDistributions_SUPERBUILD)
   # CMakeProject_SOURCE_DIR: Always expect the sources (needed for `sdist`)
   #
   if(NOT DEFINED CMakeProject_SOURCE_DIR)
-    set(CMakeProject_SOURCE_DIR "${CMAKE_SOURCE_DIR}/src")
+    set(CMakeProject_SOURCE_DIR "${CMAKE_SOURCE_DIR}/CMake-src")
 
     # Download selected source archive
     ExternalProject_add(CMakeProject-src-download

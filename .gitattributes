@@ -1,1 +1,1 @@
-cmake/_version.py export-subst
+src/cmake/_version.py export-subst
