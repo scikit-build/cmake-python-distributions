@@ -72,13 +72,8 @@ install:
   - |
     if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
         ci install
-    elif [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-        MACHINE=$(uname -m)
-        if [[ "${MACHINE}" == "s390x" ]] || [[ "${MACHINE}" == "ppc64le" ]]; then
-            pip install $(pwd)/cryptography*.whl
-        fi
-        pip install twine
     fi
+    python -m pip install -r requirements-deploy.txt
 
 script:
   - |
@@ -87,7 +82,6 @@ script:
     fi
     pwd
     ls dist
-    PATH=~/.pyenv/versions/${PYTHON_VERSION}/bin/:$PATH
     twine --version
     twine check --strict dist/*
 
@@ -100,7 +94,7 @@ after_success:
 deploy:
   # deploy-release
   - provider: script
-    script: pwd && ls dist;echo "deploy-release" && PATH=~/.pyenv/versions/${PYTHON_VERSION}/bin/:$PATH && twine upload -u $PYPI_USER -p $PYPI_PASSWORD --skip-existing dist/*
+    script: pwd && ls dist;echo "deploy-release" && twine upload -u $PYPI_USER -p $PYPI_PASSWORD --skip-existing dist/*
     skip_cleanup: true
     on:
       repo: ${TRAVIS_REPO_SLUG}

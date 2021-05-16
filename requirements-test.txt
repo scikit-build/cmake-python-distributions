@@ -1,0 +1,12 @@
+codecov>=2.0.5
+coverage>=4.2
+flake8>=3.0.4
+path.py>=11.5.0
+pytest>=3.0.3
+pytest-cov>=2.4.0
+pytest-runner>=2.9
+pytest-virtualenv>=1.7.0
+scikit-build>=0.10.0
+setuptools>=28.0.0
+virtualenv>=15.0.3
+wheel

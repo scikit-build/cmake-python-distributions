@@ -26,7 +26,7 @@ def parse_requirements(filename):
 
 
 requirements = []
-dev_requirements = parse_requirements('requirements-dev.txt')
+test_requirements = parse_requirements('requirements-test.txt')
 
 # Require pytest-runner only when running tests
 pytest_runner = (['pytest-runner>=2.0,<3dev']
@@ -89,6 +89,6 @@ setup(
     keywords='CMake build c++ fortran cross-platform cross-compilation',
 
     install_requires=requirements,
-    tests_require=dev_requirements,
+    tests_require=test_requirements,
     setup_requires=setup_requires
 )

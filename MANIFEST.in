@@ -1,6 +1,6 @@
 include CMakeLists.txt
 include CMakeUrls.cmake
-include requirements-dev.txt
+include requirements-test.txt
 include HISTORY.rst
 include README.rst
 include LICENSE_Apache_20
