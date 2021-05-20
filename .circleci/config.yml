@@ -124,6 +124,11 @@ workflows:
             - manylinux-x86_cp37-cp37m
             # python 2.7 test
             - manylinux-x64_cp27-cp27mu_tests-only
+          filters:
+            branches:
+              only: master
+            tags:
+              only: /.*/
 
       - deploy-master:
           requires:
