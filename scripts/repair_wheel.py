@@ -52,9 +52,7 @@ def main():
         elif os_ == "windows":
             # no specific tool, just copy
             shutil.copyfile(file, tmpdir / file.name)
-        files = list(tmpdir.glob("*.whl"))
-        assert len(files) == 1, files
-        file = files[0]
+        (file,) = tmpdir.glob("*.whl")
 
         # we need to handle macOS universal2 & arm64 here for now, let's use additional_platforms for this.
         additional_platforms = []
