@@ -30,31 +30,41 @@ Build Status
 
 .. table::
 
-  +---------------+------------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+
-  |               | Linux                                                                                    | macOS                                                                                             | Windows                                                                                                   |
-  +===============+==========================================================================================+===================================================================================================+===========================================================================================================+
-  | PyPI          | .. image:: https://circleci.com/gh/scikit-build/cmake-python-distributions.svg?style=svg | .. image:: https://travis-ci.com/github/scikit-build/cmake-python-distributions.svg?branch=master | .. image:: https://ci.appveyor.com/api/projects/status/439ila0jk7v6uqrr/branch/master?svg=true            |
-  |               |     :target: https://circleci.com/gh/scikit-build/cmake-python-distributions             |     :target: https://travis-ci.com/github/scikit-build/cmake-python-distributions                 |    :target: https://ci.appveyor.com/project/scikit-build/cmake-python-distributions-f3rbb/branch/master   |
-  +---------------+------------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+
+  +---------------+------------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+
+  |               | Linux                                                                                    | macOS                                                                                       | Windows                                                                                                   |
+  +===============+==========================================================================================+=============================================================================================+===========================================================================================================+
+  | PyPI          | .. image:: https://circleci.com/gh/scikit-build/cmake-python-distributions.svg?style=svg | .. image:: https://travis-ci.com/scikit-build/cmake-python-distributions.svg?branch=master  | .. image:: https://ci.appveyor.com/api/projects/status/439ila0jk7v6uqrr/branch/master?svg=true            |
+  |               |     :target: https://circleci.com/gh/scikit-build/cmake-python-distributions             |     :target: https://travis-ci.com/github/scikit-build/cmake-python-distributions           |    :target: https://ci.appveyor.com/project/scikit-build/cmake-python-distributions-f3rbb/branch/master   |
+  +---------------+------------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+
 
 Platforms
 ---------
 
 The following platforms are supported with binary wheels:
 
-+--------------+------------------------+
-| OS           | Arch                   |
-+==============+========================+
-| Windows      | 64-bit                 |
-| Windows      | 32-bit                 |
-| Linux        | manylinux1+ 64-bit     |
-| Linux        | manylinux1+ 32-bit     |
-| Linux ARM    | manylinux2014+ AArch64 |
-| Linux        | manylinux2014+ ppc64le |
-| Linux        | manylinux2014+ s390x   |
-| macOS 10.10+ | Intel                  |
-| macOS 11+    | Apple Silicon          |
-+--------------+------------------------+
+.. table::
+
+  +--------------+------------------------+
+  | OS           | Arch                   |
+  +==============+========================+
+  | Windows      | 64-bit                 |
+  +--------------+------------------------+
+  | Windows      | 32-bit                 |
+  +--------------+------------------------+
+  | Linux        | manylinux1+ 64-bit     |
+  +--------------+------------------------+
+  | Linux        | manylinux1+ 32-bit     |
+  +--------------+------------------------+
+  | Linux ARM    | manylinux2014+ AArch64 |
+  +--------------+------------------------+
+  | Linux        | manylinux2014+ ppc64le |
+  +--------------+------------------------+
+  | Linux        | manylinux2014+ s390x   |
+  +--------------+------------------------+
+  | macOS 10.10+ | Intel                  |
+  +--------------+------------------------+
+  | macOS 11+    | Apple Silicon          |
+  +--------------+------------------------+
 
 Until `PEP 656 <https://www.python.org/dev/peps/pep-0656/>`_ is implemented, we
 cannot provide wheels for Alpine and other MUSL variants. If you need to use
