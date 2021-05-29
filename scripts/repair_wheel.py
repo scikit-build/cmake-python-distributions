@@ -14,9 +14,9 @@ from convert_to_generic_platform_wheel import convert_to_generic_platform_wheel
 def main():
     if sys.platform.startswith("linux"):
         os_ = "linux"
-    elif sys.platform == "darwin":
+    elif sys.platform.startswith("darwin"):
         os_ = "macos"
-    elif sys.platform == "win32":
+    elif sys.platform.startswith("win32"):
         os_ = "windows"
     else:
         raise NotImplementedError("sys.platform '{}' is not supported yet.".format(sys.platform))
