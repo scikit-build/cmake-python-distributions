@@ -88,57 +88,18 @@ build:
                   sdist=(glob.glob("dist/*.tar.gz") + glob.glob("dist/*.zip"))[0]
                   print("Deleting [%s]" % sdist)
                   os.remove(sdist)
-  travis:
-    linux:
-      commands:
-        - |
-          # Since there are no external shared libraries to bundle into the wheels
-          # this step will fixup the wheel switching from 'linux' to 'manylinux' tag
-          for whl in dist/*.whl; do
-              auditwheel repair --plat ${AUDITWHEEL_PLAT} ${whl} -w ./dist/
-              rm ${whl}
-          done
-
-  circle:
-    commands:
-      - |
-        # Since there are no external shared libraries to bundle into the wheels
-        # this step will fixup the wheel switching from 'linux' to 'manylinux' tag
-        for whl in dist/*.whl; do
-            auditwheel repair --plat ${AUDITWHEEL_PLAT} ${whl} -w ./dist/
-            rm ${whl}
-        done
-
-test:
-  commands:
     # Convert to generic platform wheel
     - python: |
-              import glob, os, sys
-              sys.path.insert(0, "./scripts")
-              from convert_to_generic_platform_wheel import convert_to_generic_platform_wheel
-              wheels = glob.glob("dist/*.whl")
-              additional_platforms = []
-              if "MACOSX_DEPLOYMENT_TARGET" in os.environ:
-                  target = tuple(int(p) for p in os.environ["MACOSX_DEPLOYMENT_TARGET"].split("."))
-                  # let's add universal2 platform for this wheel.
-                  additional_platforms = ["macosx_{}_{}_universal2".format(*target)]
-
-                  # given pip support for universal2 was added after arm64 introduction
-                  # let's also add arm64 platform.
-                  arm64_target = target
-                  if arm64_target < (11, 0):
-                      arm64_target = (11, 0)
-                  additional_platforms.append("macosx_{}_{}_arm64".format(*arm64_target))
-
-                  if target < (11, 0):
-                      # They're were also issues with pip not picking up some universal2 wheels, tag twice
-                      additional_platforms.append("macosx_11_0_universal2")
-
-              for wheel in wheels:
-                  convert_to_generic_platform_wheel(wheel, remove_original=True, py2_py3=True, additional_platforms=additional_platforms)
+              import glob, os, subprocess, sys
+              if os.environ.get("UPLOAD_SDIST", "") != "tests-only":  # no need to repair for "tests-only"
+                  wheels = glob.glob("dist/*.whl")
+                  for wheel in wheels:
+                      subprocess.check_call([sys.executable, "scripts/repair_wheel.py", "-w", "dist", wheel])
+                      os.remove(wheel)
               wheels = glob.glob("dist/*.whl")
               assert len(wheels) == 1, "There shall be exactly 1 final wheel per build"
 
+test:
   appveyor:
     commands:
       - python setup.py test
