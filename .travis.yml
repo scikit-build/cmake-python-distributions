@@ -57,7 +57,7 @@ before_install:
     fi
   - |
     if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-        pip install -U scikit-ci scikit-ci-addons
+        pip install -U scikit-ci scikit-ci-addons 'ruamel.yaml<0.17.5'
         ci_addons --install ../addons
     elif [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
         docker run -t --rm \
