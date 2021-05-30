@@ -31,12 +31,12 @@ references:
 
   x64_build_job: &x64_build_job
     docker:
-      - image: dockcross/manylinux1-x64
+      - image: quay.io/pypa/manylinux1_x86_64:2021-05-29-46e3cf1
     <<: *ci_steps
 
   x86_build_job: &x86_build_job
     docker:
-      - image: dockcross/manylinux1-x86
+      - image: quay.io/pypa/manylinux1_i686:2021-05-29-46e3cf1
     <<: *ci_steps
 
   no_filters: &no_filters
