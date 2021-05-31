@@ -19,7 +19,7 @@ references:
             #
             export MANYLINUX_PYTHON=$(echo ${CIRCLE_JOB} | cut -d"_" -f2)
             echo "MANYLINUX_PYTHON [${MANYLINUX_PYTHON}]"
-            /opt/python/${MANYLINUX_PYTHON}/bin/pip install scikit-ci 'ruamel.yaml<0.17.5'
+            /opt/python/${MANYLINUX_PYTHON}/bin/pip install scikit-ci
             /opt/python/${MANYLINUX_PYTHON}/bin/ci
             if [ "${UPLOAD_SDIST}" == "tests-only" ]; then
               rm -f ./dist/*

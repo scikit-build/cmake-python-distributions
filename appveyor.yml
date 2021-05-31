@@ -26,7 +26,7 @@ environment:
     secure: qDoPKmtLMdcKUKRHuTlfaajjzO4Q4yu25FM5JuB7z84=
 
 init:
-  - "%PYTHON_DIR%\\python.exe -m pip install -U scikit-ci scikit-ci-addons ruamel.yaml==0.17.4"
+  - "%PYTHON_DIR%\\python.exe -m pip install -U scikit-ci scikit-ci-addons"
   - "%PYTHON_DIR%\\python.exe -m ci_addons --install ../addons"
 
   - ps: ../addons/appveyor/rolling-build.ps1
