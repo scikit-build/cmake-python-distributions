@@ -14,14 +14,6 @@ env:
     - secure: "Xejg5qGnAyo3G+/TaaAr1uHzDv9GLo3mxi6Aw/hZc9gF9lYix1TvkfE6GEBKdPgSLJSqF9NJrwKTt37XH1DjSRLG+qw6Bt1goi5Bkugdk+SC5qmMkvAoG0EKyD119WS4ObrpzqAFcOQqG+4F6iDkSuJLA+dzA3yAzTME4pkhr/2dn0krOSqIcTlgifPwhEaMgo//WRT2dEBM5dWoehXsEMD7VMOUyC0DlV15lKTPKSzTrDEUPU7UFnXgIqZM/brEPbWPQr5Jzgu7BeBk6bmPiiYeh28Cq2juzOzA+JWcGgJmXOfsImYwYuAWZrf0pkE0uQjLySvIBKT7phJv05eNqIxmv/wHK1BPcyMV+2IgFR4+f5ty6C4VUV0hT0HvHr3pMa/8A/5wSNCShEAMTHrwPM5VPWFJtUKTtS5+wwNQDI39MLk/vr9ZTo+y3WJHPaRR0nRpbA3nXFHSqoJJunoMyeI8x9cXZvJ9IENMxGuo3CfBT5RGZamfqSTgn6NjL51ArIMKpvUfm3tXTtlvCHenED1ZQeJI1nWZEalxl8pTyAZoA8S1+h8wraZrUPzhM0QuVpw7vZQeOYu2VSdHO46yxUWoQyb+JWrDTN7EC8vOl7QQzIQlqOWJB5uDJD7UlKKtneTHJrdfXvGxS/hf+Y+hFZK7r+/PDPS6aQjSNDyy+js="
     # PYPI_PASSWORD
     - secure: "iEHYaOC/yivDupsbRzohWYCwFMZbCfT2hYOM96akQtOfd1d37rqFCFjDKr3BNyvHyHzj+uNQ7IblynWAqu3cax2Z8b9YuIFXFAslD76IIgeIhxmi8jPtamMK0NBXam/LEL49EIVXUnwVZrWjnLcJxVaBHGS/9Ft3zWP5Gspa4G1yAJDhNfs+jrFipxO4DOBie9mGI2jFdbFRgcCYoY6Jo4y95zxUG1YF5e+8sUobLoBgVqyaJP4SP/Zu/4CEWMfJev8EjLBzzkoPwOU+hC09qwf2FQCvBXFrudpjPpY23WDFeKf+LcMoW9tIoUmP6UJcQibqHeidimrbo9jST0+wTo1NYjrvriKrlMho/QS4iYkd5N6DGUrhSXEMSiqfdMjVGDZ00wvCsT3DwqE9eG7K+Kw09enchjcZcggZIt9crqZPJg3GMdSwPYTlRpf2OQmE4OHL3pN5dSH5Es/sb0X1G6JQgB/2Ia9Aks2ywYEdzUZhbMqfLVx75bVS4bLfYMAMhE/j7NxpYaUlVkFhz3srLhnrYyAcvCQ6XF4cSeFfxD1ie62/qFIF/QH5u76t91uURHygvNdyJCNHhVJnnWgN9kPsJxfyfdOC2Dnrz/jJcw5irsgQVO2/K4iyGyBVoOqwwpymjoCkxB8capEoLRNLcwyQqCTBnMtGykyRYF2I7FA="
-    - CIBW_BEFORE_ALL="./scripts/manylinux-build-and-install-openssl.sh"
-    - CIBW_BUILD="cp39-*"
-    - CIBW_BUILD_VERBOSITY="1"
-    - CIBW_ENVIRONMENT_LINUX="SKBUILD_CONFIGURE_OPTIONS='-DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl -DCMAKE_JOB_POOL_COMPILE:STRING=compile -DCMAKE_JOB_POOL_LINK:STRING=link -DCMAKE_JOB_POOLS:STRING=compile=2;link=1'"
-    - CIBW_BEFORE_BUILD="python -m pip install -r requirements-repair.txt"
-    - CIBW_REPAIR_WHEEL_COMMAND="python scripts/repair_wheel.py -w {dest_dir} {wheel}"
-    - CIBW_TEST_REQUIRES="-r requirements-test.txt"
-    - CIBW_TEST_COMMAND="pytest {project}/tests"
 
 matrix:
   include:
@@ -32,7 +24,7 @@ matrix:
     - arch: s390x
 
 install:
-  - python -m pip install cibuildwheel==1.11.0
+  - python -m pip install git+https://github.com/henryiii/cibuildwheel.git@3b715c72d5159c3bf1d37faaf42ba544e038d695
   - python -m pip install -r requirements-deploy.txt
 
 script:

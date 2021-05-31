@@ -13,7 +13,7 @@ jobs:
       - run: pipx run flake8
 
   build_wheels:
-    name: Build ${{ matrix.build }} wheels on ${{ matrix.os }}
+    name: Build ${{ matrix.arch }} wheels on ${{ matrix.os }}
     needs: [flake8]
     runs-on: ${{ matrix.os }}
     strategy:
@@ -21,15 +21,15 @@ jobs:
       matrix:
         include:
           - os: ubuntu-20.04
-            build: "cp39-*x86_64*"
+            arch: "x86_64"
           - os: ubuntu-20.04
-            build: "cp39-*i686*"
+            arch: "i686"
           - os: windows-2019
-            build: "cp39-*win_amd64*"
+            arch: "AMD64"
           - os: windows-2019
-            build: "cp39-*win32*"
+            arch: "x86"
           - os: macos-10.15
-            build: "cp39-*x86_64*"
+            arch: "x86_64"
 
     steps:
       - uses: actions/checkout@v2
@@ -37,19 +37,9 @@ jobs:
           fetch-depth: 0  # required for versioneer to find tags
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@v1.11.0
+        uses: henryiii/cibuildwheel@3b715c72d5159c3bf1d37faaf42ba544e038d695
         env:
-          CIBW_BEFORE_ALL: "pipx install cmake && pipx install ninja"
-          CIBW_BEFORE_ALL_LINUX: "pipx install cmake && pipx install ninja && ./scripts/manylinux-build-and-install-openssl.sh"
-          CIBW_BUILD: "${{ matrix.build }}"
-          CIBW_ENVIRONMENT_MACOS: "MACOSX_DEPLOYMENT_TARGET=10.10"
-          CIBW_ENVIRONMENT_LINUX: "SKBUILD_CONFIGURE_OPTIONS='-DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl -DCMAKE_JOB_POOL_COMPILE:STRING=compile -DCMAKE_JOB_POOL_LINK:STRING=link -DCMAKE_JOB_POOLS:STRING=compile=2;link=1'"
-          CIBW_MANYLINUX_X86_64_IMAGE: quay.io/pypa/manylinux1_x86_64:2021-05-16-740a2ec
-          CIBW_MANYLINUX_I686_IMAGE: quay.io/pypa/manylinux1_i686:2021-05-16-740a2ec
-          CIBW_BEFORE_BUILD: "python -m pip install -r requirements-repair.txt"
-          CIBW_REPAIR_WHEEL_COMMAND: "python scripts/repair_wheel.py -w {dest_dir} {wheel}"
-          CIBW_TEST_REQUIRES: "-r requirements-test.txt"
-          CIBW_TEST_COMMAND: "pytest {project}/tests"
+          CIBW_ARCHS: "${{ matrix.arch }}"
 
       - uses: actions/upload-artifact@v2
         with:
