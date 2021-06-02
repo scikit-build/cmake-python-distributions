@@ -22,7 +22,7 @@ fi
 
 ci_before_install() {
     ${MANYLINUX_PYTHON_BIN}/python scripts/ssl-check.py
-    ${MANYLINUX_PYTHON_BIN}/pip install scikit-ci scikit-ci-addons scikit-build  'ruamel.yaml<0.17.5'
+    ${MANYLINUX_PYTHON_BIN}/pip install scikit-ci scikit-ci-addons scikit-build
 }
 
 ci_install() {
