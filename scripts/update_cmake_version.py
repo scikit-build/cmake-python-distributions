@@ -1,5 +1,7 @@
-"""Command line executable allowing to update CMakeUrls.cmake
- given a CMake version.
+#!/usr/bin/env python3
+"""
+Command line executable allowing to update CMakeUrls.cmake given a CMake
+version.
 """
 
 import argparse
@@ -34,48 +36,56 @@ def _major_minor(version):
 
 
 def get_cmake_archive_urls_and_sha256s(version, verbose=False):
-    files_base_url = "https://api.github.com/repos/Kitware/CMake/releases/tags/v%s" % version
+    files_base_url = (
+        "https://api.github.com/repos/Kitware/CMake/releases/tags/v%s" % version
+    )
 
     with _log("Collecting URLs and SHA256s from '%s'" % files_base_url):
 
-        assets = requests.get(files_base_url).json()['assets']
+        assets = requests.get(files_base_url).json()["assets"]
 
         sha_256_file = "cmake-%s-SHA-256.txt" % version
 
         expected_files = {
-            "cmake-%s.tar.gz" % version:                      "unix_source",
-            "cmake-%s.zip" % version:                         "win_source",
-            "cmake-%s-linux-x86_64.tar.gz" % version:         "linux64_binary",
+            "cmake-%s.tar.gz" % version: "unix_source",
+            "cmake-%s.zip" % version: "win_source",
+            "cmake-%s-linux-x86_64.tar.gz" % version: "linux64_binary",
             "cmake-%s-macos10.10-universal.tar.gz" % version: "macos10_10_binary",
-            "cmake-%s-windows-i386.zip" % version:            "win32_binary",
-            "cmake-%s-windows-x86_64.zip" % version:          "win64_binary",
+            "cmake-%s-windows-i386.zip" % version: "win32_binary",
+            "cmake-%s-windows-x86_64.zip" % version: "win64_binary",
         }
 
         # Get SHA256s for each asset
         shas = {}
         for asset in assets:
-            if asset['name'] == sha_256_file:
-                sha_256_url = asset['browser_download_url']
+            if asset["name"] == sha_256_file:
+                sha_256_url = asset["browser_download_url"]
                 for line in requests.get(sha_256_url).text.splitlines():
                     file = line.split()[1].strip()
                     if file in expected_files:
                         sha256 = line.split()[0].strip()
                         identifier = expected_files[file]
                         shas[identifier] = sha256
-        assert len(shas) == len(expected_files), "{} != {}".format(len(shas), len(expected_files))
+        assert len(shas) == len(expected_files), "{} != {}".format(
+            len(shas), len(expected_files)
+        )
 
         # Get download URLs for each asset
         urls = {}
         for asset in assets:
-            if asset['name'] in expected_files:
-                identifier = expected_files[asset['name']]
-                urls[identifier] = asset['browser_download_url']
+            if asset["name"] in expected_files:
+                identifier = expected_files[asset["name"]]
+                urls[identifier] = asset["browser_download_url"]
         if len(urls) != len(expected_files):
-            expected_files_by_identifier = {value: key for key, value in expected_files.items()}
+            expected_files_by_identifier = {
+                value: key for key, value in expected_files.items()
+            }
             missing_files = []
             for identifier in set(expected_files.values()) - set(urls.keys()):
                 missing_files.append(expected_files_by_identifier[identifier])
-            raise RuntimeError("Couldn't find %s at %s" % (missing_files, files_base_url))
+            raise RuntimeError(
+                "Couldn't find %s at %s" % (missing_files, files_base_url)
+            )
 
         # combine the URLs and SHA256s into a single dictionary
         zipped = {}
@@ -99,7 +109,8 @@ def generate_cmake_variables(urls_and_sha256s):
         template_inputs["%s_url" % var_prefix] = urls_and_sha256s[0]
         template_inputs["%s_sha256" % var_prefix] = urls_and_sha256s[1]
 
-    cmake_variables = textwrap.dedent("""
+    cmake_variables = textwrap.dedent(
+        """
       #-----------------------------------------------------------------------------
       # CMake sources
       set(unix_source_url          "{unix_source_url}")
@@ -125,14 +136,14 @@ def generate_cmake_variables(urls_and_sha256s):
 
       set(win64_binary_url         "{win64_binary_url}")
       set(win64_binary_sha256      "{win64_binary_sha256}")
-    """).format(**template_inputs)
+    """
+    ).format(**template_inputs)
 
     return cmake_variables
 
 
 def update_cmake_urls_script(version):
-    content = generate_cmake_variables(
-        get_cmake_archive_urls_and_sha256s(version))
+    content = generate_cmake_variables(get_cmake_archive_urls_and_sha256s(version))
     cmake_urls_filename = "CMakeUrls.cmake"
     cmake_urls_filepath = os.path.join(ROOT_DIR, cmake_urls_filename)
 
@@ -145,42 +156,55 @@ def _update_file(filepath, regex, replacement):
     msg = "Updating %s" % os.path.relpath(filepath, ROOT_DIR)
     with _log(msg):
         pattern = re.compile(regex)
-        with open(filepath, 'r') as doc_file:
+        with open(filepath, "r") as doc_file:
             lines = doc_file.readlines()
             updated_content = []
             for line in lines:
-                updated_content.append(
-                    re.sub(pattern, replacement, line))
+                updated_content.append(re.sub(pattern, replacement, line))
         with open(filepath, "w") as doc_file:
             doc_file.writelines(updated_content)
 
 
 def update_docs(version):
     pattern = re.compile(
-        r"CMake \d.(\d)+.\d <https://cmake.org/cmake/help/v\d.(\d)+/index.html>")
-    replacement = (
-        "CMake %s <https://cmake.org/cmake/help/v%s/index.html>" % (
-            version, _major_minor(version)))
-    for filename in ["docs/index.rst", "README.rst"]:
+        r"CMake \d.(\d)+.\d <https://cmake.org/cmake/help/v\d.(\d)+/index.html>"
+    )
+    replacement = "CMake %s <https://cmake.org/cmake/help/v%s/index.html>" % (
+        version,
+        _major_minor(version),
+    )
+    for filename in {"docs/index.rst", "README.rst"}:
         _update_file(os.path.join(ROOT_DIR, filename), pattern, replacement)
 
 
 def update_tests(version):
     pattern = re.compile(r'expected_version = "\d.(\d)+.\d"')
     replacement = 'expected_version = "%s"' % version
-    _update_file(os.path.join(
-        ROOT_DIR, "tests/test_distribution.py"), pattern, replacement)
+    _update_file(
+        os.path.join(ROOT_DIR, "tests/test_distribution.py"), pattern, replacement
+    )
+
+
+def update_raw_versions(version):
+    pattern = re.compile(r"\d\.(\d)+\.\d")
+    replacement = version
+    _update_file(
+        os.path.join(ROOT_DIR, "docs/update_cmake_version.rst"), pattern, replacement
+    )
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        'cmake_version', metavar='CMAKE_VERSION', type=str,
-        help='CMake version of the form X.Y.Z'
+        "cmake_version",
+        metavar="CMAKE_VERSION",
+        type=str,
+        help="CMake version of the form X.Y.Z",
     )
     parser.add_argument(
-        '--collect-only', action='store_true',
-        help='If specified, only display the archive URLs and associated hashsums'
+        "--collect-only",
+        action="store_true",
+        help="If specified, only display the archive URLs and associated hashsums",
     )
     args = parser.parse_args()
     if args.collect_only:
@@ -189,6 +213,19 @@ def main():
         update_cmake_urls_script(args.cmake_version)
         update_docs(args.cmake_version)
         update_tests(args.cmake_version)
+        update_raw_versions(args.cmake_version)
+
+        print(
+            """Complete! Now run:
+
+    git switch -c update-to-cmake-{release}
+    git add CMakeUrls.cmake docs/index.rst README.rst tests/test_distribution.py docs/update_cmake_version.rst
+    git commit -m "Update to CMake {release}"
+    gh pr create --fill --body "Created by update_cmake_version.py"
+""".format(
+                release=args.cmake_version
+            )
+        )
 
 
 if __name__ == "__main__":
