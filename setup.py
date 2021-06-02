@@ -44,9 +44,10 @@ setup(
     author='Jean-Christophe Fillion-Robin',
     author_email='jchris.fillionr@kitware.com',
 
+    package_dir={'': 'src'},
     packages=['cmake'],
 
-    cmake_install_dir='cmake/data',
+    cmake_install_dir='src/cmake/data',
 
     entry_points={
         'console_scripts': [
@@ -90,4 +91,4 @@ setup(
     install_requires=requirements,
     tests_require=dev_requirements,
     setup_requires=setup_requires
-    )
+)

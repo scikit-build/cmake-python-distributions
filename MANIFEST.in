@@ -7,7 +7,7 @@ include LICENSE_Apache_20
 include LICENSE_BSD_3
 
 recursive-exclude _skbuild *
-recursive-exclude src *
+recursive-exclude CMake-src *
 
 include versioneer.py
-include cmake/_version.py
+include src/cmake/_version.py
