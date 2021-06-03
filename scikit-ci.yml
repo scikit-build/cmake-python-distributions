@@ -26,10 +26,6 @@ before_install:
                 # Support using older manylinux images explicitly setting AUDITWHEEL_*  environment variables
                 os.environ["AUDITWHEEL_ARCH"] = manylinux_arch
                 os.environ["AUDITWHEEL_PLAT"] = manylinux_version + "_" + manylinux_arch
-                # CFLAGS
-                if arch == "x86":
-                    # Required to build cryptography wheel from source for cp37-cp37 when using manylinux-x86
-                    os.environ["CFLAGS"] = "-I/usr/local/ssl/include -L/usr/local/ssl/lib"
                 # SETUP_CMAKE_ARGS
                 if arch in ["x86", "x64"]:
                     os.environ["SETUP_CMAKE_ARGS"] = "-DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl " + os.environ["SETUP_CMAKE_ARGS"]
@@ -67,9 +63,7 @@ install:
   commands:
     - python -c "import sys; print(sys.version)"
     - python -m pip install --disable-pip-version-check --upgrade pip
-    - pip install pytest-virtualenv -f https://github.com/jcfr/pytest-plugins/releases/tag/v1.7.0.dev15 --pre
-    - pip install git+https://github.com/jcfr/wheeltools.git@wheeltools-2018-10-28-a2f174d0e
-    - pip install -r requirements-dev.txt
+    - pip install -r requirements-test.txt -r requirements-repair.txt
 
 before_build:
   commands:

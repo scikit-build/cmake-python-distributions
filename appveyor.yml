@@ -33,6 +33,7 @@ init:
 
 install:
   - "%PYTHON_DIR%\\python.exe -m ci install"
+  - "%PYTHON_DIR%\\python.exe -m pip install -r requirements-deploy.txt"
 
 build_script:
   - "%PYTHON_DIR%\\python.exe -m ci build"
