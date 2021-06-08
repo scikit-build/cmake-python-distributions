@@ -7,7 +7,7 @@ MANYLINUX_PYTHON_BIN=/opt/python/cp38-cp38/bin
 export PATH="${MANYLINUX_PYTHON_BIN}:$PATH"
 
 cd /io
-./scripts/manylinux2014-build-and-install-openssl.sh /tmp/openssl-install shared
+./scripts/manylinux-build-and-install-openssl.sh
 
 ci_before_install() {
     ${MANYLINUX_PYTHON_BIN}/python scripts/ssl-check.py
