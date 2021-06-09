@@ -21,4 +21,3 @@ function check_sha256sum {
     sha256sum -c ${fname}.sha256
     rm -f ${fname}.sha256
 }
-
