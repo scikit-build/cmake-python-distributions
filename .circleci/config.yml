@@ -24,7 +24,7 @@ references:
             if [ "${UPLOAD_SDIST}" == "tests-only" ]; then
               rm -f ./dist/*
             fi
-        no_output_timeout: 20m # may die at 10 minutes
+          no_output_timeout: 20m # may die at 10 minutes
       - persist_to_workspace:
           root: ./
           paths:
