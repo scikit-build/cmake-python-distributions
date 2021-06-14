@@ -84,19 +84,19 @@ def get_cmake_archive_urls_and_sha256s(version, verbose=False):
             for identifier in set(expected_files.values()) - set(urls.keys()):
                 missing_files.append(expected_files_by_identifier[identifier])
             raise RuntimeError(
-                "Couldn't find %s at %s" % (missing_files, files_base_url)
+                "Couldn't find {} at {}".format(missing_files, files_base_url)
             )
 
         # combine the URLs and SHA256s into a single dictionary
         zipped = {}
         for value in expected_files.values():
-            print("[%s]\n%s\n%s\n" % (value, urls[value], shas[value]))
+            print("[{}]\n{}\n{}\n".format(value, urls[value], shas[value]))
             zipped[value] = (urls[value], shas[value])
         assert len(zipped) == len(expected_files)
 
         if verbose:
             for identifier, (url, sha256) in zipped.items():
-                print("[%s]\n%s\n%s\n" % (identifier, url, sha256))
+                print("[{}]\n{}\n{}\n".format(identifier, url, sha256))
 
         return zipped
 
@@ -147,7 +147,7 @@ def update_cmake_urls_script(version):
     cmake_urls_filename = "CMakeUrls.cmake"
     cmake_urls_filepath = os.path.join(ROOT_DIR, cmake_urls_filename)
 
-    msg = "Updating '%s' with CMake version %s" % (cmake_urls_filename, version)
+    msg = "Updating '{}' with CMake version {}".format(cmake_urls_filename, version)
     with _log(msg), open(cmake_urls_filepath, "w") as cmake_file:
         cmake_file.write(content)
 
@@ -169,7 +169,7 @@ def update_docs(version):
     pattern = re.compile(
         r"CMake \d.(\d)+.\d <https://cmake.org/cmake/help/v\d.(\d)+/index.html>"
     )
-    replacement = "CMake %s <https://cmake.org/cmake/help/v%s/index.html>" % (
+    replacement = "CMake {} <https://cmake.org/cmake/help/v{}/index.html>".format(
         version,
         _major_minor(version),
     )

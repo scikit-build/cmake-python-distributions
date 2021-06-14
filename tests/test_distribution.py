@@ -1,4 +1,3 @@
-
 import os
 import pytest
 import textwrap
@@ -14,7 +13,7 @@ def _check_cmake_install(virtualenv, tmpdir):
     for executable_name in ["cmake", "cpack", "ctest"]:
         output = virtualenv.run(
             "%s --version" % executable_name, capture=True).splitlines()[0]
-        assert output == "%s version %s" % (executable_name, expected_version)
+        assert output == "{} version {}".format(executable_name, expected_version)
 
     test_script = tmpdir.join("test_cmake.cmake")
     test_script.write(textwrap.dedent(r"""
