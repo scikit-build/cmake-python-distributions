@@ -70,3 +70,19 @@ def docs(session: nox.Session) -> str:
             session.run("python", "-m", "http.server", "8000", "-d", "_build/html")
         else:
             print("Unsupported argument to docs")
+
+
+@nox.session
+def bump(session: nox.Session) -> None:
+    """
+    Set to a new version, use -- <version>, otherwise will use the latest version.
+    """
+    if session.posargs:
+        (version,) = session.posargs
+    else:
+        session.install("lastversion")
+        version = session.run(
+            "lastversion", "kitware/cmake", log=False, silent=True
+        ).strip()
+    session.install("requests")
+    session.run("python", "scripts/update_cmake_version.py", version)
