@@ -24,7 +24,7 @@ matrix:
     - arch: s390x
 
 install:
-  - python -m pip install git+https://github.com/henryiii/cibuildwheel.git@3b715c72d5159c3bf1d37faaf42ba544e038d695
+  - python -m pip install cibuildwheel==2.0.0a4
   - python -m pip install -r requirements-deploy.txt
 
 script:

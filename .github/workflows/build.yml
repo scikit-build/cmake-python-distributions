@@ -37,7 +37,7 @@ jobs:
           fetch-depth: 0  # required for versioneer to find tags
 
       - name: Build wheels
-        uses: henryiii/cibuildwheel@3b715c72d5159c3bf1d37faaf42ba544e038d695
+        uses: pypa/cibuildwheel@v2.0.0a4
         env:
           CIBW_ARCHS: "${{ matrix.arch }}"
 
