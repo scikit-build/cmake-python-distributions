@@ -30,12 +30,12 @@ Build Status
 
 .. table::
 
-  +---------------+------------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+
-  |               | Linux                                                                                    | macOS                                                                                       | Windows                                                                                                   |
-  +===============+==========================================================================================+=============================================================================================+===========================================================================================================+
-  | PyPI          | .. image:: https://circleci.com/gh/scikit-build/cmake-python-distributions.svg?style=svg | .. image:: https://travis-ci.com/scikit-build/cmake-python-distributions.svg?branch=master  | .. image:: https://ci.appveyor.com/api/projects/status/439ila0jk7v6uqrr/branch/master?svg=true            |
-  |               |     :target: https://circleci.com/gh/scikit-build/cmake-python-distributions             |     :target: https://travis-ci.com/github/scikit-build/cmake-python-distributions           |    :target: https://ci.appveyor.com/project/scikit-build/cmake-python-distributions-f3rbb/branch/master   |
-  +---------------+------------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+
+  +---------------+--------------------------------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------+
+  |               | GitHub Actions (Windows, macOS, Linux)                                                                       | Travis CI (alternative archs)                                                               |
+  +===============+==============================================================================================================+=============================================================================================+
+  | PyPI          | .. image:: https://github.com/scikit-build/cmake-python-distributions/actions/workflows/build.yml/badge.svg  | .. image:: https://travis-ci.com/scikit-build/cmake-python-distributions.svg?branch=master  |
+  |               |     :target: https://github.com/scikit-build/cmake-python-distributions/actions/workflows/build.yml          |     :target: https://travis-ci.com/github/scikit-build/cmake-python-distributions           |
+  +---------------+--------------------------------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------+
 
 Platforms
 ---------
