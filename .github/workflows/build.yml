@@ -14,7 +14,11 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
-      - run: pipx run nox --forcecolor -s lint
+      - uses: actions/setup-python@v2
+        with:
+          fetch-depth: 0  # required for versioneer to find tags
+      - uses: pre-commit/action@v2.0.3
+
 
   build_wheels:
     name: Build ${{ matrix.arch }} wheels on ${{ matrix.os }}
