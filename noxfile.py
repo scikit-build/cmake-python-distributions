@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import nox
 from pathlib import Path
 
