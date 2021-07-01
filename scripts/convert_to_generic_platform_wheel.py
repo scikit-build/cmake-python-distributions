@@ -1,4 +1,3 @@
-
 import argparse
 import logging
 import os
@@ -94,7 +93,7 @@ def _convert_to_generic_platform_wheel(wheel_ctx, py2_py3, additional_platforms)
     logger.debug('Previous pyver tags: %s', ', '.join(original_pyver_tags))
     pyver_tags = _to_generic_pyver(original_pyver_tags)
     if py2_py3:
-        if len(set(["py2", "py3"]) & set(pyver_tags)) == 0:
+        if len({"py2", "py3"} & set(pyver_tags)) == 0:
             raise ValueError("pyver_tags does not contain py2 nor py3")
         pyver_tags = list(sorted(set(pyver_tags + ["py2", "py3"])))
     if pyver_tags != original_pyver_tags:
