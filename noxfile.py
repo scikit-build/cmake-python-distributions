@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import argparse
 from pathlib import Path
 
 import nox
@@ -79,12 +80,45 @@ def bump(session: nox.Session) -> None:
     """
     Set to a new version, use -- <version>, otherwise will use the latest version.
     """
-    if session.posargs:
-        (version,) = session.posargs
-    else:
+    parser = argparse.ArgumentParser(description="Process some integers.")
+    parser.add_argument(
+        "--commit", action="store_true", help="Make a branch and commit."
+    )
+    parser.add_argument(
+        "version", nargs="?", help="The version to process - leave off for latest."
+    )
+    args = parser.parse_args(session.posargs)
+
+    if args.version is None:
         session.install("lastversion")
         version = session.run(
             "lastversion", "kitware/cmake", log=False, silent=True
         ).strip()
+    else:
+        version = args.version
+
     session.install("requests")
-    session.run("python", "scripts/update_cmake_version.py", version)
+
+    extra = [] if args.commit else ["--quiet"]
+    session.run("python", "scripts/update_cmake_version.py", version, *extra)
+
+    if args.commit:
+        session.run("git", "switch", "-c", f"update-to-cmake-{version}", external=True)
+        files = (
+            "CMakeUrls.cmake",
+            "docs/index.rst",
+            "README.rst",
+            "tests/test_distribution.py",
+            "docs/update_cmake_version.rst",
+        )
+        session.run(
+            "git",
+            "add",
+            "-u",
+            *files,
+            external=True,
+        )
+        session.run("git", "commit", "-m", f"Update to CMake {version}", external=True)
+        session.log(
+            'Complete! Now run: gh pr create --fill --body "Created by update_cmake_version.py"'
+        )
