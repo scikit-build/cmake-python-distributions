@@ -9,6 +9,18 @@ of CMake associated with the current CMake python distributions.
 
 Available CMake archives can be found at https://cmake.org/files.
 
+Nox prodedure
+-------------
+
+If using nox, run::
+
+    nox -s bump -- <version>
+
+
+And follow the instructions it gives you. Leave off the version to bump to the latest version.
+
+Classic procedure:
+------------------
 
 1. Install `requests`::
 

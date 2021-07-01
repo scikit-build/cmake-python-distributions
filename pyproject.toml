@@ -16,7 +16,7 @@ before-all = [
 ]
 before-build = "pip install -r requirements-repair.txt"
 repair-wheel-command = "python scripts/repair_wheel.py -w {dest_dir} {wheel}"
-test-requires = "-r requirements-test.txt"
+test-extras = "test"
 test-command = "pytest {project}/tests"
 
 [tool.cibuildwheel.linux]

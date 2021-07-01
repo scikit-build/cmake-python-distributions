@@ -25,15 +25,7 @@ def parse_requirements(filename):
         return TextFile(filename, file).readlines()
 
 
-requirements = []
 test_requirements = parse_requirements('requirements-test.txt')
-
-# Require pytest-runner only when running tests
-pytest_runner = (['pytest-runner>=2.0,<3dev']
-                 if any(arg in sys.argv for arg in ('pytest', 'test'))
-                 else [])
-
-setup_requires = pytest_runner
 
 setup(
     name='cmake',
@@ -88,7 +80,5 @@ setup(
 
     keywords='CMake build c++ fortran cross-platform cross-compilation',
 
-    install_requires=requirements,
-    tests_require=test_requirements,
-    setup_requires=setup_requires
+    extras_require={"test": test_requirements},
 )
