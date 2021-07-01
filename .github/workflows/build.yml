@@ -1,20 +1,24 @@
 name: Build and upload to PyPI
 
 on:
-  push:
+  workflow_dispatch:
   pull_request:
+  push:
+    branches:
+      - master
+      - main
 
 jobs:
-  flake8:
-    name: flake8
+  lint:
+    name: Lint
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
-      - run: pipx run flake8
+      - run: pipx run nox --forcecolor -s lint
 
   build_wheels:
     name: Build ${{ matrix.arch }} wheels on ${{ matrix.os }}
-    needs: [flake8]
+    needs: [lint]
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -47,7 +51,7 @@ jobs:
 
   build_sdist:
     name: Build source distribution
-    needs: [flake8]
+    needs: [lint]
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
@@ -108,33 +112,21 @@ jobs:
           name: artifact
           path: dist
 
-      - run: |
-          pipx install twine
-          twine check --strict dist/*
+      - run: pipx run twine check --strict dist/*
 
   upload_pypi:
-    name: Upload to (Test) PyPI
+    name: Upload to PyPI
     needs: [build_wheels, build_sdist, test_sdist, check_dist]
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.repository == 'scikit-build/cmake-python-distributions'
+    if: github.event_name == 'push' && github.repository == 'scikit-build/cmake-python-distributions' && startsWith(github.ref, 'refs/tags/')
     steps:
       - uses: actions/download-artifact@v2
         with:
           name: artifact
           path: dist
 
-      - name: Upload to Test PyPI
-        uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
-        with:
-          user: __token__
-          password: ${{ secrets.PYPI_TEST_PASSWORD }}
-          skip_existing: true
-          repository_url: https://test.pypi.org/legacy/
-
       - name: Upload to PyPI
-        # upload to PyPI on every tag
-        if: startsWith(github.ref, 'refs/tags/')
-        uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
+        uses: pypa/gh-action-pypi-publish@v1.4.2
         with:
           user: __token__
           password: ${{ secrets.PYPI_RELEASE_PASSWORD }}
