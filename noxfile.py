@@ -99,7 +99,7 @@ def bump(session: nox.Session) -> None:
 
     session.install("requests")
 
-    extra = [] if args.commit else ["--quiet"]
+    extra = ["--quiet"] if args.commit else []
     session.run("python", "scripts/update_cmake_version.py", version, *extra)
 
     if args.commit:
@@ -120,5 +120,5 @@ def bump(session: nox.Session) -> None:
         )
         session.run("git", "commit", "-m", f"Update to CMake {version}", external=True)
         session.log(
-            'Complete! Now run: gh pr create --fill --body "Created by update_cmake_version.py"'
+            'Complete! Now run: gh pr create --fill --body "Created by running `nox -s bump -- --commit`"'
         )
