@@ -9,7 +9,7 @@ DIST_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../dist'))
 
 
 def _check_cmake_install(virtualenv, tmpdir):
-    expected_version = "3.20.4"
+    expected_version = "3.20.5"
 
     for executable_name in ["cmake", "cpack", "ctest"]:
         output = virtualenv.run(
