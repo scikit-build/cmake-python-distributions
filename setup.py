@@ -3,8 +3,8 @@
 
 import os
 import sys
-
 from distutils.text_file import TextFile
+
 from skbuild import setup
 
 # Add current folder to path
@@ -12,7 +12,6 @@ from skbuild import setup
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 import versioneer  # noqa: E402
-
 
 with open('README.rst', 'r') as fp:
     readme = fp.read()

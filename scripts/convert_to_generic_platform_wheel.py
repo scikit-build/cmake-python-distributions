@@ -3,14 +3,16 @@ import argparse
 import logging
 import os
 import sys
-
 from itertools import product
-from os.path import (abspath, basename, dirname, isfile, join as pjoin, splitext)
+from os.path import abspath, basename, dirname, isfile
+from os.path import join as pjoin
+from os.path import splitext
 
 try:
     from wheel.install import WheelFile
 except ImportError:  # As of Wheel 0.32.0
     from wheel.wheelfile import WheelFile
+
 from wheel.pkginfo import read_pkg_info, write_pkg_info
 from wheeltools.tools import unique_by_index
 from wheeltools.wheeltools import InWheelCtx
