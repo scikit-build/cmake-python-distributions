@@ -37,8 +37,8 @@ def lint(session: nox.Session) -> str:
     """
     Run linters on the codebase.
     """
-    session.install("flake8")
-    session.run("flake8")
+    session.install("pre-commit")
+    session.run("pre-commit", "run", "-a")
 
 
 @nox.session
