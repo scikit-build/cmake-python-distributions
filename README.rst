@@ -69,14 +69,14 @@ The following platforms are supported with binary wheels:
 Until `PEP 656 <https://www.python.org/dev/peps/pep-0656/>`_ is implemented, we
 cannot provide wheels for Alpine and other MUSL variants. If you need to use
 Alpine, the requirements are ``g++ ninja cmake openssl-dev linux-headers``. If
-those are installed, then `pip3 install cmake`` will work.
+those are installed, then ``pip3 install cmake`` will work.
 
 Maintainers
 -----------
 
-* `How to update CMake version ? <http://cmake-python-distributions.readthedocs.io/en/latest/update_cmake_version.html>`_
+* `How to update CMake version? <http://cmake-python-distributions.readthedocs.io/en/latest/update_cmake_version.html>`_
 
-* `How to make a release ? <http://cmake-python-distributions.readthedocs.io/en/latest/make_a_release.html>`_
+* `How to make a release? <http://cmake-python-distributions.readthedocs.io/en/latest/make_a_release.html>`_
 
 Miscellaneous
 -------------
