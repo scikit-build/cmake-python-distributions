@@ -13,7 +13,7 @@ This is usually done after :ref:`updating_cmake_version`.
 Prerequisites
 -------------
 
-* All CI tests are passing on `AppVeyor`_, `CircleCI`_ and `Travis CI`_.
+* All CI tests are passing on `GitHub Actions`_ and `Travis CI`_.
 
 * You have a `GPG signing key <https://help.github.com/articles/generating-a-new-gpg-key/>`_.
 
@@ -122,8 +122,7 @@ means that ``echo "Hello"`` should be copied and evaluated in the terminal.
 .. _venv: https://docs.python.org/3/library/venv.html
 
 
-.. _AppVeyor: https://ci.appveyor.com/project/scikit-build/cmake-python-distributions-f3rbb/history
-.. _CircleCI: https://circleci.com/gh/scikit-build/cmake-python-distributions
+.. _AppVeyor: https://github.com/scikit-build/cmake-python-distributions/actions/workflows/build.yml
 .. _Travis CI: https://travis-ci.org/scikit-build/cmake-python-distributions/pull_requests
 
 .. _PyPI: https://pypi.org/project/cmake

@@ -102,9 +102,8 @@ Before you submit a pull request, check that it meets these guidelines:
    your new functionality into a function with a docstring, and add the
    feature to the list in `README.rst`.
 
-3. The pull request should work for Python 2.7, and 3.3, 3.4, 3.5.
-   Check `AppVeyor <https://ci.appveyor.com/project/scikit-build/cmake-python-distributions-f3rbb>`_,
-   `CircleCI <https://circleci.com/gh/scikit-build/cmake-python-distributions>`_
+3. The pull request should work for Python 2.7, and 3.5+.
+   Check `GitHub Actions https://github.com/scikit-build/cmake-python-distributions/actions/workflows/build.yml`_
    and `TravisCi <https://travis-ci.org/scikit-build/cmake-python-distributions/pull_requests>`_
    and make sure that the tests pass for all supported Python versions.
 
@@ -115,3 +114,5 @@ Tips
 To run a subset of tests::
 
 	$ pytest tests/test_cmake.py
+    # OR
+    $ nox -s tests -- tests/test_cmake.py
