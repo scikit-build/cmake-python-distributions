@@ -207,6 +207,11 @@ def main():
         action="store_true",
         help="If specified, only display the archive URLs and associated hashsums",
     )
+    parser.add_argument(
+        "--quiet",
+        action="store_true",
+        help="Hide the output",
+    )
     args = parser.parse_args()
     if args.collect_only:
         get_cmake_archive_urls_and_sha256s(args.cmake_version, verbose=True)
@@ -216,17 +221,16 @@ def main():
         update_tests(args.cmake_version)
         update_raw_versions(args.cmake_version)
 
-        print(
-            """Complete! Now run:
+        if not args.quiet:
+            msg = """\
+                Complete! Now run:
 
-    git switch -c update-to-cmake-{release}
-    git add CMakeUrls.cmake docs/index.rst README.rst tests/test_distribution.py docs/update_cmake_version.rst
-    git commit -m "Update to CMake {release}"
-    gh pr create --fill --body "Created by update_cmake_version.py"
-""".format(
-                release=args.cmake_version
-            )
-        )
+                git switch -c update-to-cmake-{release}
+                git add -u CMakeUrls.cmake docs/index.rst README.rst tests/test_distribution.py docs/update_cmake_version.rst
+                git commit -m "Update to CMake {release}"
+                gh pr create --fill --body "Created by update_cmake_version.py"
+                """
+            print(textwrap.dedent(msg.format(release=args.cmake_version)))
 
 
 if __name__ == "__main__":

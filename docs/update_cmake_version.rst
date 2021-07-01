@@ -17,7 +17,7 @@ If using nox, run::
     nox -s bump -- <version>
 
 
-And follow the instructions it gives you. Leave off the version to bump to the latest version.
+And follow the instructions it gives you. Leave off the version to bump to the latest version. Add `--commit` to run the commit procedure.
 
 Classic procedure:
 ------------------
@@ -48,7 +48,7 @@ Classic procedure:
 
     release=3.20.4
     git switch -c update-to-cmake-$release
-    git add CMakeUrls.cmake docs/index.rst README.rst tests/test_distribution.py docs/update_cmake_version.rst
+    git add -u CMakeUrls.cmake docs/index.rst README.rst tests/test_distribution.py docs/update_cmake_version.rst
     git commit -m "Update to CMake $release"
 
 4. Push the topic and create a `Pull Request`.
