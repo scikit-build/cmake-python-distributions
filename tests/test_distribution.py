@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 import os
-import pytest
 import textwrap
 
+import pytest
 from path import Path, matchers
 
 DIST_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../dist'))

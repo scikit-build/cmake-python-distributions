@@ -36,3 +36,7 @@ SKBUILD_CONFIGURE_OPTIONS = "-DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl -DCMAKE_JOB_
 
 [tool.cibuildwheel.macos.environment]
 MACOSX_DEPLOYMENT_TARGET = "10.10"
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3

@@ -14,6 +14,11 @@ repos:
   - id: trailing-whitespace
   - id: fix-encoding-pragma
 
+- repo: https://github.com/PyCQA/isort
+  rev: 5.8.0
+  hooks:
+  - id: isort
+
 - repo: https://github.com/asottile/pyupgrade
   rev: v2.19.1
   hooks:
