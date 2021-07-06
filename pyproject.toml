@@ -9,9 +9,9 @@ build-backend = "setuptools.build_meta"
 [tool.cibuildwheel]
 build = "cp39-*"
 before-all = [
-    "pipx install -f --pip-args='-c {project}/constraints-ci.txt' cmake",
+    "pipx install -f --pip-args=\"-c {project}/constraints-ci.txt\" cmake",
     "cmake --version",
-    "pipx install -f --pip-args='-c {project}/constraints-ci.txt' ninja",
+    "pipx install -f --pip-args=\"-c {project}/constraints-ci.txt\" ninja",
     "ninja --version",
 ]
 before-build = "pip install -r requirements-repair.txt"
@@ -21,9 +21,9 @@ test-command = "pytest {project}/tests"
 
 [tool.cibuildwheel.linux]
 before-all = [
-    "pipx install -f --pip-args='-c {project}/constraints-ci.txt' cmake",
+    "pipx install -f --pip-args=\"-c {project}/constraints-ci.txt\" cmake",
     "cmake --version",
-    "pipx install -f --pip-args='-c {project}/constraints-ci.txt' ninja",
+    "pipx install -f --pip-args=\"-c {project}/constraints-ci.txt\" ninja",
     "ninja --version",
     "./scripts/manylinux-build-and-install-openssl.sh",
 ]
