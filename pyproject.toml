@@ -9,9 +9,9 @@ build-backend = "setuptools.build_meta"
 [tool.cibuildwheel]
 build = "cp39-*"
 before-all = [
-    "pipx install cmake==3.20.4",
+    "pipx install -f --pip-args='-c {project}/constraints-ci.txt' cmake",
     "cmake --version",
-    "pipx install ninja==1.10.0.post2",
+    "pipx install -f --pip-args='-c {project}/constraints-ci.txt' ninja",
     "ninja --version",
 ]
 before-build = "pip install -r requirements-repair.txt"
@@ -21,15 +21,18 @@ test-command = "pytest {project}/tests"
 
 [tool.cibuildwheel.linux]
 before-all = [
-    "pipx install cmake==3.20.4",
+    "pipx install -f --pip-args='-c {project}/constraints-ci.txt' cmake",
     "cmake --version",
-    "pipx install ninja==1.10.0.post2",
+    "pipx install -f --pip-args='-c {project}/constraints-ci.txt' ninja",
     "ninja --version",
     "./scripts/manylinux-build-and-install-openssl.sh",
 ]
 build-verbosity = "1"
-manylinux-x86_64-image = "manylinux1"
-manylinux-i686-image = "manylinux1"
+manylinux-x86_64-image = "quay.io/pypa/manylinux1_x86_64:2021-07-04-13bcf48"
+manylinux-i686-image = "quay.io/pypa/manylinux1_i686:2021-07-04-13bcf48"
+manylinux-aarch64-image = "quay.io/pypa/manylinux2014_aarch64:2021-07-04-1e3ce39"
+manylinux-ppc64le-image = "quay.io/pypa/manylinux2014_ppc64le:2021-07-04-1e3ce39"
+manylinux-s390x-image = "quay.io/pypa/manylinux2014_s390x:2021-07-04-1e3ce39"
 
 [tool.cibuildwheel.linux.environment]
 SKBUILD_CONFIGURE_OPTIONS = "-DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl -DCMAKE_JOB_POOL_COMPILE:STRING=compile -DCMAKE_JOB_POOL_LINK:STRING=link -DCMAKE_JOB_POOLS:STRING=compile=2;link=1"
