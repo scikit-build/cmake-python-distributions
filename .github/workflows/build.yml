@@ -2,6 +2,13 @@ name: CI
 
 on:
   workflow_dispatch:
+    inputs:
+      use_qemu:
+        description: 'Use qemu to build linux aarch64, ppc64le & s390x'
+        required: true
+        default: true
+  schedule:
+    - cron: '0 18 * * 5'  # "At 18:00 on Friday."
   pull_request:
   push:
     branches:
@@ -9,6 +16,9 @@ on:
       - main
     tags:
       - "*.*.*"
+
+env:
+  USE_QEMU: ${{ fromJSON(github.event.inputs.use_qemu || 'false') || (github.event_name == 'schedule') || startsWith(github.ref, 'refs/tags/') }}
 
 jobs:
   lint:
@@ -32,26 +42,47 @@ jobs:
         include:
           - os: ubuntu-20.04
             arch: "x86_64"
+            use_qemu: false
           - os: ubuntu-20.04
             arch: "i686"
+            use_qemu: false
+          - os: ubuntu-20.04
+            arch: "aarch64"
+            use_qemu: true
+          - os: ubuntu-20.04
+            arch: "ppc64le"
+            use_qemu: true
+          - os: ubuntu-20.04
+            arch: "s390x"
+            use_qemu: true
           - os: windows-2019
             arch: "AMD64"
+            use_qemu: false
           - os: windows-2019
             arch: "x86"
+            use_qemu: false
           - os: macos-10.15
             arch: "x86_64"
+            use_qemu: false
 
     steps:
       - uses: actions/checkout@v2
+        if: (!matrix.use_qemu) || fromJSON(env.USE_QEMU)
         with:
           fetch-depth: 0  # required for versioneer to find tags
 
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1.2.0
+        if: matrix.use_qemu && fromJSON(env.USE_QEMU)
+
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.0.0a4
+        if: (!matrix.use_qemu) || fromJSON(env.USE_QEMU)
         env:
           CIBW_ARCHS: "${{ matrix.arch }}"
 
       - uses: actions/upload-artifact@v2
+        if: (!matrix.use_qemu) || fromJSON(env.USE_QEMU)
         with:
           path: ./wheelhouse/*.whl
 
