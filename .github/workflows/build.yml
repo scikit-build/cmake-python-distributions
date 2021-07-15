@@ -27,8 +27,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
-        with:
-          fetch-depth: 0  # required for versioneer to find tags
       - uses: pre-commit/action@v2.0.3
 
 
@@ -165,6 +163,4 @@ jobs:
       - name: Upload to PyPI
         uses: pypa/gh-action-pypi-publish@v1.4.2
         with:
-          user: __token__
           password: ${{ secrets.PYPI_RELEASE_PASSWORD }}
-          skip_existing: true
