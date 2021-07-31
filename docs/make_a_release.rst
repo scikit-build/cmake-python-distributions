@@ -13,7 +13,7 @@ This is usually done after :ref:`updating_cmake_version`.
 Prerequisites
 -------------
 
-* All CI tests are passing on `GitHub Actions`_ and `Travis CI`_.
+* All CI tests are passing on `GitHub Actions`_ and `Travis CI`_ (if credits are available).
 
 * You have a `GPG signing key <https://help.github.com/articles/generating-a-new-gpg-key/>`_.
 
@@ -36,7 +36,7 @@ means that ``echo "Hello"`` should be copied and evaluated in the terminal.
 `PyPI`_: Step-by-step
 ---------------------
 
-1. Make sure that all CI tests are passing on `AppVeyor`_, `CircleCI`_ and `Travis CI`_.
+1. Make sure that all CI tests are passing on `GitHub Actions`_ and `Travis CI`_ (if credits are available).
 
 
 2. Download the latest sources
@@ -89,11 +89,15 @@ means that ``echo "Hello"`` should be copied and evaluated in the terminal.
   .. note:: This will trigger builds on each CI services and automatically upload the wheels \
             and source distribution on `PyPI`_.
 
-7. Check the status of the builds on `AppVeyor`_, `CircleCI`_ and `Travis CI`_.
+7. Check the status of the builds on `GitHub Actions`_.
 
 8. Once the builds are completed, check that the distributions are available on `PyPI`_.
 
-9. Create a clean testing environment to test the installation
+9. Make a GitHub release based on the tag. This will display the latest version
+   in the GitHub sidebar, and will notify release watchers of the release.
+   Title it `Version X.Y.Z` and add a little note about what changed (Python only).
+
+10. Create a clean testing environment to test the installation
 
   .. code::
 
@@ -107,7 +111,7 @@ means that ``echo "Hello"`` should be copied and evaluated in the terminal.
       If the ``mkvirtualenv`` command is not available, this means you do not have `virtualenvwrapper`_
       installed, in that case, you could either install it or directly use `virtualenv`_ or `venv`_.
 
-10. Cleanup
+11. Cleanup
 
   .. code::
 
@@ -122,7 +126,7 @@ means that ``echo "Hello"`` should be copied and evaluated in the terminal.
 .. _venv: https://docs.python.org/3/library/venv.html
 
 
-.. _AppVeyor: https://github.com/scikit-build/cmake-python-distributions/actions/workflows/build.yml
+.. _GitHub Actions: https://github.com/scikit-build/cmake-python-distributions/actions/workflows/build.yml
 .. _Travis CI: https://travis-ci.org/scikit-build/cmake-python-distributions/pull_requests
 
 .. _PyPI: https://pypi.org/project/cmake
