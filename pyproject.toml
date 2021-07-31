@@ -33,6 +33,7 @@ manylinux-i686-image = "manylinux1"
 
 [tool.cibuildwheel.linux.environment]
 SKBUILD_CONFIGURE_OPTIONS = "-DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl -DCMAKE_JOB_POOL_COMPILE:STRING=compile -DCMAKE_JOB_POOL_LINK:STRING=link -DCMAKE_JOB_POOLS:STRING=compile=2;link=1"
+OPENSSL_CACHE_DIR = "home/runner/work/cmake-python-distributions/cmake-python-distributions/.cache-openssl"
 
 [tool.cibuildwheel.macos.environment]
 MACOSX_DEPLOYMENT_TARGET = "10.10"
