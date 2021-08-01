@@ -213,6 +213,7 @@ set(CMAKE_EXE_LINKER_FLAGS \"-lstdc++ -lgcc -lrt\" CACHE STRING \"Initial cache\
           BINARY_DIR ${LibUV_BINARY_DIR}
           URL "https://dist.libuv.org/dist/v1.23.0/libuv-v1.23.0.tar.gz"
           URL_HASH "SHA256=d1746d324dea973d9f4c7ff40ba9cf60556c0bae9a92ad970568211b0e3bce27"
+          DOWNLOAD_DIR ${CMakePythonDistributions_ARCHIVE_DOWNLOAD_DIR}
           ${_common_args}
           CMAKE_CACHE_ARGS
             ${_common_cache_args}
