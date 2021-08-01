@@ -29,6 +29,7 @@ def build(session: nox.Session) -> str:
         session.run("python", "-m", "build", "--outdir", tmpdir, env=BUILD_ENV)
         (wheel_path,) = Path(tmpdir).glob("*.whl")
         (sdist_path,) = Path(tmpdir).glob("*.tar.gz")
+        Path("dist").mkdir(exist_ok=True)
         wheel_path.rename(f"dist/{wheel_path.name}")
         sdist_path.rename(f"dist/{sdist_path.name}")
         built = wheel_path.name
