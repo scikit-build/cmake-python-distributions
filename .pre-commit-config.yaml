@@ -15,12 +15,12 @@ repos:
   - id: fix-encoding-pragma
 
 - repo: https://github.com/PyCQA/isort
-  rev: 5.9.2
+  rev: 5.9.3
   hooks:
   - id: isort
 
 - repo: https://github.com/asottile/pyupgrade
-  rev: v2.23.0
+  rev: v2.23.1
   hooks:
   - id: pyupgrade
 
