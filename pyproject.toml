@@ -1,6 +1,6 @@
 [build-system]
 requires = [
-    "scikit-build",
+    "scikit-build @ git+https://github.com/scikit-build/scikit-build.git@739238cfdc7224e02651f94b41f2aea1fd84b519",
     "setuptools>=42",
     "wheel"
 ]
