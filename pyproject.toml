@@ -1,6 +1,6 @@
 [build-system]
 requires = [
-    "scikit-build @ git+https://github.com/scikit-build/scikit-build.git@739238cfdc7224e02651f94b41f2aea1fd84b519",
+    "scikit-build>=0.12",
     "setuptools>=42",
     "wheel"
 ]
@@ -18,6 +18,7 @@ before-build = "pip install -r requirements-repair.txt"
 repair-wheel-command = "python scripts/repair_wheel.py -w {dest_dir} {wheel}"
 test-extras = "test"
 test-command = "pytest {project}/tests"
+build-verbosity = "1"
 
 [tool.cibuildwheel.linux]
 before-all = [
@@ -27,7 +28,6 @@ before-all = [
     "ninja --version",
     "./scripts/manylinux-build-and-install-openssl.sh",
 ]
-build-verbosity = "1"
 manylinux-x86_64-image = "manylinux1"
 manylinux-i686-image = "manylinux1"
 
