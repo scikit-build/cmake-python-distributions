@@ -203,7 +203,25 @@ set(CMAKE_EXE_LINKER_FLAGS \"-lstdc++ -lgcc -lrt\" CACHE STRING \"Initial cache\
       set(_cmake_cache_args)
 
       # libuv
+      set(UseCustomLibUV OFF)
       if(UNIX AND NOT APPLE)
+        # libuv 1.23.0 is the last version to build on CentOS 5 (or glibc < 2.12)
+        # Use libuv 1.23.0 instead of cmake embedded libuv when detecting glibc < 2.12
+        # https://github.com/libuv/libuv/blob/v1.x/SUPPORTED_PLATFORMS.md
+        include(CheckSymbolExists)
+        check_symbol_exists(__GLIBC__ "stdlib.h" HAS_GLIBC_MAJOR)
+        check_symbol_exists(__GLIBC_MINOR__ "stdlib.h" HAS_GLIBC_MINOR)
+        if(HAS_GLIBC_MAJOR AND HAS_GLIBC_MINOR AND (CMAKE_CXX_COMPILER_ID STREQUAL "GNU"))
+          execute_process(COMMAND echo __GLIBC__ COMMAND "${CMAKE_CXX_COMPILER}" -E -P -imacros stdlib.h - OUTPUT_VARIABLE GLIBC_MAJOR_)
+          string(STRIP "${GLIBC_MAJOR_}" GLIBC_MAJOR)
+          execute_process(COMMAND echo __GLIBC_MINOR__ COMMAND "${CMAKE_CXX_COMPILER}" -E -P -imacros stdlib.h - OUTPUT_VARIABLE GLIBC_MINOR_)
+          string(STRIP "${GLIBC_MINOR_}" GLIBC_MINOR)
+          if("${GLIBC_MAJOR}.${GLIBC_MINOR}" VERSION_LESS "2.12")
+            set(UseCustomLibUV ON)
+          endif()
+        endif()
+      endif()
+      if(UseCustomLibUV)
         set(LibUV_SOURCE_DIR ${CMAKE_BINARY_DIR}/LibUV-src)
         set(LibUV_BINARY_DIR ${CMAKE_BINARY_DIR}/LibUV-build)
         set(LibUV_INSTALL_DIR ${CMAKE_BINARY_DIR}/LibUV-install)

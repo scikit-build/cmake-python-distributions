@@ -84,6 +84,33 @@ jobs:
         with:
           path: ./wheelhouse/*.whl
 
+  build_manylinux1_wheels:
+    name: Build ${{ matrix.arch }} manylinux1 wheels
+    needs: [lint]
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: "x86_64"
+          - arch: "i686"
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # required for versioneer to find tags
+
+      - name: Build wheels
+        uses: pypa/cibuildwheel@v2.0.1
+        env:
+          CIBW_ARCHS: "${{ matrix.arch }}"
+          CIBW_MANYLINUX_X86_64_IMAGE: "manylinux1"
+          CIBW_MANYLINUX_I686_IMAGE: "manylinux1"
+
+      - uses: actions/upload-artifact@v2
+        with:
+          path: ./wheelhouse/*.whl
+
   build_sdist:
     name: Build source distribution
     needs: [lint]
@@ -139,7 +166,7 @@ jobs:
 
   check_dist:
     name: Check dist
-    needs: [build_wheels, build_sdist, test_sdist]
+    needs: [build_wheels, build_manylinux1_wheels, build_sdist, test_sdist]
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/download-artifact@v2
@@ -151,7 +178,7 @@ jobs:
 
   upload_pypi:
     name: Upload to PyPI
-    needs: [build_wheels, build_sdist, test_sdist, check_dist]
+    needs: [build_wheels, build_manylinux1_wheels, build_sdist, test_sdist, check_dist]
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.repository == 'scikit-build/cmake-python-distributions' && startsWith(github.ref, 'refs/tags/')
     steps:
