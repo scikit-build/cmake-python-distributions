@@ -1,2 +1,2 @@
-cmake==3.21.1.post1
+cmake==3.21.2
 ninja==1.10.2
