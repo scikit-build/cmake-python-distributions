@@ -10,9 +10,9 @@ set -o pipefail
 MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 source $MY_DIR/utils.sh
 
-OPENSSL_ROOT=openssl-1.1.1l
-# Hash from https://www.openssl.org/source/openssl-1.1.1l.tar.gz.sha256
-OPENSSL_HASH=0b7a3e5e59c34827fe0c3a74b7ec8baef302b98fa80088d7f9153aa16fa76bd1
+OPENSSL_ROOT=openssl-3.0.0
+# Hash from https://www.openssl.org/source/openssl-3.0.0.tar.gz.sha256
+OPENSSL_HASH=59eedfcb46c25214c9bd37ed6078297b4df01d012267fe9e9eee31f61bc70536
 
 cd /tmp
 
@@ -33,6 +33,12 @@ if ! perl -e 'use 5.10.0' &> /dev/null; then
 	make install > /dev/null
 	popd
 	export PATH=/tmp/perl-openssl/bin:${PATH}
+else
+	if [ "${AUDITWHEEL_PLAT:0:9}" == "manylinux" ]; then
+		# more perl modules are needed than the bare minimum already installed in CentOS
+		# c.f. https://github.com/openssl/openssl/blob/openssl-3.0.0/NOTES-PERL.md#general-notes
+		yum -y install perl-core
+	fi
 fi
 
 # Download
