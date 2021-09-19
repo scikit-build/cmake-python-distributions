@@ -21,6 +21,7 @@ install:
 
 script:
   - |
+    set -e
     cibuildwheel --output-dir dist
     ls dist
     twine --version
