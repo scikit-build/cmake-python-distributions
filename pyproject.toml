@@ -17,13 +17,11 @@ before-all = [
 before-build = "pip install -r requirements-repair.txt"
 repair-wheel-command = "python scripts/repair_wheel.py -w {dest_dir} {wheel}"
 test-extras = "test"
-test-command = "pytest {project}/tests"
+test-command = "pytest --ignore={project}/tests/test_distribution.py {project}/tests"
 build-verbosity = "1"
 
 [tool.cibuildwheel.linux]
 before-all = [
-    "pipx install -f --pip-args=\"-c {project}/constraints-ci.txt\" cmake",
-    "cmake --version",
     "pipx install -f --pip-args=\"-c {project}/constraints-ci.txt\" ninja",
     "ninja --version",
     "./scripts/manylinux-build-and-install-openssl.sh",
