@@ -22,6 +22,8 @@ build-verbosity = "1"
 
 [tool.cibuildwheel.linux]
 before-all = [
+    "pipx install -f --pip-args=\"-c {project}/constraints-ci.txt\" cmake",
+    "cmake --version",
     "pipx install -f --pip-args=\"-c {project}/constraints-ci.txt\" ninja",
     "ninja --version",
     "./scripts/manylinux-build-and-install-openssl.sh",

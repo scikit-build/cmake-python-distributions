@@ -125,7 +125,6 @@ jobs:
         uses: pypa/cibuildwheel@v2.2.0a1
         env:
           CIBW_ARCHS: "${{ matrix.arch }}"
-          CIBW_BEFORE_ALL: "pipx install -f --pip-args=\"-c {project}/constraints-ci.txt\" cmake && pipx install -f --pip-args=\"-c {project}/constraints-ci.txt\" ninja && ./scripts/manylinux-build-and-install-openssl.sh"
           CIBW_BUILD: "cp39-manylinux_*"
           CIBW_MANYLINUX_X86_64_IMAGE: "manylinux1"
           CIBW_MANYLINUX_I686_IMAGE: "manylinux1"
