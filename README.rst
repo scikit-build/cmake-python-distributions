@@ -67,7 +67,7 @@ The following platforms are supported with binary wheels:
   | macOS 10.10+  | Intel                    |
   +---------------+--------------------------+
   | macOS 11+     | Apple Silicon            |
-  +--------------+--------------------------+
+  +---------------+--------------------------+
 
 Maintainers
 -----------
