@@ -4,3 +4,4 @@ scikit-build
 sphinx
 sphinx_rtd_theme
 sphinxcontrib-blockdiag
+funcparserlib>=1.0.0a0
