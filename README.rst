@@ -44,32 +44,30 @@ The following platforms are supported with binary wheels:
 
 .. table::
 
-  +--------------+------------------------+
-  | OS           | Arch                   |
-  +==============+========================+
-  | Windows      | 64-bit                 |
-  +--------------+------------------------+
-  | Windows      | 32-bit                 |
-  +--------------+------------------------+
-  | Linux        | manylinux1+ 64-bit     |
-  +--------------+------------------------+
-  | Linux        | manylinux1+ 32-bit     |
-  +--------------+------------------------+
-  | Linux ARM    | manylinux2014+ AArch64 |
-  +--------------+------------------------+
-  | Linux        | manylinux2014+ ppc64le |
-  +--------------+------------------------+
-  | Linux        | manylinux2014+ s390x   |
-  +--------------+------------------------+
-  | macOS 10.10+ | Intel                  |
-  +--------------+------------------------+
-  | macOS 11+    | Apple Silicon          |
-  +--------------+------------------------+
-
-Until `PEP 656 <https://www.python.org/dev/peps/pep-0656/>`_ is implemented, we
-cannot provide wheels for Alpine and other MUSL variants. If you need to use
-Alpine, the requirements are ``g++ ninja cmake openssl-dev linux-headers``. If
-those are installed, then ``pip3 install cmake`` will work.
+  +---------------+--------------------------+
+  | OS            | Arch                     |
+  +===============+==========================+
+  | Windows       | | 64-bit                 |
+  |               | | 32-bit                 |
+  +---------------+--------------------------+
+  | Linux Intel   | | manylinux1+ 64-bit     |
+  |               | | musllinux 64-bit       |
+  |               | | manylinux1+ 32-bit     |
+  |               | | musllinux 32-bit       |
+  +---------------+--------------------------+
+  | Linux ARM     | | manylinux2014+ AArch64 |
+  |               | | musllinux AArch64      |
+  +---------------+--------------------------+
+  | Linux PowerPC | | manylinux2014+ ppc64le |
+  |               | | musllinux ppc64le      |
+  +---------------+--------------------------+
+  | Linux IBM Z   | | manylinux2014+ s390x   |
+  |               | | musllinux s390x        |
+  +---------------+--------------------------+
+  | macOS 10.10+  | Intel                    |
+  +---------------+--------------------------+
+  | macOS 11+     | Apple Silicon            |
+  +--------------+--------------------------+
 
 Maintainers
 -----------
