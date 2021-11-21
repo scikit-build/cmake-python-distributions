@@ -181,7 +181,7 @@ jobs:
           SKBUILD_CONFIGURE_OPTIONS: "-DBUILD_CMAKE_FROM_SOURCE:BOOL=OFF"
         run: |
           pip install dist/*.tar.gz
-          rm dist/*.tar.gz
+          rm -rf dist
 
       - name: Test installed SDist
         run: pytest ./tests
