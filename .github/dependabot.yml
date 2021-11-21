@@ -12,3 +12,11 @@ updates:
       - dependency-name: "actions/setup-python"
       - dependency-name: "actions/upload-artifact"
       - dependency-name: "actions/download-artifact"
+  # Maintain dependencies for pip constraints-ci.txt
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    allow:
+      - dependency-name: "cmake"
+      - dependency-name: "ninja"
