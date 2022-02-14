@@ -40,11 +40,19 @@ jobs:
         include:
           - os: ubuntu-20.04
             arch: "x86_64"
-            build: ""
+            build: "manylinux_"
+            use_qemu: false
+          - os: ubuntu-20.04
+            arch: "x86_64"
+            build: "musllinux_"
             use_qemu: false
           - os: ubuntu-20.04
             arch: "i686"
-            build: ""
+            build: "manylinux_"
+            use_qemu: false
+          - os: ubuntu-20.04
+            arch: "i686"
+            build: "musllinux_"
             use_qemu: false
           - os: ubuntu-20.04
             arch: "aarch64"
