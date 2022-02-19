@@ -33,6 +33,10 @@ if(CMakePythonDistributions_SUPERBUILD)
 
   option(BUILD_VERBOSE "Build reporting additional information (e.g download progress, ...)" ON)
 
+  option(RUN_CMAKE_TEST "Run CMake test suite when built from sources" ON)
+
+  set(RUN_CMAKE_TEST_EXCLUDE "BootstrapTest" CACHE STRING "CMake test suite exclusion regex")
+
   set(CMakePythonDistributions_ARCHIVE_DOWNLOAD_DIR "${CMAKE_BINARY_DIR}"
     CACHE PATH "Directory where to download archives"
     )
@@ -311,15 +315,17 @@ set(CMAKE_EXE_LINKER_FLAGS \"-lstdc++ -lgcc -lrt\" CACHE STRING \"Initial cache\
             )
           set(CMAKEPROJECT_BUILD_LAST_STEP "strip_executables")
         endif()
-        # TODO probably want to make this conditional
-        ExternalProject_Add_Step(CMakeProject-build run_cmake_test_suite
-          DEPENDEES ${CMAKEPROJECT_BUILD_LAST_STEP}
-          COMMENT "Running CMake test suite"
-          COMMAND ./bin/ctest --force-new-ctest-process --stop-on-failure --output-on-failure -j2 -E BootstrapTest
-          WORKING_DIRECTORY ${CMakeProject_BINARY_DIR}
-          USES_TERMINAL 1
-          )
-        set(CMAKEPROJECT_BUILD_LAST_STEP "run_cmake_test_suite")
+
+        if(RUN_CMAKE_TEST)
+          ExternalProject_Add_Step(CMakeProject-build run_cmake_test_suite
+            DEPENDEES ${CMAKEPROJECT_BUILD_LAST_STEP}
+            COMMENT "Running CMake test suite, exclusion list: '${RUN_CMAKE_TEST_EXCLUDE}'"
+            COMMAND ./bin/ctest --force-new-ctest-process --stop-on-failure --output-on-failure -j2 -E ${RUN_CMAKE_TEST_EXCLUDE}
+            WORKING_DIRECTORY ${CMakeProject_BINARY_DIR}
+            USES_TERMINAL 1
+            )
+          set(CMAKEPROJECT_BUILD_LAST_STEP "run_cmake_test_suite")
+        endif()
     else()
       cpd_ExternalProject_Add_Empty(CMakeProject-build "CMakeProject-src-download")
     endif()

@@ -28,9 +28,11 @@ before-all = [
     "ninja --version",
     "./scripts/manylinux-build-and-install-openssl.sh",
 ]
+environment = { SKBUILD_CONFIGURE_OPTIONS = "-DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl -DCMAKE_JOB_POOL_COMPILE:STRING=compile -DCMAKE_JOB_POOL_LINK:STRING=link -DCMAKE_JOB_POOLS:STRING=compile=2;link=1 -DCMAKE_CXX_STANDARD:STRING=11" }
 
-[tool.cibuildwheel.linux.environment]
-SKBUILD_CONFIGURE_OPTIONS = "-DCMAKE_CXX_STANDARD:STRING=11 -DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl -DCMAKE_JOB_POOL_COMPILE:STRING=compile -DCMAKE_JOB_POOL_LINK:STRING=link -DCMAKE_JOB_POOLS:STRING=compile=2;link=1"
+[[tool.cibuildwheel.overrides]]
+select = "*-musllinux*"
+environment = { SKBUILD_CONFIGURE_OPTIONS = "-DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl -DCMAKE_JOB_POOL_COMPILE:STRING=compile -DCMAKE_JOB_POOL_LINK:STRING=link -DCMAKE_JOB_POOLS:STRING=compile=2;link=1 -DRUN_CMAKE_TEST_EXCLUDE:STRING='BootstrapTest|ExportImport|RunCMake.install|RunCMake.file-GET_RUNTIME_DEPENDENCIES'" }
 
 [tool.cibuildwheel.macos.environment]
 MACOSX_DEPLOYMENT_TARGET = "10.10"
