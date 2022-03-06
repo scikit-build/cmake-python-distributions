@@ -31,8 +31,21 @@ before-all = [
 environment = { SKBUILD_CONFIGURE_OPTIONS = "-DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl -DCMAKE_JOB_POOL_COMPILE:STRING=compile -DCMAKE_JOB_POOL_LINK:STRING=link -DCMAKE_JOB_POOLS:STRING=compile=2;link=1 -DCMAKE_CXX_STANDARD:STRING=11" }
 
 [[tool.cibuildwheel.overrides]]
-select = "*-musllinux*"
+select = ["*-manylinux_aarch64", "*-manylinux_ppc64le", "*-manylinux_s390x"]
+# disable tests on those platforms, QEMU is taking to long for jobs to pass on GHA
+environment = { SKBUILD_CONFIGURE_OPTIONS = "-DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl -DCMAKE_JOB_POOL_COMPILE:STRING=compile -DCMAKE_JOB_POOL_LINK:STRING=link -DCMAKE_JOB_POOLS:STRING=compile=2;link=1 -DCMAKE_CXX_STANDARD:STRING=11 -DRUN_CMAKE_TEST:BOOL=OFF" }
+
+[[tool.cibuildwheel.overrides]]
+select = ["*-musllinux_x86_64", "*-musllinux_i686"]
+# disable some tests
+# - BootstrapTest fails with custom OpenSSL and probably does not make much sense for this project
+# - ExportImport|RunCMake.install|RunCMake.file-GET_RUNTIME_DEPENDENCIES: c.f. https://discourse.cmake.org/t/cmake-test-suite-failing-on-alpine-linux/5064
 environment = { SKBUILD_CONFIGURE_OPTIONS = "-DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl -DCMAKE_JOB_POOL_COMPILE:STRING=compile -DCMAKE_JOB_POOL_LINK:STRING=link -DCMAKE_JOB_POOLS:STRING=compile=2;link=1 -DRUN_CMAKE_TEST_EXCLUDE:STRING='BootstrapTest|ExportImport|RunCMake.install|RunCMake.file-GET_RUNTIME_DEPENDENCIES'" }
+
+[[tool.cibuildwheel.overrides]]
+select = ["*-musllinux_aarch64", "*-musllinux_ppc64le", "*-musllinux_s390x"]
+# disable tests on those platforms, QEMU is taking to long for jobs to pass on GHA
+environment = { SKBUILD_CONFIGURE_OPTIONS = "-DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl -DCMAKE_JOB_POOL_COMPILE:STRING=compile -DCMAKE_JOB_POOL_LINK:STRING=link -DCMAKE_JOB_POOLS:STRING=compile=2;link=1 -DRUN_CMAKE_TEST:BOOL=OFF" }
 
 [tool.cibuildwheel.macos.environment]
 MACOSX_DEPLOYMENT_TARGET = "10.10"
