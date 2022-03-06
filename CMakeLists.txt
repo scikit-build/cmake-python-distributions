@@ -33,6 +33,10 @@ if(CMakePythonDistributions_SUPERBUILD)
 
   option(BUILD_VERBOSE "Build reporting additional information (e.g download progress, ...)" ON)
 
+  option(RUN_CMAKE_TEST "Run CMake test suite when built from sources" ON)
+
+  set(RUN_CMAKE_TEST_EXCLUDE "BootstrapTest" CACHE STRING "CMake test suite exclusion regex")
+
   set(CMakePythonDistributions_ARCHIVE_DOWNLOAD_DIR "${CMAKE_BINARY_DIR}"
     CACHE PATH "Directory where to download archives"
     )
@@ -261,6 +265,13 @@ set(CMAKE_EXE_LINKER_FLAGS \"-lstdc++ -lgcc -lrt\" CACHE STRING \"Initial cache\
         message(STATUS "SuperBuild -   CMakeProject-build - OPENSSL_ROOT_DIR: ${OPENSSL_ROOT_DIR}")
       endif()
 
+      if(DEFINED CMAKE_CXX_STANDARD)
+        list(APPEND _cmake_cache_args
+          -DCMAKE_CXX_STANDARD:STRING=${CMAKE_CXX_STANDARD}
+          )
+        message(STATUS "SuperBuild -   CMakeProject-build - CMAKE_CXX_STANDARD: ${CMAKE_CXX_STANDARD}")
+      endif()
+
       ExternalProject_add(CMakeProject-build
         SOURCE_DIR ${CMakeProject_SOURCE_DIR}
         BINARY_DIR ${CMakeProject_BINARY_DIR}
@@ -271,7 +282,7 @@ set(CMAKE_EXE_LINKER_FLAGS \"-lstdc++ -lgcc -lrt\" CACHE STRING \"Initial cache\
         CMAKE_CACHE_ARGS
           -DBUILD_CursesDialog:BOOL=OFF
           -DCMAKE_USE_OPENSSL:BOOL=ON
-          -DBUILD_TESTING:BOOL=OFF
+          -DBUILD_TESTING:BOOL=ON
           -DCMake_INSTALL_DEPENDENCIES:BOOL=ON
           -DCMAKE_INSTALL_MESSAGE:STRING=NEVER
           ${_common_cache_args}
@@ -285,6 +296,8 @@ set(CMAKE_EXE_LINKER_FLAGS \"-lstdc++ -lgcc -lrt\" CACHE STRING \"Initial cache\
           LibUV
         )
 
+        set(CMAKEPROJECT_BUILD_LAST_STEP "build")
+
         find_program(STRIP_EXECUTABLE strip)
         if(STRIP_EXECUTABLE)
 
@@ -293,12 +306,25 @@ set(CMAKE_EXE_LINKER_FLAGS \"-lstdc++ -lgcc -lrt\" CACHE STRING \"Initial cache\
           set(ctest_executable "${CMakeProject_BINARY_DIR}/bin/ctest")
 
           ExternalProject_Add_Step(CMakeProject-build strip_executables
-            DEPENDEES build
+            DEPENDEES ${CMAKEPROJECT_BUILD_LAST_STEP}
             COMMENT "Stripping CMake executables"
             COMMAND ${STRIP_EXECUTABLE} ${cmake_executable}
             COMMAND ${STRIP_EXECUTABLE} ${cpack_executable}
             COMMAND ${STRIP_EXECUTABLE} ${ctest_executable}
+            USES_TERMINAL 1
             )
+          set(CMAKEPROJECT_BUILD_LAST_STEP "strip_executables")
+        endif()
+
+        if(RUN_CMAKE_TEST)
+          ExternalProject_Add_Step(CMakeProject-build run_cmake_test_suite
+            DEPENDEES ${CMAKEPROJECT_BUILD_LAST_STEP}
+            COMMENT "Running CMake test suite, exclusion list: '${RUN_CMAKE_TEST_EXCLUDE}'"
+            COMMAND ./bin/ctest --force-new-ctest-process --stop-on-failure --output-on-failure -j2 -E ${RUN_CMAKE_TEST_EXCLUDE}
+            WORKING_DIRECTORY ${CMakeProject_BINARY_DIR}
+            USES_TERMINAL 1
+            )
+          set(CMAKEPROJECT_BUILD_LAST_STEP "run_cmake_test_suite")
         endif()
     else()
       cpd_ExternalProject_Add_Empty(CMakeProject-build "CMakeProject-src-download")
