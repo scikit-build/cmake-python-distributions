@@ -9,7 +9,7 @@ of CMake associated with the current CMake python distributions.
 
 Available CMake archives can be found at https://cmake.org/files.
 
-Nox prodedure
+Nox procedure
 -------------
 
 If using nox, run::
