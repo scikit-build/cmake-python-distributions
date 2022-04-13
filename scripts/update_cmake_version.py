@@ -106,9 +106,9 @@ def generate_cmake_variables(urls_and_sha256s):
     template_inputs = {}
 
     # Get SHA256s and URLs
-    for var_prefix, urls_and_sha256s in urls_and_sha256s.items():
-        template_inputs["%s_url" % var_prefix] = urls_and_sha256s[0]
-        template_inputs["%s_sha256" % var_prefix] = urls_and_sha256s[1]
+    for var_prefix, urls_and_sha256s_values in urls_and_sha256s.items():
+        template_inputs["%s_url" % var_prefix] = urls_and_sha256s_values[0]
+        template_inputs["%s_sha256" % var_prefix] = urls_and_sha256s_values[1]
 
     cmake_variables = textwrap.dedent(
         """
