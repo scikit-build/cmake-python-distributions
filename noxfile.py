@@ -76,12 +76,8 @@ def docs(session: nox.Session) -> str:
             print("Unsupported argument to docs")
 
 
-@nox.session
-def bump(session: nox.Session) -> None:
-    """
-    Set to a new version, use -- <version>, otherwise will use the latest version.
-    """
-    parser = argparse.ArgumentParser(description="Process some integers.")
+def _bump(session: nox.Session, name: str, repository: str, script: str, files) -> None:
+    parser = argparse.ArgumentParser()
     parser.add_argument(
         "--commit", action="store_true", help="Make a branch and commit."
     )
@@ -92,34 +88,45 @@ def bump(session: nox.Session) -> None:
 
     if args.version is None:
         session.install("lastversion")
-        version = session.run(
-            "lastversion", "kitware/cmake", log=False, silent=True
-        ).strip()
+        version = session.run("lastversion", repository, log=False, silent=True).strip()
     else:
         version = args.version
 
     session.install("requests")
 
     extra = ["--quiet"] if args.commit else []
-    session.run("python", "scripts/update_cmake_version.py", version, *extra)
+    session.run("python", script, version, *extra)
 
     if args.commit:
-        session.run("git", "switch", "-c", f"update-to-cmake-{version}", external=True)
-        files = (
-            "CMakeUrls.cmake",
-            "docs/index.rst",
-            "README.rst",
-            "tests/test_distribution.py",
-            "docs/update_cmake_version.rst",
-        )
-        session.run(
-            "git",
-            "add",
-            "-u",
-            *files,
-            external=True,
-        )
-        session.run("git", "commit", "-m", f"Update to CMake {version}", external=True)
+        session.run("git", "switch", "-c", f"update-to-{name.lower()}-{version}", external=True)
+        session.run("git", "add", "-u", *files, external=True)
+        session.run("git", "commit", "-m", f"Update to {name} {version}", external=True)
         session.log(
-            'Complete! Now run: gh pr create --fill --body "Created by running `nox -s bump -- --commit`"'
+            f'Complete! Now run: gh pr create --fill --body "Created by running `nox -s {session.name} -- --commit`"'
         )
+
+
+@nox.session
+def bump(session: nox.Session) -> None:
+    """
+    Set to a new version, use -- <version>, otherwise will use the latest version.
+    """
+    files = (
+        "CMakeUrls.cmake",
+        "docs/index.rst",
+        "README.rst",
+        "tests/test_distribution.py",
+        "docs/update_cmake_version.rst",
+    )
+    _bump(session, "CMake", "kitware/cmake", "scripts/update_cmake_version.py", files)
+
+
+@nox.session(name="bump-openssl")
+def bump_openssl(session: nox.Session) -> None:
+    """
+    Set openssl to a new version, use -- <version>, otherwise will use the latest version.
+    """
+    files = (
+        "scripts/manylinux-build-and-install-openssl.sh",
+    )
+    _bump(session, "OpenSSL", "openssl/openssl", "scripts/update_openssl_version.py", files)
