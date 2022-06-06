@@ -11,7 +11,6 @@ MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 source $MY_DIR/utils.sh
 
 OPENSSL_ROOT=openssl-3.0.3
-# Hash from https://www.openssl.org/source/openssl-3.0.3.tar.gz.sha256
 OPENSSL_HASH=ee0078adcef1de5f003c62c80cc96527721609c6f3bb42b7795df31f8b558c0b
 
 cd /tmp
