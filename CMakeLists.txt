@@ -206,11 +206,11 @@ set(CMAKE_EXE_LINKER_FLAGS \"-lstdc++ -lgcc -lrt\" CACHE STRING \"Initial cache\
       # cache arguments for CMake
       set(_cmake_cache_args)
 
-      # libuv
+      # libuv / glibc check
       set(UseCustomLibUV OFF)
       if(UNIX AND NOT APPLE)
-        # libuv 1.23.0 is the last version to build on CentOS 5 (or glibc < 2.12)
-        # Use libuv 1.23.0 instead of cmake embedded libuv when detecting glibc < 2.12
+        # as of CMake 3.23.0, the minimum supported version of libuv is 1.28.0.
+        # this implies that the minimum supported glibc version is 2.12
         # https://github.com/libuv/libuv/blob/v1.x/SUPPORTED_PLATFORMS.md
         include(CheckSymbolExists)
         check_symbol_exists(__GLIBC__ "stdlib.h" HAS_GLIBC_MAJOR)
@@ -221,7 +221,8 @@ set(CMAKE_EXE_LINKER_FLAGS \"-lstdc++ -lgcc -lrt\" CACHE STRING \"Initial cache\
           execute_process(COMMAND echo __GLIBC_MINOR__ COMMAND "${CMAKE_CXX_COMPILER}" -E -P -imacros stdlib.h - OUTPUT_VARIABLE GLIBC_MINOR_)
           string(STRIP "${GLIBC_MINOR_}" GLIBC_MINOR)
           if("${GLIBC_MAJOR}.${GLIBC_MINOR}" VERSION_LESS "2.12")
-            set(UseCustomLibUV ON)
+            # set(UseCustomLibUV ON)
+            message(FATAL_ERROR "GLIBC ${GLIBC_MAJOR}.${GLIBC_MINOR} not supported")
           endif()
         endif()
       endif()

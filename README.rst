@@ -50,9 +50,9 @@ The following platforms are supported with binary wheels:
   | Windows       | | 64-bit                 |
   |               | | 32-bit                 |
   +---------------+--------------------------+
-  | Linux Intel   | | manylinux1+ 64-bit     |
+  | Linux Intel   | | manylinux2010+ 64-bit  |
   |               | | musllinux 64-bit       |
-  |               | | manylinux1+ 32-bit     |
+  |               | | manylinux2010+ 32-bit  |
   |               | | musllinux 32-bit       |
   +---------------+--------------------------+
   | Linux ARM     | | manylinux2014+ AArch64 |
