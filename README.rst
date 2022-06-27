@@ -69,6 +69,8 @@ The following platforms are supported with binary wheels:
   | macOS 11+     | Apple Silicon            |
   +---------------+--------------------------+
 
+The last version to provide ``manylinux1`` wheels was ``3.22.x``.
+
 Maintainers
 -----------
 
