@@ -11,3 +11,5 @@ recursive-exclude CMake-src *
 
 include versioneer.py
 include src/cmake/_version.py
+include src/cmake/__init__.pyi
+include src/cmake/py.typed

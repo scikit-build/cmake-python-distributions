@@ -2,17 +2,16 @@
 requires = [
     "scikit-build>=0.12",
     "setuptools>=42",
-    "wheel"
 ]
 build-backend = "setuptools.build_meta"
 
 [tool.cibuildwheel]
 build = "cp39-*"
 before-all = [
-    "pipx install -f --pip-args=\"-c {project}/constraints-ci.txt\" cmake",
-    "cmake --version",
-    "pipx install -f --pip-args=\"-c {project}/constraints-ci.txt\" ninja",
-    "ninja --version",
+    'pipx install -f --pip-args="-c {project}/constraints-ci.txt" cmake',
+    'cmake --version',
+    'pipx install -f --pip-args="-c {project}/constraints-ci.txt" ninja',
+    'ninja --version',
 ]
 before-build = "pip install -r requirements-repair.txt"
 repair-wheel-command = "python scripts/repair_wheel.py -w {dest_dir} {wheel}"
@@ -22,11 +21,11 @@ build-verbosity = "1"
 
 [tool.cibuildwheel.linux]
 before-all = [
-    "pipx install -f --pip-args=\"-c {project}/constraints-ci.txt\" cmake",
-    "cmake --version",
-    "pipx install -f --pip-args=\"-c {project}/constraints-ci.txt\" ninja",
-    "ninja --version",
-    "./scripts/manylinux-build-and-install-openssl.sh",
+    'pipx install -f --pip-args="-c {project}/constraints-ci.txt" cmake',
+    'cmake --version',
+    'pipx install -f --pip-args="-c {project}/constraints-ci.txt" ninja',
+    'ninja --version',
+    './scripts/manylinux-build-and-install-openssl.sh',
 ]
 environment = { SKBUILD_CONFIGURE_OPTIONS = "-DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl -DCMAKE_JOB_POOL_COMPILE:STRING=compile -DCMAKE_JOB_POOL_LINK:STRING=link -DCMAKE_JOB_POOLS:STRING=compile=2;link=1 -DCMAKE_CXX_STANDARD:STRING=11" }
 
@@ -52,4 +51,3 @@ MACOSX_DEPLOYMENT_TARGET = "10.10"
 
 [tool.isort]
 profile = "black"
-multi_line_output = 3
