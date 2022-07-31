@@ -164,53 +164,10 @@ if(CMakePythonDistributions_SUPERBUILD)
     #
     if(NOT DEFINED CMakeProject_BINARY_DIR)
 
-      # cache arguments common to LibUV and CMake
-      set(_common_cache_args)
-      if(DEFINED CMAKE_BUILD_TYPE)
-        list(APPEND _common_cache_args
-          -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
-          )
-      endif()
-      if(DEFINED CMAKE_TOOLCHAIN_FILE)
-        list(APPEND _common_cache_args
-          -DCMAKE_TOOLCHAIN_FILE:STRING=${CMAKE_TOOLCHAIN_FILE}
-          )
-      endif()
-      foreach(var_name IN ITEMS
-        CMAKE_BUILD_PARALLEL_LEVEL
-        CMAKE_JOB_POOLS
-        CMAKE_JOB_POOL_COMPILE
-        CMAKE_JOB_POOL_LINK
-        )
-        if(DEFINED ${var_name})
-          list(APPEND _common_cache_args
-            -D${var_name}:STRING=${${var_name}}
-            )
-          message(STATUS "SuperBuild -   CMakeProject-build - ${var_name}: ${${var_name}}")
-        endif()
-      endforeach()
-
-      set(_common_args )
-      if(UNIX AND (NOT APPLE AND NOT CMAKE_SYSTEM_NAME STREQUAL "FreeBSD"))
-        # Since CMAKE_C_FLAGS and CMAKE_EXE_LINKER_FLAGS arguments contain spaces, we generate an initial
-        # cache file.
-        file(WRITE "${CMAKE_BINARY_DIR}/initial-cache.txt"
-"set(CMAKE_C_FLAGS \"-D_POSIX_C_SOURCE=199506L -D_POSIX_SOURCE=1 -D_SVID_SOURCE=1 -D_BSD_SOURCE=1\" CACHE STRING \"Initial cache\" FORCE)
-set(CMAKE_EXE_LINKER_FLAGS \"-lstdc++ -lgcc -lrt\" CACHE STRING \"Initial cache\" FORCE)
-")
-        set(_common_args
-          CMAKE_ARGS -C "${CMAKE_BINARY_DIR}/initial-cache.txt"
-          )
-      endif()
-
-      # cache arguments for CMake
-      set(_cmake_cache_args)
-
-      # libuv
-      set(UseCustomLibUV OFF)
+      # glibc check
       if(UNIX AND NOT APPLE)
-        # libuv 1.23.0 is the last version to build on CentOS 5 (or glibc < 2.12)
-        # Use libuv 1.23.0 instead of cmake embedded libuv when detecting glibc < 2.12
+        # as of CMake 3.23.0, the minimum supported version of libuv is 1.28.0.
+        # this implies that the minimum supported glibc version is 2.12
         # https://github.com/libuv/libuv/blob/v1.x/SUPPORTED_PLATFORMS.md
         include(CheckSymbolExists)
         check_symbol_exists(__GLIBC__ "stdlib.h" HAS_GLIBC_MAJOR)
@@ -221,42 +178,36 @@ set(CMAKE_EXE_LINKER_FLAGS \"-lstdc++ -lgcc -lrt\" CACHE STRING \"Initial cache\
           execute_process(COMMAND echo __GLIBC_MINOR__ COMMAND "${CMAKE_CXX_COMPILER}" -E -P -imacros stdlib.h - OUTPUT_VARIABLE GLIBC_MINOR_)
           string(STRIP "${GLIBC_MINOR_}" GLIBC_MINOR)
           if("${GLIBC_MAJOR}.${GLIBC_MINOR}" VERSION_LESS "2.12")
-            set(UseCustomLibUV ON)
+            message(FATAL_ERROR "GLIBC ${GLIBC_MAJOR}.${GLIBC_MINOR} not supported")
           endif()
         endif()
       endif()
-      if(UseCustomLibUV)
-        set(LibUV_SOURCE_DIR ${CMAKE_BINARY_DIR}/LibUV-src)
-        set(LibUV_BINARY_DIR ${CMAKE_BINARY_DIR}/LibUV-build)
-        set(LibUV_INSTALL_DIR ${CMAKE_BINARY_DIR}/LibUV-install)
 
-        ExternalProject_add(LibUV
-          SOURCE_DIR ${LibUV_SOURCE_DIR}
-          BINARY_DIR ${LibUV_BINARY_DIR}
-          URL "https://dist.libuv.org/dist/v1.23.0/libuv-v1.23.0.tar.gz"
-          URL_HASH "SHA256=d1746d324dea973d9f4c7ff40ba9cf60556c0bae9a92ad970568211b0e3bce27"
-          DOWNLOAD_DIR ${CMakePythonDistributions_ARCHIVE_DOWNLOAD_DIR}
-          ${_common_args}
-          CMAKE_CACHE_ARGS
-            ${_common_cache_args}
-            -DCMAKE_INSTALL_PREFIX:PATH=${LibUV_INSTALL_DIR}
-            -DCMAKE_INSTALL_LIBDIR:STRING=lib
-          USES_TERMINAL_CONFIGURE 1
-          USES_TERMINAL_BUILD 1
-          ${ep_log_configure_build_args}
-          INSTALL_DIR ${LibUV_INSTALL_DIR}
-          )
+      # cmake cache arguments
+      set(_cmake_cache_args)
+      if(DEFINED CMAKE_BUILD_TYPE)
         list(APPEND _cmake_cache_args
-          -DCMAKE_USE_SYSTEM_LIBRARY_LIBUV:BOOL=ON
-          -DLibUV_LIBRARY:FILEPATH=${LibUV_INSTALL_DIR}/lib/libuv_a.a
-          -DLibUV_INCLUDE_DIR:PATH=${LibUV_INSTALL_DIR}/include
+          -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
           )
-      else()
-        cpd_ExternalProject_Add_Empty(LibUV "")
       endif()
-
-      # cmake
-      set(CMakeProject_BINARY_DIR ${CMAKE_BINARY_DIR}/CMakeProject-build)
+      if(DEFINED CMAKE_TOOLCHAIN_FILE)
+        list(APPEND _cmake_cache_args
+          -DCMAKE_TOOLCHAIN_FILE:STRING=${CMAKE_TOOLCHAIN_FILE}
+          )
+      endif()
+      foreach(var_name IN ITEMS
+        CMAKE_BUILD_PARALLEL_LEVEL
+        CMAKE_JOB_POOLS
+        CMAKE_JOB_POOL_COMPILE
+        CMAKE_JOB_POOL_LINK
+        )
+        if(DEFINED ${var_name})
+          list(APPEND _cmake_cache_args
+            -D${var_name}:STRING=${${var_name}}
+            )
+          message(STATUS "SuperBuild -   CMakeProject-build - ${var_name}: ${${var_name}}")
+        endif()
+      endforeach()
 
       if(DEFINED OPENSSL_ROOT_DIR)
         list(APPEND _cmake_cache_args
@@ -272,20 +223,35 @@ set(CMAKE_EXE_LINKER_FLAGS \"-lstdc++ -lgcc -lrt\" CACHE STRING \"Initial cache\
         message(STATUS "SuperBuild -   CMakeProject-build - CMAKE_CXX_STANDARD: ${CMAKE_CXX_STANDARD}")
       endif()
 
+      set(_cmake_args )
+      if(UNIX AND (NOT APPLE AND NOT CMAKE_SYSTEM_NAME STREQUAL "FreeBSD"))
+        # Since CMAKE_C_FLAGS and CMAKE_EXE_LINKER_FLAGS arguments contain spaces, we generate an initial
+        # cache file.
+        file(WRITE "${CMAKE_BINARY_DIR}/initial-cache.txt"
+"set(CMAKE_C_FLAGS \"-D_POSIX_C_SOURCE=199506L -D_POSIX_SOURCE=1 -D_SVID_SOURCE=1 -D_BSD_SOURCE=1\" CACHE STRING \"Initial cache\" FORCE)
+set(CMAKE_EXE_LINKER_FLAGS \"-lstdc++ -lgcc -lrt\" CACHE STRING \"Initial cache\" FORCE)
+")
+        set(_cmake_args
+          CMAKE_ARGS -C "${CMAKE_BINARY_DIR}/initial-cache.txt"
+          )
+      endif()
+
+      # cmake
+      set(CMakeProject_BINARY_DIR ${CMAKE_BINARY_DIR}/CMakeProject-build)
+
       ExternalProject_add(CMakeProject-build
         SOURCE_DIR ${CMakeProject_SOURCE_DIR}
         BINARY_DIR ${CMakeProject_BINARY_DIR}
         DOWNLOAD_COMMAND ""
         UPDATE_COMMAND ""
         BUILD_ALWAYS 1
-        ${_common_args}
+        ${_cmake_args}
         CMAKE_CACHE_ARGS
           -DBUILD_CursesDialog:BOOL=OFF
           -DCMAKE_USE_OPENSSL:BOOL=ON
           -DBUILD_TESTING:BOOL=ON
           -DCMake_INSTALL_DEPENDENCIES:BOOL=ON
           -DCMAKE_INSTALL_MESSAGE:STRING=NEVER
-          ${_common_cache_args}
           ${_cmake_cache_args}
         USES_TERMINAL_CONFIGURE 1
         USES_TERMINAL_BUILD 1
@@ -293,7 +259,6 @@ set(CMAKE_EXE_LINKER_FLAGS \"-lstdc++ -lgcc -lrt\" CACHE STRING \"Initial cache\
         INSTALL_COMMAND ""
         DEPENDS
           CMakeProject-src-download
-          LibUV
         )
 
         set(CMAKEPROJECT_BUILD_LAST_STEP "build")

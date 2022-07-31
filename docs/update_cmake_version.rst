@@ -29,13 +29,13 @@ Classic procedure:
 2. Execute `scripts/update_cmake_version.py` command line tool with the desired
    ``X.Y.Z`` CMake version available for download. For example::
 
-    $ release=3.22.6
+    $ release=3.23.3
     $ ./scripts/update_cmake_version.py $release
-    Collecting URLs and SHA256s from 'https://api.github.com/repos/Kitware/CMake/releases/tags/v3.22.6'
+    Collecting URLs and SHA256s from 'https://api.github.com/repos/Kitware/CMake/releases/tags/v3.23.3'
     [...]
-    Collecting URLs and SHA256s from 'https://api.github.com/repos/Kitware/CMake/releases/tags/v3.22.6' - done
-    Updating 'CMakeUrls.cmake' with CMake version 3.22.6
-    Updating 'CMakeUrls.cmake' with CMake version 3.22.6 - done
+    Collecting URLs and SHA256s from 'https://api.github.com/repos/Kitware/CMake/releases/tags/v3.23.3' - done
+    Updating 'CMakeUrls.cmake' with CMake version 3.23.3
+    Updating 'CMakeUrls.cmake' with CMake version 3.23.3 - done
     Updating docs/index.rst
     Updating docs/index.rst - done
     Updating README.rst
@@ -46,7 +46,7 @@ Classic procedure:
 3. Create a topic named `update-to-cmake-X.Y.Z` and commit the changes.
    For example::
 
-    release=3.22.6
+    release=3.23.3
     git switch -c update-to-cmake-$release
     git add -u CMakeUrls.cmake docs/index.rst README.rst tests/test_distribution.py docs/update_cmake_version.rst
     git commit -m "Update to CMake $release"

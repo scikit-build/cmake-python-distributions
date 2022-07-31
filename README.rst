@@ -11,7 +11,7 @@ The suite of CMake tools were created by Kitware in response to the need
 for a powerful, cross-platform build environment for open-source projects
 such as ITK and VTK.
 
-The CMake python wheels provide `CMake 3.22.6 <https://cmake.org/cmake/help/v3.22/index.html>`_.
+The CMake python wheels provide `CMake 3.23.3 <https://cmake.org/cmake/help/v3.23/index.html>`_.
 
 Latest Release
 --------------
@@ -50,9 +50,9 @@ The following platforms are supported with binary wheels:
   | Windows       | | 64-bit                 |
   |               | | 32-bit                 |
   +---------------+--------------------------+
-  | Linux Intel   | | manylinux1+ 64-bit     |
+  | Linux Intel   | | manylinux2010+ 64-bit  |
   |               | | musllinux 64-bit       |
-  |               | | manylinux1+ 32-bit     |
+  |               | | manylinux2010+ 32-bit  |
   |               | | musllinux 32-bit       |
   +---------------+--------------------------+
   | Linux ARM     | | manylinux2014+ AArch64 |
@@ -68,6 +68,8 @@ The following platforms are supported with binary wheels:
   +---------------+--------------------------+
   | macOS 11+     | Apple Silicon            |
   +---------------+--------------------------+
+
+The last version to provide ``manylinux1`` wheels was ``3.22.x``.
 
 Maintainers
 -----------
