@@ -75,7 +75,7 @@ setup(
         'Operating System :: OS Independent',
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
-        'Topic :: Software Development :: Build Tools'
+        'Topic :: Software Development :: Build Tools',
         'Typing :: Typed',
         ],
 
