@@ -43,6 +43,7 @@ try:  # noqa: C901
         packages=['cmake'],
 
         cmake_install_dir='src/cmake/data',
+        include_package_data=True,
 
         entry_points={
             'console_scripts': [
