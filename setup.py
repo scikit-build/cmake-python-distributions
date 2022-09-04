@@ -41,9 +41,9 @@ try:  # noqa: C901
 
         package_dir={'': 'src'},
         packages=['cmake'],
+        package_data={"cmake": ["py.typed"]},
 
         cmake_install_dir='src/cmake/data',
-        include_package_data=True,
 
         entry_points={
             'console_scripts': [
