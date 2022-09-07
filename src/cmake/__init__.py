@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import os
-import platform
 import subprocess
 import sys
 
@@ -17,7 +16,7 @@ if not os.path.exists(CMAKE_DATA):
     from skbuild.constants import CMAKE_INSTALL_DIR as SKBUILD_CMAKE_INSTALL_DIR
     from skbuild.constants import set_skbuild_plat_name
 
-    if platform.system().lower() == "darwin":
+    if sys.platform.startswith("darwin"):
         # Since building the project specifying --plat-name or CMAKE_OSX_* variables
         # leads to different SKBUILD_DIR, the code below attempt to guess the most
         # likely plat-name.
@@ -31,7 +30,7 @@ if not os.path.exists(CMAKE_DATA):
     if os.path.exists(_cmake_data):
         CMAKE_DATA = _cmake_data
 
-if platform.system().lower() == "darwin":
+if sys.platform.startswith("darwin"):
     CMAKE_DATA = os.path.join(CMAKE_DATA, 'CMake.app', 'Contents')
 
 CMAKE_BIN_DIR = os.path.join(CMAKE_DATA, 'bin')
