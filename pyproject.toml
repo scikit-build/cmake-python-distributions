@@ -1,6 +1,7 @@
 [build-system]
 requires = [
-    "scikit-build>=0.12",
+    "scikit-build>=0.12; python_version>='3.6'",
+    "scikit-build>=0.12,<0.16; python_version<'3.6'",
     "setuptools>=42",
 ]
 build-backend = "setuptools.build_meta"
@@ -16,7 +17,10 @@ before-all = [
 before-build = "pip install -r requirements-repair.txt"
 repair-wheel-command = "python scripts/repair_wheel.py -w {dest_dir} {wheel}"
 test-extras = "test"
-test-command = "pytest --ignore={project}/tests/test_distribution.py {project}/tests"
+test-command = [
+    "git config --global protocol.file.allow always",
+    "pytest --ignore={project}/tests/test_distribution.py {project}/tests",
+]
 build-verbosity = "1"
 
 [tool.cibuildwheel.linux]
