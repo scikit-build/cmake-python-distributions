@@ -30,9 +30,6 @@ if not os.path.exists(CMAKE_DATA):
     if os.path.exists(_cmake_data):
         CMAKE_DATA = _cmake_data
 
-if sys.platform.startswith("darwin"):
-    CMAKE_DATA = os.path.join(CMAKE_DATA, 'CMake.app', 'Contents')
-
 CMAKE_BIN_DIR = os.path.join(CMAKE_DATA, 'bin')
 CMAKE_DOC_DIR = os.path.join(CMAKE_DATA, 'doc')
 CMAKE_SHARE_DIR = os.path.join(CMAKE_DATA, 'share')
