@@ -39,7 +39,7 @@ CMAKE_SHARE_DIR = os.path.join(CMAKE_DATA, 'share')
 
 
 def _program(name, args):
-    return subprocess.call([os.path.join(CMAKE_BIN_DIR, name)] + args)
+    return subprocess.call([os.path.join(CMAKE_BIN_DIR, name)] + args, close_fds=False)
 
 
 def cmake():
