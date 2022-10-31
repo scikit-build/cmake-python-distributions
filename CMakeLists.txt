@@ -380,21 +380,40 @@ include\(\"${CMakeProject_BINARY_DIR}/cmake_install.cmake\")
 
     set(CMAKE_INSTALL_MESSAGE "NEVER")
 
+    if(APPLE)
+      set(distribution_root "${CMakeProject_BINARY_DISTRIBUTION_DIR}/CMake.app/Contents")
+    else()
+      set(distribution_root "${CMakeProject_BINARY_DISTRIBUTION_DIR}")
+    endif()
+
     # Install all files from binary distribution
     file(GLOB_RECURSE binary_distribution_files
       LIST_DIRECTORIES FALSE
-      ${CMakeProject_BINARY_DISTRIBUTION_DIR}/*
+      ${distribution_root}/*
       )
     foreach(file IN LISTS binary_distribution_files)
-      get_filename_component(directory ${file} DIRECTORY)
-      file(RELATIVE_PATH relative_directory ${CMakeProject_BINARY_DISTRIBUTION_DIR} ${directory})
-      set(type FILES)
-      if(relative_directory STREQUAL "bin")
-        set(type PROGRAMS)
-      endif()
       # Skip symlinks like "CMake.app/Contents/Frameworks/QtWidgets.framework/Versions/Current"
       if(IS_SYMLINK ${file})
         continue()
+      endif()
+
+      # skip some mac app bundle files
+      set(find_index -1)
+      foreach(name IN ITEMS CodeResources Info.plist Frameworks _CodeSignature MacOS PlugIns Resources doc/cmake/html man)
+        string(FIND "${file}" "${distribution_root}/${name}" find_index)
+        if("${find_index}" EQUAL 0)
+          break()
+        endif()
+      endforeach()
+      if("${find_index}" EQUAL 0)
+        continue()
+      endif()
+
+      get_filename_component(directory ${file} DIRECTORY)
+      file(RELATIVE_PATH relative_directory ${distribution_root} ${directory})
+      set(type FILES)
+      if(relative_directory STREQUAL "bin")
+        set(type PROGRAMS)
       endif()
       set(_permissions)
       get_filename_component(filename ${file} NAME)
