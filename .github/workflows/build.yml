@@ -23,7 +23,7 @@ env:
 jobs:
   lint:
     name: Lint
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
@@ -40,43 +40,43 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: ubuntu-20.04
+          - os: ubuntu-22.04
             arch: "x86_64"
             build: "manylinux_"
             use_qemu: false
-          - os: ubuntu-20.04
+          - os: ubuntu-22.04
             arch: "x86_64"
             build: "musllinux_"
             use_qemu: false
-          - os: ubuntu-20.04
+          - os: ubuntu-22.04
             arch: "i686"
             build: "manylinux_"
             use_qemu: false
-          - os: ubuntu-20.04
+          - os: ubuntu-22.04
             arch: "i686"
             build: "musllinux_"
             use_qemu: false
-          - os: ubuntu-20.04
+          - os: ubuntu-22.04
             arch: "aarch64"
             build: "manylinux_"
             use_qemu: true
-          - os: ubuntu-20.04
+          - os: ubuntu-22.04
             arch: "aarch64"
             build: "musllinux_"
             use_qemu: true
-          - os: ubuntu-20.04
+          - os: ubuntu-22.04
             arch: "ppc64le"
             build: "manylinux_"
             use_qemu: true
-          - os: ubuntu-20.04
+          - os: ubuntu-22.04
             arch: "ppc64le"
             build: "musllinux_"
             use_qemu: true
-          - os: ubuntu-20.04
+          - os: ubuntu-22.04
             arch: "s390x"
             build: "manylinux_"
             use_qemu: true
-          - os: ubuntu-20.04
+          - os: ubuntu-22.04
             arch: "s390x"
             build: "musllinux_"
             use_qemu: true
@@ -88,13 +88,13 @@ jobs:
             arch: "x86"
             build: ""
             use_qemu: false
-          - os: macos-10.15
+          - os: macos-11
             arch: "x86_64"
             build: ""
             use_qemu: false
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         if: (!matrix.use_qemu) || fromJSON(env.USE_QEMU)
         with:
           fetch-depth: 0  # required for versioneer to find tags
@@ -118,7 +118,7 @@ jobs:
   build_manylinux2010_wheels:
     name: Build ${{ matrix.arch }} manylinux2010 wheels
     needs: [lint]
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
       matrix:
@@ -127,7 +127,7 @@ jobs:
           - arch: "i686"
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0  # required for versioneer to find tags
 
@@ -146,9 +146,9 @@ jobs:
   build_sdist:
     name: Build source distribution
     needs: [lint]
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0  # required for versioneer to find tags
 
@@ -162,14 +162,14 @@ jobs:
   test_sdist:
     name: Test SDist with python ${{ matrix.python }}
     needs: [build_sdist]
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
       matrix:
-        python: ["2.7", "3.6", "3.10"]
+        python: ["2.7", "3.6", "3.11"]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
         name: Install Python ${{ matrix.python }}
         with:
@@ -199,7 +199,7 @@ jobs:
   check_dist:
     name: Check dist
     needs: [build_wheels, build_manylinux2010_wheels, build_sdist, test_sdist]
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/download-artifact@v3
         with:
