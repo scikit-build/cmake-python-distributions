@@ -30,12 +30,12 @@ Build Status
 
 .. table::
 
-  +---------------+--------------------------------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------+
-  |               | GitHub Actions (Windows, macOS, Linux)                                                                       | Travis CI (alternative archs)                                                               |
-  +===============+==============================================================================================================+=============================================================================================+
-  | PyPI          | .. image:: https://github.com/scikit-build/cmake-python-distributions/actions/workflows/build.yml/badge.svg  | .. image:: https://travis-ci.com/scikit-build/cmake-python-distributions.svg?branch=master  |
-  |               |     :target: https://github.com/scikit-build/cmake-python-distributions/actions/workflows/build.yml          |     :target: https://travis-ci.com/github/scikit-build/cmake-python-distributions           |
-  +---------------+--------------------------------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------+
+  +---------------+--------------------------------------------------------------------------------------------------------------+
+  |               | GitHub Actions (Windows, macOS, Linux)                                                                       |
+  +===============+==============================================================================================================+
+  | PyPI          | .. image:: https://github.com/scikit-build/cmake-python-distributions/actions/workflows/build.yml/badge.svg  |
+  |               |     :target: https://github.com/scikit-build/cmake-python-distributions/actions/workflows/build.yml          |
+  +---------------+--------------------------------------------------------------------------------------------------------------+
 
 Platforms
 ---------
