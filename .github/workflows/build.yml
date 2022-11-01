@@ -209,12 +209,6 @@ jobs:
 
       - run: pipx run twine check --strict dist/*
 
-  pass:
-    needs: [check_dist]
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "All jobs passed"
-
   upload_pypi:
     name: Upload to PyPI
     needs: [check_dist]
