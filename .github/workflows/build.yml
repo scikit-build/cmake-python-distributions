@@ -167,7 +167,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python: ["2.7", "3.6", "3.11"]
+        python: ["2.7", "3.6", "3.7", "3.11"]
 
     steps:
       - uses: actions/checkout@v3
@@ -180,7 +180,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends libssl-dev
-          pip install -r requirements-dev.txt
+          pip install pytest pytest-virtualenv virtualenv
 
       - uses: actions/download-artifact@v3
         with:
@@ -189,7 +189,7 @@ jobs:
 
       - name: Install SDist
         env:
-          SKBUILD_CONFIGURE_OPTIONS: "-DBUILD_CMAKE_FROM_SOURCE:BOOL=OFF"
+          CMAKE_ARGS: "-DBUILD_CMAKE_FROM_SOURCE:BOOL=OFF"
         run: |
           pip install dist/*.tar.gz
           rm -rf dist

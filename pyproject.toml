@@ -1,18 +1,59 @@
 [build-system]
-requires = [
-    "scikit-build>=0.12",
-    "setuptools>=42",
+requires = ["scikit-build-core"]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "cmake"
+version = "0.0.1"
+description = "CMake is an open-source, cross-platform family of tools designed to build, test and package software"
+keywords = ["CMake", "build", "c++", "fortran", "cross-platform", "cross-compilation"]
+readme = "README.rst"
+license = {text = "Apache 2.0"}
+authors = [
+    {name = "Jean-Christophe Fillion-Robin", email = "jchris.fillionr@kitware.com"},
 ]
-build-backend = "setuptools.build_meta"
+classifiers = [
+    "License :: OSI Approved :: Apache Software License",
+    "License :: OSI Approved :: BSD License",
+    "Programming Language :: C",
+    "Programming Language :: C++",
+    "Programming Language :: Fortran",
+    "Programming Language :: Python",
+    "Operating System :: OS Independent",
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Build Tools",
+    "Typing :: Typed"
+]
+requires-python = ">=3.7"
+
+[project.urls]
+Homepage = "https://cmake.org"
+Documentation = "https://cmake-python-distributions.readthedocs.io"
+Source = "ttps://github.com/scikit-build/cmake-python-distributions"
+"Mailing list" = "https://groups.google.com/forum/#!forum/scikit-build"
+"Bug Tracker" = "https://github.com/scikit-build/cmake-python-distributions/issues"
+
+[project.optional-dependencies]
+test = [
+  "codecov>=2.0.5",
+  "coverage>=4.2",
+  "flake8>=3.0.4",
+  "path.py>=11.5.0",
+  "pytest>=3.0.3",
+  "pytest-cov>=2.4.0",
+  "pytest-runner>=2.9",
+  "pytest-virtualenv>=1.7.0",
+  "virtualenv>=15.0.3"
+]
+
+[project.scripts]
+cmake = "cmake:cmake"
+cpack = "cmake:cpack"
+ctest = "cmake:ctest"
 
 [tool.cibuildwheel]
 build = "cp39-*"
-before-all = [
-    'pipx install -f --pip-args="-c {project}/constraints-ci.txt" cmake',
-    'cmake --version',
-    'pipx install -f --pip-args="-c {project}/constraints-ci.txt" ninja',
-    'ninja --version',
-]
 before-build = "pip install -r requirements-repair.txt"
 repair-wheel-command = "python scripts/repair_wheel.py -w {dest_dir} {wheel}"
 test-extras = "test"
@@ -21,30 +62,26 @@ build-verbosity = "1"
 
 [tool.cibuildwheel.linux]
 before-all = [
-    'pipx install -f --pip-args="-c {project}/constraints-ci.txt" cmake',
-    'cmake --version',
-    'pipx install -f --pip-args="-c {project}/constraints-ci.txt" ninja',
-    'ninja --version',
     './scripts/manylinux-build-and-install-openssl.sh',
 ]
-environment = { SKBUILD_CONFIGURE_OPTIONS = "-DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl -DCMAKE_JOB_POOL_COMPILE:STRING=compile -DCMAKE_JOB_POOL_LINK:STRING=link -DCMAKE_JOB_POOLS:STRING=compile=2;link=1 -DCMAKE_CXX_STANDARD:STRING=11" }
+environment = { CMAKE_ARGS = "-DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl -DCMAKE_JOB_POOL_COMPILE:STRING=compile -DCMAKE_JOB_POOL_LINK:STRING=link -DCMAKE_JOB_POOLS:STRING=compile=2;link=1 -DCMAKE_CXX_STANDARD:STRING=11" }
 
 [[tool.cibuildwheel.overrides]]
 select = ["*-manylinux_aarch64", "*-manylinux_ppc64le", "*-manylinux_s390x"]
 # disable tests on those platforms, QEMU is taking to long for jobs to pass on GHA
-environment = { SKBUILD_CONFIGURE_OPTIONS = "-DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl -DCMAKE_JOB_POOL_COMPILE:STRING=compile -DCMAKE_JOB_POOL_LINK:STRING=link -DCMAKE_JOB_POOLS:STRING=compile=2;link=1 -DCMAKE_CXX_STANDARD:STRING=11 -DRUN_CMAKE_TEST:BOOL=OFF" }
+environment = { CMAKE_ARGS = "-DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl -DCMAKE_JOB_POOL_COMPILE:STRING=compile -DCMAKE_JOB_POOL_LINK:STRING=link -DCMAKE_JOB_POOLS:STRING=compile=2;link=1 -DCMAKE_CXX_STANDARD:STRING=11 -DRUN_CMAKE_TEST:BOOL=OFF" }
 
 [[tool.cibuildwheel.overrides]]
 select = ["*-musllinux_x86_64", "*-musllinux_i686"]
 # disable some tests
 # - BootstrapTest fails with custom OpenSSL and probably does not make much sense for this project
 # - ExportImport|RunCMake.install|RunCMake.file-GET_RUNTIME_DEPENDENCIES: c.f. https://discourse.cmake.org/t/cmake-test-suite-failing-on-alpine-linux/5064
-environment = { SKBUILD_CONFIGURE_OPTIONS = "-DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl -DCMAKE_JOB_POOL_COMPILE:STRING=compile -DCMAKE_JOB_POOL_LINK:STRING=link -DCMAKE_JOB_POOLS:STRING=compile=2;link=1 -DRUN_CMAKE_TEST_EXCLUDE:STRING='BootstrapTest|ExportImport|RunCMake.install|RunCMake.file-GET_RUNTIME_DEPENDENCIES'" }
+environment = { CMAKE_ARGS = "-DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl -DCMAKE_JOB_POOL_COMPILE:STRING=compile -DCMAKE_JOB_POOL_LINK:STRING=link -DCMAKE_JOB_POOLS:STRING=compile=2;link=1 -DRUN_CMAKE_TEST_EXCLUDE:STRING='BootstrapTest|ExportImport|RunCMake.install|RunCMake.file-GET_RUNTIME_DEPENDENCIES'" }
 
 [[tool.cibuildwheel.overrides]]
 select = ["*-musllinux_aarch64", "*-musllinux_ppc64le", "*-musllinux_s390x"]
 # disable tests on those platforms, QEMU is taking to long for jobs to pass on GHA
-environment = { SKBUILD_CONFIGURE_OPTIONS = "-DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl -DCMAKE_JOB_POOL_COMPILE:STRING=compile -DCMAKE_JOB_POOL_LINK:STRING=link -DCMAKE_JOB_POOLS:STRING=compile=2;link=1 -DRUN_CMAKE_TEST:BOOL=OFF" }
+environment = { CMAKE_ARGS = "-DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl -DCMAKE_JOB_POOL_COMPILE:STRING=compile -DCMAKE_JOB_POOL_LINK:STRING=link -DCMAKE_JOB_POOLS:STRING=compile=2;link=1 -DRUN_CMAKE_TEST:BOOL=OFF" }
 
 [tool.cibuildwheel.macos.environment]
 MACOSX_DEPLOYMENT_TARGET = "10.10"

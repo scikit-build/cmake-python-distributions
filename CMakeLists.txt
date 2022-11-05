@@ -372,7 +372,11 @@ else()
     # Install CMakeProject
     install(CODE "
 message(STATUS \"Install CMake project\")
+set(CMAKE_INSTALL_PREFIX_BACKUP \"\${CMAKE_INSTALL_PREFIX}\")
+set(CMAKE_INSTALL_PREFIX \"\${CMAKE_INSTALL_PREFIX}/cmake/data\")
 include\(\"${CMakeProject_BINARY_DIR}/cmake_install.cmake\")
+set(CMAKE_INSTALL_PREFIX \"\${CMAKE_INSTALL_PREFIX_BACKUP}\")
+unset(CMAKE_INSTALL_PREFIX_BACKUP)
 ")
 
   #-----------------------------------------------------------------------------
@@ -424,8 +428,11 @@ include\(\"${CMakeProject_BINARY_DIR}/cmake_install.cmake\")
           WORLD_READ WORLD_EXECUTE
           )
       endif()
-      install(${type} ${file} DESTINATION "${relative_directory}" ${_permissions})
+      install(${type} ${file} DESTINATION "cmake/data/${relative_directory}" ${_permissions})
     endforeach()
   endif()
-
+  install(FILES src/cmake/__init__.py  DESTINATION "cmake")
+  install(FILES src/cmake/__init__.pyi DESTINATION "cmake")
+  install(FILES src/cmake/_version.py  DESTINATION "cmake")
+  install(FILES src/cmake/py.typed     DESTINATION "cmake")
 endif()

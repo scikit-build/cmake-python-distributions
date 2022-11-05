@@ -1,3 +1,0 @@
--r requirements-test.txt
--r requirements-repair.txt
--r requirements-deploy.txt
