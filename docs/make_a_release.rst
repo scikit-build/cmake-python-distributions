@@ -13,7 +13,7 @@ This is usually done after :ref:`updating_cmake_version`.
 Prerequisites
 -------------
 
-* All CI tests are passing on `GitHub Actions`_ and `Travis CI`_ (if credits are available).
+* All CI tests are passing on `GitHub Actions`_.
 
 * You have a `GPG signing key <https://help.github.com/articles/generating-a-new-gpg-key/>`_.
 
@@ -36,7 +36,7 @@ means that ``echo "Hello"`` should be copied and evaluated in the terminal.
 `PyPI`_: Step-by-step
 ---------------------
 
-1. Make sure that all CI tests are passing on `GitHub Actions`_ and `Travis CI`_ (if credits are available).
+1. Make sure that all CI tests are passing on `GitHub Actions`_.
 
 
 2. Download the latest sources
@@ -127,6 +127,5 @@ means that ``echo "Hello"`` should be copied and evaluated in the terminal.
 
 
 .. _GitHub Actions: https://github.com/scikit-build/cmake-python-distributions/actions/workflows/build.yml
-.. _Travis CI: https://travis-ci.org/scikit-build/cmake-python-distributions/pull_requests
 
 .. _PyPI: https://pypi.org/project/cmake
