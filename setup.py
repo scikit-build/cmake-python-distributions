@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 import os
 import sys
@@ -15,15 +14,15 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import versioneer  # noqa: E402
 
-with open('README.rst', 'r') as fp:
+with open('README.rst') as fp:
     readme = fp.read()
 
-with open('HISTORY.rst', 'r') as fp:
+with open('HISTORY.rst') as fp:
     history = fp.read().replace('.. :changelog:', '')
 
 
 def parse_requirements(filename):
-    with open(filename, 'r') as file:
+    with open(filename) as file:
         return TextFile(filename, file).readlines()
 
 
