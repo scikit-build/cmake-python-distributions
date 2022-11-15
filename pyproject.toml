@@ -1,5 +1,5 @@
 [build-system]
-requires = ["scikit-build-core @ git+https://github.com/scikit-build/scikit-build-core@73ce73a9967d1bf6932522ba6af9f2c881e17f3a"]
+requires = ["scikit-build-core @ git+https://github.com/scikit-build/scikit-build-core@main"]
 build-backend = "scikit_build_core.build"
 
 [project]
@@ -52,8 +52,8 @@ cmake = "cmake:cmake"
 cpack = "cmake:cpack"
 ctest = "cmake:ctest"
 
-# [tool.scikit-build]
-# sdist.reproducible = false
+[tool.scikit-build]
+ninja.make-fallback = false
 
 [tool.cibuildwheel]
 build = "cp39-*"
