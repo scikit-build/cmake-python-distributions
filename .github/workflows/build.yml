@@ -89,7 +89,7 @@ jobs:
             build: ""
             use_qemu: false
           - os: macos-11
-            arch: "x86_64"
+            arch: "universal2"
             build: ""
             use_qemu: false
 
