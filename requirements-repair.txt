@@ -1,2 +1,2 @@
-wheeltools @ git+https://github.com/jcfr/wheeltools.git@wheeltools-2018-10-28-a2f174d0e#egg=wheeltools
 wheel<0.38
+wheeltools @ git+https://github.com/jcfr/wheeltools.git@wheeltools-2018-10-28-a2f174d0e#egg=wheeltools
