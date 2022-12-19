@@ -9,4 +9,4 @@ pytest-virtualenv>=1.7.0
 scikit-build>=0.10.0
 setuptools>=28.0.0
 virtualenv>=15.0.3
-wheel
+wheel<0.38
