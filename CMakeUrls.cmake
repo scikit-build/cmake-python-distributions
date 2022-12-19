@@ -24,3 +24,6 @@ set(win32_binary_sha256      "ddd115257a19ff3dd18fc63f32a00ae742f8b62d2e39bc3546
 
 set(win64_binary_url         "https://github.com/Kitware/CMake/releases/download/v3.25.0/cmake-3.25.0-windows-x86_64.zip")
 set(win64_binary_sha256      "b46030c10cab1170355952f9ac59f7e6dabc248070fc53f15dff11d4ed2910f8")
+
+set(winarm64_binary_url      "https://github.com/Kitware/CMake/releases/download/v3.25.0/cmake-3.25.0-windows-arm64.zip")
+set(winarm64_binary_sha256   "350e4a6361329cb6245b59a5eeb59ce96e2980ce5d149cd5384f6009eec04c9f")
