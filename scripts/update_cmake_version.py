@@ -54,6 +54,7 @@ def get_cmake_archive_urls_and_sha256s(version, verbose=False):
             "cmake-%s-macos10.10-universal.tar.gz" % version: "macos10_10_binary",
             "cmake-%s-windows-i386.zip" % version: "win32_binary",
             "cmake-%s-windows-x86_64.zip" % version: "win64_binary",
+            "cmake-%s-windows-arm64.zip" % version: "winarm64_binary",
         }
 
         # Get SHA256s for each asset
@@ -137,6 +138,9 @@ def generate_cmake_variables(urls_and_sha256s):
 
       set(win64_binary_url         "{win64_binary_url}")
       set(win64_binary_sha256      "{win64_binary_sha256}")
+
+      set(winarm64_binary_url      "{winarm64_binary_url}")
+      set(winarm64_binary_sha256   "{winarm64_binary_sha256}")
     """
     ).format(**template_inputs)
 

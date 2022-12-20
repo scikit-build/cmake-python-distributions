@@ -84,6 +84,10 @@ jobs:
             arch: "AMD64"
             build: ""
             use_qemu: false
+          - os: windows-2022
+            arch: "ARM64"
+            build: ""
+            use_qemu: false
           - os: windows-2019
             arch: "x86"
             build: ""
