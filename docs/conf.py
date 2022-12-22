@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 #
 # CMake Python Distributions documentation build configuration file, created by
 # sphinx-quickstart on Wed Nov  9 02:28:46 2016.
