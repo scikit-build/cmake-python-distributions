@@ -1,4 +1,4 @@
-from typing import NoReturn
+from typing import Iterator, NoReturn
 
 __version__: tuple[int, int, int] | tuple[int, int, int, str, str]
 
