@@ -29,7 +29,7 @@ def parse_requirements(filename):
 
 test_requirements = parse_requirements('requirements-test.txt')
 
-try:  # noqa: C901
+try:
     setup(
         name='cmake',
 

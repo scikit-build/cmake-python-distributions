@@ -45,13 +45,11 @@ def main():
         if os_ == "linux":
             subprocess.run(["auditwheel", "repair", "-w", str(tmpdir), str(file)], check=True, stdout=subprocess.PIPE)
         elif os_ == "macos":
-            # delocate does not pass for now: https://github.com/matthew-brett/delocate/issues/105
-            # subprocess.run(
-            #     ["delocate-wheel", "--require-archs", "arm64,x86_64", "-w", str(tmpdir), str(file)],
-            #     check=True,
-            #     stdout=subprocess.PIPE,
-            # )
-            shutil.copyfile(file, tmpdir / file.name)
+            subprocess.run(
+                ["delocate-wheel", "--require-archs", "arm64,x86_64", "-w", str(tmpdir), str(file)],
+                check=True,
+                stdout=subprocess.PIPE,
+            )
         elif os_ == "windows":
             # no specific tool, just copy
             shutil.copyfile(file, tmpdir / file.name)

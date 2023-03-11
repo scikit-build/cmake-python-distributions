@@ -13,7 +13,7 @@ def _run(program, args):
     args = ["%s.py" % program] + args
     with push_argv(args), pytest.raises(SystemExit) as excinfo:
         func()
-    assert 0 == excinfo.value.code
+    assert excinfo.value.code == 0
 
 
 def test_cmake_module():

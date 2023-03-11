@@ -111,7 +111,7 @@ def generate_cmake_variables(urls_and_sha256s):
         template_inputs["%s_url" % var_prefix] = urls_and_sha256s_values[0]
         template_inputs["%s_sha256" % var_prefix] = urls_and_sha256s_values[1]
 
-    cmake_variables = textwrap.dedent(
+    return textwrap.dedent(
         """
       #-----------------------------------------------------------------------------
       # CMake sources
@@ -143,8 +143,6 @@ def generate_cmake_variables(urls_and_sha256s):
       set(winarm64_binary_sha256   "{winarm64_binary_sha256}")
     """
     ).format(**template_inputs)
-
-    return cmake_variables
 
 
 def update_cmake_urls_script(version):

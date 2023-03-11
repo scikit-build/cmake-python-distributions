@@ -4,9 +4,8 @@ import logging
 import os
 import sys
 from itertools import product
-from os.path import abspath, basename, dirname, isfile
+from os.path import abspath, basename, dirname, isfile, splitext
 from os.path import join as pjoin
-from os.path import splitext
 
 try:
     from wheel.install import WheelFile
@@ -78,7 +77,7 @@ def _convert_to_generic_platform_wheel(wheel_ctx, py2_py3, additional_platforms)
     platform_tags = fparts['plat'].split('.')
     logger.debug('Previous platform tags: %s', ', '.join(platform_tags))
     if additional_platforms:
-        platform_tags = list(sorted(set(platform_tags + [p for p in additional_platforms])))
+        platform_tags = sorted(set(platform_tags + list(additional_platforms)))
         fparts['plat'] = '.'.join(platform_tags)
         logger.debug('New platform tags ....: %s', ', '.join(platform_tags))
     else:
@@ -98,7 +97,7 @@ def _convert_to_generic_platform_wheel(wheel_ctx, py2_py3, additional_platforms)
     if py2_py3:
         if len({"py2", "py3"} & set(pyver_tags)) == 0:
             raise ValueError("pyver_tags does not contain py2 nor py3")
-        pyver_tags = list(sorted(set(pyver_tags + ["py2", "py3"])))
+        pyver_tags = sorted(set(pyver_tags + ["py2", "py3"]))
     if pyver_tags != original_pyver_tags:
         logger.debug('New pyver tags ....: %s', ', '.join(pyver_tags))
         fparts['pyver'] = '.'.join(pyver_tags)
@@ -160,7 +159,7 @@ def convert_to_generic_platform_wheel(wheel_path, out_dir='./dist/', remove_orig
         ctx.out_wheel = _convert_to_generic_platform_wheel(ctx, py2_py3, additional_platforms)
 
     if remove_original:
-        logger.info('Removed original wheel %s' % wheel_path)
+        logger.info('Removed original wheel %s', wheel_path)
         os.remove(wheel_path)
 
 
