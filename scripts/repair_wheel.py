@@ -9,8 +9,6 @@ import sys
 import tempfile
 from pathlib import Path
 
-from convert_to_generic_platform_wheel import convert_to_generic_platform_wheel
-
 
 def main():
     if sys.platform.startswith("linux"):
@@ -55,9 +53,11 @@ def main():
             shutil.copyfile(file, tmpdir / file.name)
         (file,) = tmpdir.glob("*.whl")
 
-        # we need to handle macOS universal2 & arm64 here for now, let's use additional_platforms for this.
-        additional_platforms = []
+        # we need to handle macOS universal2 & arm64 here for now, let's use platform_tag_args for this.
+        platform_tag_args = []
         if os_ == "macos":
+            additional_platforms = []
+
             # first, get the target macOS deployment target from the wheel
             match = re.match(r"^.*-macosx_(\d+)_(\d+)_x86_64\.whl$", file.name)
             assert match is not None
@@ -77,13 +77,18 @@ def main():
                 # They're were also issues with pip not picking up some universal2 wheels, tag twice
                 additional_platforms.append("macosx_11_0_universal2")
 
+            platform_tag_args = [f"--platform-tag=+{'.'.join(additional_platforms)}"]
+
         # make this a py2.py3 wheel
-        convert_to_generic_platform_wheel(
-            str(file),
-            out_dir=str(wheelhouse),
-            py2_py3=True,
-            additional_platforms=additional_platforms,
+        subprocess.run(
+            ["wheel", "tags", "--python-tag", "py2.py3", "--abi-tag", "none", *platform_tag_args, "--remove", str(file)],
+            check=True,
+            stdout=subprocess.PIPE,
         )
+        files = list(tmpdir.glob("*.whl"))
+        assert len(files) == 1, files
+        file = files[0]
+        file.rename(wheelhouse / file.name)
 
 
 if __name__ == "__main__":
