@@ -1,11 +1,11 @@
 
 #-----------------------------------------------------------------------------
 # CMake sources
-set(unix_source_url          "https://github.com/Kitware/CMake/releases/download/v3.26.0/cmake-3.26.0.tar.gz")
-set(unix_source_sha256       "4256613188857e95700621f7cdaaeb954f3546a9249e942bc2f9b3c26e381365")
+set(unix_source_url          "https://github.com/Kitware/CMake/releases/download/v3.26.1/cmake-3.26.1.tar.gz")
+set(unix_source_sha256       "f29964290ad3ced782a1e58ca9fda394a82406a647e24d6afd4e6c32e42c412f")
 
-set(windows_source_url       "https://github.com/Kitware/CMake/releases/download/v3.26.0/cmake-3.26.0.zip")
-set(windows_source_sha256    "c9d3c06fac55a80179654102de5980b59346957d7f908b99d2b533603842e21e")
+set(windows_source_url       "https://github.com/Kitware/CMake/releases/download/v3.26.1/cmake-3.26.1.zip")
+set(windows_source_sha256    "cf6913e8d160bc301e8b668145ac02a2dded3dd633974c83071f57da87f09ecf")
 
 #-----------------------------------------------------------------------------
 # CMake binaries
@@ -13,17 +13,17 @@ set(windows_source_sha256    "c9d3c06fac55a80179654102de5980b59346957d7f908b99d2
 set(linux32_binary_url       "NA")  # Linux 32-bit binaries not available
 set(linux32_binary_sha256    "NA")
 
-set(linux64_binary_url       "https://github.com/Kitware/CMake/releases/download/v3.26.0/cmake-3.26.0-linux-x86_64.tar.gz")
-set(linux64_binary_sha256    "69b55523145b2e619f637e7766c413cb1b7de1f06269ea1eab4a655d59847d59")
+set(linux64_binary_url       "https://github.com/Kitware/CMake/releases/download/v3.26.1/cmake-3.26.1-linux-x86_64.tar.gz")
+set(linux64_binary_sha256    "b1dfd11d50e2dfb3d18be86ca1a369da1c1131badc14b659491dd42be1fed704")
 
-set(macos10_10_binary_url    "https://github.com/Kitware/CMake/releases/download/v3.26.0/cmake-3.26.0-macos10.10-universal.tar.gz")
-set(macos10_10_binary_sha256 "52a8d45c791ed6442cd4b22ddf51aa35df24df831765ab680d763286f04a4f43")
+set(macos10_10_binary_url    "https://github.com/Kitware/CMake/releases/download/v3.26.1/cmake-3.26.1-macos10.10-universal.tar.gz")
+set(macos10_10_binary_sha256 "60c338d43eb07b8eeb7fb8cef7f808a53edeb9508cd387029ec987dac3d8f762")
 
-set(win32_binary_url         "https://github.com/Kitware/CMake/releases/download/v3.26.0/cmake-3.26.0-windows-i386.zip")
-set(win32_binary_sha256      "64b29fb20c2ee5079b32b975ebf7659ca55e1b6f43fd72d0d84a1df2536c3d4c")
+set(win32_binary_url         "https://github.com/Kitware/CMake/releases/download/v3.26.1/cmake-3.26.1-windows-i386.zip")
+set(win32_binary_sha256      "a0a5f91e609063c0437f6e03aa2d0de4ada5d12ed5ad74acc09d95960504bc99")
 
-set(win64_binary_url         "https://github.com/Kitware/CMake/releases/download/v3.26.0/cmake-3.26.0-windows-x86_64.zip")
-set(win64_binary_sha256      "01191a53d0481ec0e911ba4e37ec41949013408a12dcdf92832a968fea751ea8")
+set(win64_binary_url         "https://github.com/Kitware/CMake/releases/download/v3.26.1/cmake-3.26.1-windows-x86_64.zip")
+set(win64_binary_sha256      "a2cefff35caa91e55716f1951ed82db928fc24f14d61641b21851dcddb81a21e")
 
-set(winarm64_binary_url      "https://github.com/Kitware/CMake/releases/download/v3.26.0/cmake-3.26.0-windows-arm64.zip")
-set(winarm64_binary_sha256   "ec8939856138309f3809d46d5a766ccb5b1f1db539101083bcd623f2161262cf")
+set(winarm64_binary_url      "https://github.com/Kitware/CMake/releases/download/v3.26.1/cmake-3.26.1-windows-arm64.zip")
+set(winarm64_binary_sha256   "3d83793e5fea081a7d776d60dc4b44585676d2a85915e44f8da0f2de2a24151e")
