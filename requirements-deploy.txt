@@ -1,6 +1,0 @@
-
-# need to pin cryptography for s390x/ppc64le builds:
-# cryptography never provided wheels for those architectures and the
-# requirements to build from sources are relaxed when building the 3.3 series
-cryptography~=3.3.2 ; sys_platform=="linux" and platform_machine in "s390x, ppc64le"
-twine
