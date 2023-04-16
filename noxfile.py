@@ -76,7 +76,7 @@ def docs(session: nox.Session) -> str:
             print("Unsupported argument to docs")
 
 
-def _bump(session: nox.Session, name: str, repository: str, script: str, files) -> None:
+def _bump(session: nox.Session, name: str, repository: str, branch: str, script: str, files) -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--commit", action="store_true", help="Make a branch and commit."
@@ -88,7 +88,11 @@ def _bump(session: nox.Session, name: str, repository: str, script: str, files) 
 
     if args.version is None:
         session.install("lastversion")
-        version = session.run("lastversion", repository, log=False, silent=True).strip()
+        lastversion_args = []
+        if branch:
+            lastversion_args.extend(("--branch", branch))
+        lastversion_args.append(repository)
+        version = session.run("lastversion", *lastversion_args, log=False, silent=True).strip()
     else:
         version = args.version
 
@@ -118,7 +122,7 @@ def bump(session: nox.Session) -> None:
         "tests/test_distribution.py",
         "docs/update_cmake_version.rst",
     )
-    _bump(session, "CMake", "kitware/cmake", "scripts/update_cmake_version.py", files)
+    _bump(session, "CMake", "kitware/cmake", "", "scripts/update_cmake_version.py", files)
 
 
 @nox.session(name="bump-openssl")
@@ -129,4 +133,4 @@ def bump_openssl(session: nox.Session) -> None:
     files = (
         "scripts/manylinux-build-and-install-openssl.sh",
     )
-    _bump(session, "OpenSSL", "openssl/openssl", "scripts/update_openssl_version.py", files)
+    _bump(session, "OpenSSL", "openssl/openssl", "3.0", "scripts/update_openssl_version.py", files)
