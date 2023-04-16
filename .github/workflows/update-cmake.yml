@@ -42,7 +42,7 @@ jobs:
       if: github.ref == 'refs/heads/master' && github.repository == 'scikit-build/cmake-python-distributions'
       uses: peter-evans/create-pull-request@v5
       with:
-        commit-message: Update dependencies
+        commit-message: '[Bot] Update to CMake ${{ steps.bump-cmake.outputs.version }}'
         title: '[Bot] Update to CMake ${{ steps.bump-cmake.outputs.version }}'
         body: |
           Created by update_cmake_version.py
