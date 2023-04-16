@@ -222,6 +222,8 @@ def main():
         update_docs(args.cmake_version)
         update_tests(args.cmake_version)
         update_raw_versions(args.cmake_version)
+        with open(os.path.join(ROOT_DIR, ".cmake.version"), "w") as version_file:
+            version_file.write(args.cmake_version + "\n")
 
         if not args.quiet:
             msg = """\
