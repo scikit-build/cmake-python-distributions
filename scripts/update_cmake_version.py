@@ -176,7 +176,7 @@ def update_docs(version):
         version,
         _major_minor(version),
     )
-    for filename in {"docs/index.rst", "README.rst"}:
+    for filename in ["docs/index.rst", "README.rst"]:
         _update_file(os.path.join(ROOT_DIR, filename), pattern, replacement)
 
 
