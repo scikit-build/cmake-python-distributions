@@ -109,11 +109,14 @@ except BaseException:
     successfully install cmake:
     1) Upgrade to the latest pip and try again. This will fix errors for most
        users. See: https://pip.pypa.io/en/stable/installing/#upgrading-pip
-    2) If on Linux, with glibc < 2.12, you can set PIP_ONLY_BINARY=cmake in
+    2) If running on Raspberry Pi OS, you can set PIP_ONLY_BINARY=cmake in
+       order to retrieve the latest wheels built by piwheels.
+       c.f. https://github.com/scikit-build/cmake-python-distributions/issues/392#issuecomment-1676284749
+    3) If on Linux, with glibc < 2.12, you can set PIP_ONLY_BINARY=cmake in
        order to retrieve the last manylinux1 compatible wheel.
-    3) If on Linux, with glibc < 2.12, you can cap "cmake<3.23" in your
+    4) If on Linux, with glibc < 2.12, you can cap "cmake<3.23" in your
        requirements in order to retrieve the last manylinux1 compatible wheel.
-    4) Open an issue with the debug information that follows at
+    5) Open an issue with the debug information that follows at
        https://github.com/scikit-build/cmake-python-distributions/issues
     """
     )
