@@ -119,7 +119,7 @@ def bump(session: nox.Session) -> None:
         "CMakeUrls.cmake",
         "docs/index.rst",
         "README.rst",
-        "tests/test_distribution.py",
+        "tests/test_cmake.py",
         "docs/update_cmake_version.rst",
     )
     _bump(session, "CMake", "kitware/cmake", "", "scripts/update_cmake_version.py", files)
