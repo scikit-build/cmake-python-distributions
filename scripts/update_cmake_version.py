@@ -184,7 +184,7 @@ def update_tests(version):
     pattern = re.compile(r'expected_version = "\d.(\d)+.\d"')
     replacement = 'expected_version = "%s"' % version
     _update_file(
-        os.path.join(ROOT_DIR, "tests/test_distribution.py"), pattern, replacement
+        os.path.join(ROOT_DIR, "tests/test_cmake.py"), pattern, replacement
     )
 
 
@@ -228,7 +228,7 @@ def main():
                 Complete! Now run:
 
                 git switch -c update-to-cmake-{release}
-                git add -u CMakeUrls.cmake docs/index.rst README.rst tests/test_distribution.py docs/update_cmake_version.rst
+                git add -u CMakeUrls.cmake docs/index.rst README.rst tests/test_cmake.py docs/update_cmake_version.rst
                 git commit -m "Update to CMake {release}"
                 gh pr create --fill --body "Created by update_cmake_version.py"
                 """

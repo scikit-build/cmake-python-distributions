@@ -40,15 +40,15 @@ Classic procedure:
     Updating docs/index.rst - done
     Updating README.rst
     Updating README.rst - done
-    Updating tests/test_distribution.py
-    Updating tests/test_distribution.py - done
+    Updating tests/test_cmake.py
+    Updating tests/test_cmake.py - done
 
 3. Create a topic named `update-to-cmake-X.Y.Z` and commit the changes.
    For example::
 
     release=3.27.8
     git switch -c update-to-cmake-$release
-    git add -u CMakeUrls.cmake docs/index.rst README.rst tests/test_distribution.py docs/update_cmake_version.rst
+    git add -u CMakeUrls.cmake docs/index.rst README.rst tests/test_cmake.py docs/update_cmake_version.rst
     git commit -m "Update to CMake $release"
 
 4. Push the topic and create a `Pull Request`.
