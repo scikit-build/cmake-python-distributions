@@ -7,14 +7,6 @@ from distutils.text_file import TextFile
 
 from skbuild import setup
 
-# Add current folder to path
-# This is required to import versioneer in an isolated pip build
-# Prepending allows not to break on a non-isolated build when versioneer
-# is already installed (c.f. https://github.com/scikit-build/cmake-python-distributions/issues/171)
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-
-import versioneer  # noqa: E402
-
 with open('README.rst', 'r') as fp:
     readme = fp.read()
 
@@ -32,9 +24,6 @@ test_requirements = parse_requirements('requirements-test.txt')
 try:
     setup(
         name='cmake',
-
-        version=versioneer.get_version(),
-        cmdclass=versioneer.get_cmdclass(),
 
         author='Jean-Christophe Fillion-Robin',
         author_email='jchris.fillionr@kitware.com',

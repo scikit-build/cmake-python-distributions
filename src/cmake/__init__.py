@@ -3,10 +3,14 @@ import os
 import subprocess
 import sys
 
-from ._version import get_versions
+from ._version import version as __version__
 
-__version__ = get_versions()['version']
-del get_versions
+__all__ = ["__version__", "CMAKE_DATA", "CMAKE_BIN_DIR", "CMAKE_DOC_DIR", "CMAKE_SHARE_DIR", "cmake", "cpack", "ctest"]
+
+
+def __dir__():
+    return __all__
+
 
 CMAKE_DATA = os.path.join(os.path.dirname(__file__), 'data')
 
