@@ -117,6 +117,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: (!matrix.use_qemu) || fromJSON(env.USE_QEMU)
         with:
+          name: Wheel-${{ matrix.os }}-${{ matrix.build }}${{ matrix.arch }}
           path: ./wheelhouse/*.whl
 
   build_manylinux2010_wheels:
@@ -145,6 +146,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
+          name: Wheel-manylinux2010-${{ matrix.arch }}
           path: ./wheelhouse/*.whl
 
   build_sdist:
@@ -161,6 +163,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
+          name: SDist
           path: dist/*.tar.gz
 
   test_sdist:
@@ -199,7 +202,7 @@ jobs:
 
       - uses: actions/download-artifact@v4
         with:
-          name: artifact
+          name: SDist
           path: dist
 
       - name: Install SDist
@@ -219,10 +222,9 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: artifact
-          path: dist
+          path: all
 
-      - run: pipx run twine check --strict dist/*
+      - run: pipx run twine check --strict all/*/*
 
   upload_pypi:
     name: Upload to PyPI
@@ -237,7 +239,11 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: artifact
-          path: dist
+          path: all
+
+      - name: Merge files
+        run: |
+          mkdir dist
+          mv all/*/* dist/.
 
       - uses: pypa/gh-action-pypi-publish@release/v1
