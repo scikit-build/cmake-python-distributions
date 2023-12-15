@@ -117,7 +117,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: (!matrix.use_qemu) || fromJSON(env.USE_QEMU)
         with:
-          name: Wheel-${{ matrix.os }}-${{ matrix.arch }}
+          name: Wheel-${{ matrix.os }}-${{ matrix.build }}${{ matrix.arch }}
           path: ./wheelhouse/*.whl
 
   build_manylinux2010_wheels:
