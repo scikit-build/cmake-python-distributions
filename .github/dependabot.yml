@@ -4,7 +4,11 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: "weekly"
+    groups:
+      actions:
+        patterns:
+          - "*"
   # Maintain dependencies for pip constraints-ci.txt
   - package-ecosystem: "pip"
     directory: "/"
