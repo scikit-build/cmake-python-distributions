@@ -17,6 +17,10 @@ on:
     tags:
       - "*.*.*"
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   USE_QEMU: ${{ fromJSON(github.event.inputs.use_qemu || 'false') || (github.event_name == 'schedule') || startsWith(github.ref, 'refs/tags/') }}
 
