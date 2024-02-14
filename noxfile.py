@@ -55,25 +55,49 @@ def tests(session: nox.Session) -> str:
     session.run("pytest", *session.posargs)
 
 
-@nox.session
-def docs(session: nox.Session) -> str:
+@nox.session(reuse_venv=True)
+def docs(session: nox.Session) -> None:
     """
-    Build the docs.
+    Build the docs. Pass "--serve" to serve. Pass "-b linkcheck" to check links.
     """
 
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--serve", action="store_true", help="Serve after building")
+    parser.add_argument(
+        "-b", dest="builder", default="html", help="Build target (default: html)"
+    )
+    args, posargs = parser.parse_known_args(session.posargs)
+
+    if args.builder != "html" and args.serve:
+        session.error("Must not specify non-HTML builder with --serve")
+
+    extra_installs = ["sphinx-autobuild"] if args.serve else []
+
     wheel = build(session)
-    session.install("-r", "requirements-docs.txt")
+    session.install("-r", "docs/requirements-docs.txt", *extra_installs)
     session.install(f"./dist/{wheel}")
 
     session.chdir("docs")
-    session.run("sphinx-build", "-M", "html", ".", "_build")
 
-    if session.posargs:
-        if "serve" in session.posargs:
-            print("Launching docs at http://localhost:8000/ - use Ctrl-C to quit")
-            session.run("python", "-m", "http.server", "8000", "-d", "_build/html")
-        else:
-            print("Unsupported argument to docs")
+    if args.builder == "linkcheck":
+        session.run(
+            "sphinx-build", "-b", "linkcheck", ".", "_build/linkcheck", *posargs
+        )
+        return
+
+    shared_args = (
+        "-n",  # nitpicky mode
+        "-T",  # full tracebacks
+        f"-b={args.builder}",
+        ".",
+        f"_build/{args.builder}",
+        *posargs,
+    )
+
+    if args.serve:
+        session.run("sphinx-autobuild", *shared_args)
+    else:
+        session.run("sphinx-build", "--keep-going", *shared_args)
 
 
 def _bump(session: nox.Session, name: str, repository: str, branch: str, script: str, files) -> None:

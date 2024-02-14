@@ -5,7 +5,7 @@ Building the CMake Python wheel
 Overview
 --------
 
-This project has been designed to work with `scikit-build <http://scikit-build.readthedocs.io/>`_.
+This project has been designed to work with `scikit-build <https://scikit-build.readthedocs.io/>`_.
 
 It provides a `setup.py` and allows to create both source and binary distributions of
 CMake.
