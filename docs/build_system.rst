@@ -2,12 +2,8 @@
 Understanding the Build-system
 ==============================
 
-CMakeLists.txt
---------------
 
-.. _CMakeLists: https://github.com/scikit-build/cmake-python-distributions/blob/master/CMakeLists.txt
-
-The build system is described by the `CMakeLists.txt <CMakeLists>`_ and is composed of few projects each responsible
+The build system is described by the ``CMakeLists.txt`` and is composed of few projects each responsible
 for a specific task. Once configured, the `Outer Project` is responsible for driving the overall build
 composed of multiple project called `external project`. Here is the list of `external project`:
 
@@ -15,8 +11,6 @@ composed of multiple project called `external project`. Here is the list of `ext
 * ``CMakeProject-binary-download``
 * ``CMakeProject-build``
 * ``CMakePythonDistributions``: This corresponds to the `Inner Project` represented below.
-
-.. _ ..CMakeLists\.txt: https://github.com/scikit-build/cmake-python-distributions/blob/master/CMakeLists.txt
 
 The flow chart represented below illustrates which external projects are included based on the configure
 options and describes the role of each one:
@@ -36,7 +30,7 @@ options and describes the role of each one:
             color = "#FFF0D7";
 
             // properties
-            configure [shape = beginpoint, label = "CMakeLists", description="See `CMakeLists.txt <CMakeLists>`_"];
+            configure [shape = beginpoint, label = "CMakeLists", description="CMake configuration file"];
             ask_download [label ="Download source ?", shape = diamond, description = "If option ``CMakeProject_SOURCE_DIR`` is set, skip source download."];
             download_source [label ="Download Source archive", description = "External project downloading archives from https://cmake.org/files/."]
             reuse_source_dir [label ="Re-use source directory", description = "Empty external project."]

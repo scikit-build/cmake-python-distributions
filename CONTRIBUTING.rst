@@ -103,7 +103,7 @@ Before you submit a pull request, check that it meets these guidelines:
    feature to the list in `README.rst`.
 
 3. The pull request should work for Python 2.7, and 3.6+.
-   Check `GitHub Actions https://github.com/scikit-build/cmake-python-distributions/actions/workflows/build.yml`_
+   Check `GitHub Actions <https://github.com/scikit-build/cmake-python-distributions/actions/workflows/build.yml>`_
    and make sure that the tests pass for all supported Python versions.
 
 

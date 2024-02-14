@@ -55,8 +55,10 @@ MACOSX_DEPLOYMENT_TARGET = "10.10"
 
 
 [tool.ruff]
-select = [
-  "E", "F", "W", # flake8
+src = ["src"]
+
+[tool.ruff.lint]
+extend-select = [
   "B",           # flake8-bugbear
   "I",           # isort
   "ARG",         # flake8-unused-arguments
@@ -75,22 +77,16 @@ select = [
   "NPY",         # NumPy specific rules
   "PD",          # pandas-vet
 ]
-extend-ignore = [
-  "PLR",    # Design related pylint codes
-  "E501",   # Line too long
+ignore = [
+  "PLR09",  # Too many X
   "RUF005", # Python 3 needed
   "B904",   # Python 3 needed
   "SIM105", # Python 3 needed
 ]
-src = ["src"]
-unfixable = [
-  "T20",  # Removes print statements
-  "F841", # Removes unused variables
-]
 exclude = ["src/cmake/_version.py"]
 flake8-unused-arguments.ignore-variadic-names = true
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 "docs/conf.py" = ["E402"]
 "*.pyi" = ["ARG001"]
 "noxfile.py" = ["PLW0603"] # Could be fixed if Python 2 dropped
