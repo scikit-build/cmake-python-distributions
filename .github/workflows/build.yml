@@ -190,7 +190,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends libssl-dev
-          pip install pytest pytest-virtualenv virtualenv pytest-cov
+          pip install pytest pytest-cov
 
       - uses: actions/download-artifact@v4
         with:
