@@ -29,26 +29,26 @@ Classic procedure:
 2. Execute `scripts/update_cmake_version.py` command line tool with the desired
    ``X.Y.Z`` CMake version available for download. For example::
 
-    $ release=3.25.0
+    $ release=3.28.3
     $ ./scripts/update_cmake_version.py $release
-    Collecting URLs and SHA256s from 'https://api.github.com/repos/Kitware/CMake/releases/tags/v3.25.0'
+    Collecting URLs and SHA256s from 'https://api.github.com/repos/Kitware/CMake/releases/tags/v3.28.3'
     [...]
-    Collecting URLs and SHA256s from 'https://api.github.com/repos/Kitware/CMake/releases/tags/v3.25.0' - done
-    Updating 'CMakeUrls.cmake' with CMake version 3.25.0
-    Updating 'CMakeUrls.cmake' with CMake version 3.25.0 - done
+    Collecting URLs and SHA256s from 'https://api.github.com/repos/Kitware/CMake/releases/tags/v3.28.3' - done
+    Updating 'CMakeUrls.cmake' with CMake version 3.28.3
+    Updating 'CMakeUrls.cmake' with CMake version 3.28.3 - done
     Updating docs/index.rst
     Updating docs/index.rst - done
     Updating README.rst
     Updating README.rst - done
-    Updating tests/test_distribution.py
-    Updating tests/test_distribution.py - done
+    Updating tests/test_cmake.py
+    Updating tests/test_cmake.py - done
 
 3. Create a topic named `update-to-cmake-X.Y.Z` and commit the changes.
    For example::
 
-    release=3.25.0
+    release=3.28.3
     git switch -c update-to-cmake-$release
-    git add -u CMakeUrls.cmake docs/index.rst README.rst tests/test_distribution.py docs/update_cmake_version.rst
+    git add -u CMakeUrls.cmake docs/index.rst README.rst tests/test_cmake.py docs/update_cmake_version.rst
     git commit -m "Update to CMake $release"
 
 4. Push the topic and create a `Pull Request`.

@@ -17,6 +17,10 @@ on:
     tags:
       - "*.*.*"
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   USE_QEMU: ${{ fromJSON(github.event.inputs.use_qemu || 'false') || (github.event_name == 'schedule') || startsWith(github.ref, 'refs/tags/') }}
 
@@ -25,11 +29,11 @@ jobs:
     name: Lint
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.x"
-      - uses: pre-commit/action@v3.0.0
+      - uses: pre-commit/action@v3.0.1
 
 
   build_wheels:
@@ -84,6 +88,10 @@ jobs:
             arch: "AMD64"
             build: ""
             use_qemu: false
+          - os: windows-2022
+            arch: "ARM64"
+            build: ""
+            use_qemu: false
           - os: windows-2019
             arch: "x86"
             build: ""
@@ -94,25 +102,26 @@ jobs:
             use_qemu: false
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         if: (!matrix.use_qemu) || fromJSON(env.USE_QEMU)
         with:
           fetch-depth: 0  # required for versioneer to find tags
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2.1.0
+        uses: docker/setup-qemu-action@v3.0.0
         if: matrix.use_qemu && fromJSON(env.USE_QEMU)
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@v2.11.2
+        uses: pypa/cibuildwheel@v2.16.5
         if: (!matrix.use_qemu) || fromJSON(env.USE_QEMU)
         env:
           CIBW_ARCHS: "${{ matrix.arch }}"
           CIBW_BUILD: "cp39-${{ matrix.build }}*"
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: (!matrix.use_qemu) || fromJSON(env.USE_QEMU)
         with:
+          name: Wheel-${{ matrix.os }}-${{ matrix.build }}${{ matrix.arch }}
           path: ./wheelhouse/*.whl
 
   build_manylinux2010_wheels:
@@ -127,20 +136,21 @@ jobs:
           - arch: "i686"
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0  # required for versioneer to find tags
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@v2.11.2
+        uses: pypa/cibuildwheel@v2.16.5
         env:
           CIBW_ARCHS: "${{ matrix.arch }}"
           CIBW_BUILD: "cp39-manylinux_*"
           CIBW_MANYLINUX_X86_64_IMAGE: "manylinux2010"
           CIBW_MANYLINUX_I686_IMAGE: "manylinux2010"
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
+          name: Wheel-manylinux2010-${{ matrix.arch }}
           path: ./wheelhouse/*.whl
 
   build_sdist:
@@ -148,15 +158,16 @@ jobs:
     needs: [lint]
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0  # required for versioneer to find tags
 
       - name: Build SDist
         run: pipx run build --sdist
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
+          name: SDist
           path: dist/*.tar.gz
 
   test_sdist:
@@ -167,14 +178,25 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python: ["2.7", "3.6", "3.7", "3.11"]
+        python: ["2.7", "3.6", "3.7", "3.12"]
 
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        if: matrix.python != '2.7'
         name: Install Python ${{ matrix.python }}
         with:
           python-version: ${{ matrix.python }}
+
+      - name: Install Ubuntu Python 2.7
+        if: matrix.python == '2.7'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends python2 python3-virtualenv
+          virtualenv -p python2 ${HOME}/cp27
+          ${HOME}/cp27/bin/python -m pip install -U pip
+          ${HOME}/cp27/bin/python -m pip install -U setuptools wheel
+          echo "${HOME}/cp27/bin" >> $GITHUB_PATH
 
       - name: Install dependencies
         run: |
@@ -182,9 +204,9 @@ jobs:
           sudo apt-get install -y --no-install-recommends libssl-dev
           pip install pytest pytest-virtualenv virtualenv pytest-cov
 
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
-          name: artifact
+          name: SDist
           path: dist
 
       - name: Install SDist
@@ -203,25 +225,30 @@ jobs:
     needs: [build_wheels, build_manylinux2010_wheels, build_sdist, test_sdist]
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
-          name: artifact
-          path: dist
+          path: all
 
-      - run: pipx run twine check --strict dist/*
+      - run: pipx run twine check --strict all/*/*
 
   upload_pypi:
     name: Upload to PyPI
     needs: [check_dist]
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.repository == 'scikit-build/cmake-python-distributions' && startsWith(github.ref, 'refs/tags/')
+    environment:
+      name: pypi
+      url: https://pypi.org/p/cmake
+    permissions:
+      id-token: write
     steps:
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
-          name: artifact
-          path: dist
+          path: all
 
-      - name: Upload to PyPI
-        uses: pypa/gh-action-pypi-publish@v1.5.1
-        with:
-          password: ${{ secrets.PYPI_RELEASE_PASSWORD }}
+      - name: Merge files
+        run: |
+          mkdir dist
+          mv all/*/* dist/.
+
+      - uses: pypa/gh-action-pypi-publish@release/v1

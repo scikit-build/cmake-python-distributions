@@ -54,6 +54,7 @@ def get_cmake_archive_urls_and_sha256s(version, verbose=False):
             "cmake-%s-macos10.10-universal.tar.gz" % version: "macos10_10_binary",
             "cmake-%s-windows-i386.zip" % version: "win32_binary",
             "cmake-%s-windows-x86_64.zip" % version: "win64_binary",
+            "cmake-%s-windows-arm64.zip" % version: "winarm64_binary",
         }
 
         # Get SHA256s for each asset
@@ -110,7 +111,7 @@ def generate_cmake_variables(urls_and_sha256s):
         template_inputs["%s_url" % var_prefix] = urls_and_sha256s_values[0]
         template_inputs["%s_sha256" % var_prefix] = urls_and_sha256s_values[1]
 
-    cmake_variables = textwrap.dedent(
+    return textwrap.dedent(
         """
       #-----------------------------------------------------------------------------
       # CMake sources
@@ -137,10 +138,11 @@ def generate_cmake_variables(urls_and_sha256s):
 
       set(win64_binary_url         "{win64_binary_url}")
       set(win64_binary_sha256      "{win64_binary_sha256}")
+
+      set(winarm64_binary_url      "{winarm64_binary_url}")
+      set(winarm64_binary_sha256   "{winarm64_binary_sha256}")
     """
     ).format(**template_inputs)
-
-    return cmake_variables
 
 
 def update_cmake_urls_script(version):
@@ -174,7 +176,7 @@ def update_docs(version):
         version,
         _major_minor(version),
     )
-    for filename in {"docs/index.rst", "README.rst"}:
+    for filename in ["docs/index.rst", "README.rst"]:
         _update_file(os.path.join(ROOT_DIR, filename), pattern, replacement)
 
 
@@ -182,7 +184,7 @@ def update_tests(version):
     pattern = re.compile(r'expected_version = "\d.(\d)+.\d"')
     replacement = 'expected_version = "%s"' % version
     _update_file(
-        os.path.join(ROOT_DIR, "tests/test_distribution.py"), pattern, replacement
+        os.path.join(ROOT_DIR, "tests/test_cmake.py"), pattern, replacement
     )
 
 
@@ -226,7 +228,7 @@ def main():
                 Complete! Now run:
 
                 git switch -c update-to-cmake-{release}
-                git add -u CMakeUrls.cmake docs/index.rst README.rst tests/test_distribution.py docs/update_cmake_version.rst
+                git add -u CMakeUrls.cmake docs/index.rst README.rst tests/test_cmake.py docs/update_cmake_version.rst
                 git commit -m "Update to CMake {release}"
                 gh pr create --fill --body "Created by update_cmake_version.py"
                 """

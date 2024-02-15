@@ -1,11 +1,17 @@
 # -*- coding: utf-8 -*-
+import os
+import subprocess
+import sysconfig
 import textwrap
 
 import pytest
+from importlib_metadata import distribution
 
 import cmake
 
 from . import push_argv
+
+all_tools = pytest.mark.parametrize("tool", ["cmake", "cpack", "ctest"])
 
 
 def _run(program, args):
@@ -13,13 +19,12 @@ def _run(program, args):
     args = ["%s.py" % program] + args
     with push_argv(args), pytest.raises(SystemExit) as excinfo:
         func()
-    assert 0 == excinfo.value.code
+    assert excinfo.value.code == 0
 
 
-def test_cmake_module():
-    _run("cmake", ["--version"])
-    _run("cpack", ["--version"])
-    _run("ctest", ["--version"])
+@all_tools
+def test_cmake_module(tool):
+    _run(tool, ["--version"])
 
 
 def test_cmake_https(tmpdir):
@@ -43,3 +48,22 @@ def test_cmake_https(tmpdir):
     ))
 
     _run("cmake", ["-DTMP_DIR:PATH=%s" % str(tmpdir), "-P", str(test_script)])
+
+
+def _get_scripts():
+    dist = distribution("cmake")
+    scripts_paths = [os.path.abspath(sysconfig.get_path("scripts", scheme)) for scheme in sysconfig.get_scheme_names()]
+    scripts = []
+    for file in dist.files:
+        if os.path.abspath(str(file.locate().parent)) in scripts_paths:
+            scripts.append(file.locate().resolve(strict=True))
+    return scripts
+
+
+@all_tools
+def test_cmake_script(tool):
+    expected_version = "3.28.3"
+    scripts = [script for script in _get_scripts() if script.stem == tool]
+    assert len(scripts) == 1
+    output = subprocess.check_output([str(scripts[0]), "--version"]).decode("ascii")
+    assert output.splitlines()[0] == "{} version {}".format(tool, expected_version)

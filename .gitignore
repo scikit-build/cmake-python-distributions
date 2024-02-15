@@ -61,3 +61,9 @@ docs/_build
 # IDE junk
 .idea/*
 *.swp
+
+# Output from cibuildwheel
+wheelhouse/
+
+# Version
+_version.py

@@ -1,7 +1,8 @@
 docutils
-funcparserlib>=1.0.0a0
+funcparserlib>=1.0.0
+pillow<10
 pygments
 scikit-build
 sphinx
 sphinx_rtd_theme
-sphinxcontrib-blockdiag
+sphinxcontrib-blockdiag # old, not compatible with pillow 10+

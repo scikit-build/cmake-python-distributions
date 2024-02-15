@@ -78,8 +78,12 @@ if(CMakePythonDistributions_SUPERBUILD)
   endif()
   if(WIN32)
     set(binary_archive "win32_binary")
-    if((CMAKE_SIZEOF_VOID_P EQUAL 8) AND NOT(${CMAKE_SYSTEM_PROCESSOR} STREQUAL "ARM64"))
-      set(binary_archive "win64_binary")
+    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+      if(${CMAKE_SYSTEM_PROCESSOR} STREQUAL "ARM64" OR "$ENV{SETUPTOOLS_EXT_SUFFIX}" MATCHES arm64)
+        set(binary_archive "winarm64_binary")
+      else()
+        set(binary_archive "win64_binary")
+      endif()
     endif()
   endif()
   check_archive_var("${binary_archive}")
@@ -282,10 +286,15 @@ set(CMAKE_EXE_LINKER_FLAGS \"-lstdc++ -lgcc -lrt\" CACHE STRING \"Initial cache\
         endif()
 
         if(RUN_CMAKE_TEST)
+          include(ProcessorCount)
+          ProcessorCount(NB_CPU)
+          if(NB_CPU EQUAL 0)
+            set(NB_CPU 2)
+          endif()
           ExternalProject_Add_Step(CMakeProject-build run_cmake_test_suite
             DEPENDEES ${CMAKEPROJECT_BUILD_LAST_STEP}
             COMMENT "Running CMake test suite, exclusion list: '${RUN_CMAKE_TEST_EXCLUDE}'"
-            COMMAND ./bin/ctest --force-new-ctest-process --stop-on-failure --output-on-failure -j2 -E ${RUN_CMAKE_TEST_EXCLUDE}
+            COMMAND ./bin/ctest --force-new-ctest-process --stop-on-failure --output-on-failure -j${NB_CPU} -E ${RUN_CMAKE_TEST_EXCLUDE}
             WORKING_DIRECTORY ${CMakeProject_BINARY_DIR}
             USES_TERMINAL 1
             )

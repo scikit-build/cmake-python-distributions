@@ -4,7 +4,6 @@ build-backend = "scikit_build_core.build"
 
 [project]
 name = "cmake"
-version = "3.25.0"
 description = "CMake is an open-source, cross-platform family of tools designed to build, test and package software"
 keywords = ["CMake", "build", "c++", "fortran", "cross-platform", "cross-compilation"]
 readme = "README.rst"
@@ -25,6 +24,7 @@ classifiers = [
     "Topic :: Software Development :: Build Tools",
     "Typing :: Typed"
 ]
+dynamic = ["version"]
 requires-python = ">=3.7"
 
 [project.urls]
@@ -36,15 +36,10 @@ Source = "ttps://github.com/scikit-build/cmake-python-distributions"
 
 [project.optional-dependencies]
 test = [
-  "codecov>=2.0.5",
   "coverage>=4.2",
-  "flake8>=3.0.4",
-  "path.py>=11.5.0",
+  "importlib_metadata>=2.0",
   "pytest>=3.0.3",
   "pytest-cov>=2.4.0",
-  "pytest-runner>=2.9",
-  "pytest-virtualenv>=1.7.0",
-  "virtualenv>=15.0.3"
 ]
 
 [project.scripts]
@@ -58,37 +53,75 @@ wheel.py-api = "py2.py3"
 wheel.expand-macos-universal-tags = true
 wheel.install-dir = "cmake/data"
 
+[tool.setuptools_scm]
+write_to = "src/cmake/_version.py"
+
 [tool.cibuildwheel]
 build = "cp39-*"
 test-extras = "test"
-test-command = "pytest --ignore={project}/tests/test_distribution.py {project}/tests"
-build-verbosity = "1"
+test-command = "pytest {project}/tests"
+build-verbosity = 1
 
 [tool.cibuildwheel.linux]
 before-all = [
     './scripts/manylinux-build-and-install-openssl.sh',
 ]
-environment = { CMAKE_ARGS = "-DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl -DCMAKE_JOB_POOL_COMPILE:STRING=compile -DCMAKE_JOB_POOL_LINK:STRING=link -DCMAKE_JOB_POOLS:STRING=compile=2;link=1 -DCMAKE_CXX_STANDARD:STRING=11" }
+environment = { CMAKE_ARGS = "-DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl -DCMAKE_JOB_POOL_COMPILE:STRING=compile -DCMAKE_JOB_POOL_LINK:STRING=link -DCMAKE_JOB_POOLS:STRING=compile=4;link=1 -DCMAKE_CXX_STANDARD:STRING=11" }
 
 [[tool.cibuildwheel.overrides]]
 select = ["*-manylinux_aarch64", "*-manylinux_ppc64le", "*-manylinux_s390x"]
 # disable tests on those platforms, QEMU is taking to long for jobs to pass on GHA
-environment = { CMAKE_ARGS = "-DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl -DCMAKE_JOB_POOL_COMPILE:STRING=compile -DCMAKE_JOB_POOL_LINK:STRING=link -DCMAKE_JOB_POOLS:STRING=compile=2;link=1 -DCMAKE_CXX_STANDARD:STRING=11 -DRUN_CMAKE_TEST:BOOL=OFF" }
+environment = { CMAKE_ARGS = "-DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl -DCMAKE_JOB_POOL_COMPILE:STRING=compile -DCMAKE_JOB_POOL_LINK:STRING=link -DCMAKE_JOB_POOLS:STRING=compile=4;link=1 -DCMAKE_CXX_STANDARD:STRING=11 -DRUN_CMAKE_TEST:BOOL=OFF" }
 
 [[tool.cibuildwheel.overrides]]
 select = ["*-musllinux_x86_64", "*-musllinux_i686"]
 # disable some tests
 # - BootstrapTest fails with custom OpenSSL and probably does not make much sense for this project
 # - ExportImport|RunCMake.install|RunCMake.file-GET_RUNTIME_DEPENDENCIES: c.f. https://discourse.cmake.org/t/cmake-test-suite-failing-on-alpine-linux/5064
-environment = { CMAKE_ARGS = "-DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl -DCMAKE_JOB_POOL_COMPILE:STRING=compile -DCMAKE_JOB_POOL_LINK:STRING=link -DCMAKE_JOB_POOLS:STRING=compile=2;link=1 -DRUN_CMAKE_TEST_EXCLUDE:STRING='BootstrapTest|ExportImport|RunCMake.install|RunCMake.file-GET_RUNTIME_DEPENDENCIES'" }
+environment = { CMAKE_ARGS = "-DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl -DCMAKE_JOB_POOL_COMPILE:STRING=compile -DCMAKE_JOB_POOL_LINK:STRING=link -DCMAKE_JOB_POOLS:STRING=compile=4;link=1 -DRUN_CMAKE_TEST_EXCLUDE:STRING='BootstrapTest|ExportImport|RunCMake.install|RunCMake.file-GET_RUNTIME_DEPENDENCIES'" }
 
 [[tool.cibuildwheel.overrides]]
 select = ["*-musllinux_aarch64", "*-musllinux_ppc64le", "*-musllinux_s390x"]
 # disable tests on those platforms, QEMU is taking to long for jobs to pass on GHA
-environment = { CMAKE_ARGS = "-DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl -DCMAKE_JOB_POOL_COMPILE:STRING=compile -DCMAKE_JOB_POOL_LINK:STRING=link -DCMAKE_JOB_POOLS:STRING=compile=2;link=1 -DRUN_CMAKE_TEST:BOOL=OFF" }
+environment = { CMAKE_ARGS = "-DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl -DCMAKE_JOB_POOL_COMPILE:STRING=compile -DCMAKE_JOB_POOL_LINK:STRING=link -DCMAKE_JOB_POOLS:STRING=compile=4;link=1 -DRUN_CMAKE_TEST:BOOL=OFF" }
 
 [tool.cibuildwheel.macos.environment]
 MACOSX_DEPLOYMENT_TARGET = "10.10"
 
-[tool.isort]
-profile = "black"
+
+[tool.ruff]
+src = ["src"]
+
+[tool.ruff.lint]
+extend-select = [
+  "B",           # flake8-bugbear
+  "I",           # isort
+  "ARG",         # flake8-unused-arguments
+  "C4",          # flake8-comprehensions
+  "ICN",         # flake8-import-conventions
+  "ISC",         # flake8-implicit-str-concat
+  "G",           # flake8-logging-format
+  "PGH",         # pygrep-hooks
+  "PIE",         # flake8-pie
+  "PL",          # pylint
+  "PT",          # flake8-pytest-style
+  "RET",         # flake8-return
+  "RUF",         # Ruff-specific
+  "SIM",         # flake8-simplify
+  "EXE",         # flake8-executable
+  "NPY",         # NumPy specific rules
+  "PD",          # pandas-vet
+]
+ignore = [
+  "PLR09",  # Too many X
+  "RUF005", # Python 3 needed
+  "B904",   # Python 3 needed
+  "SIM105", # Python 3 needed
+]
+exclude = ["src/cmake/_version.py"]
+flake8-unused-arguments.ignore-variadic-names = true
+
+[tool.ruff.lint.per-file-ignores]
+"docs/conf.py" = ["E402"]
+"*.pyi" = ["ARG001"]
+"noxfile.py" = ["PLW0603"] # Could be fixed if Python 2 dropped

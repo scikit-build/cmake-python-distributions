@@ -122,7 +122,7 @@ means that ``echo "Hello"`` should be copied and evaluated in the terminal.
 
 
 .. _virtualenvwrapper: https://virtualenvwrapper.readthedocs.io/
-.. _virtualenv: http://virtualenv.readthedocs.io
+.. _virtualenv: https://virtualenv.pypa.io/en/latest
 .. _venv: https://docs.python.org/3/library/venv.html
 
 
