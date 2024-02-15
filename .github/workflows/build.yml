@@ -173,30 +173,18 @@ jobs:
   test_sdist:
     name: Test SDist with python ${{ matrix.python }}
     needs: [build_sdist]
-    # 22.04 doesn't have 2.7 or 3.6
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
       matrix:
-        python: ["2.7", "3.6", "3.7", "3.12"]
+        python: ["3.7", "3.12"]
 
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-        if: matrix.python != '2.7'
         name: Install Python ${{ matrix.python }}
         with:
           python-version: ${{ matrix.python }}
-
-      - name: Install Ubuntu Python 2.7
-        if: matrix.python == '2.7'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends python2 python3-virtualenv
-          virtualenv -p python2 ${HOME}/cp27
-          ${HOME}/cp27/bin/python -m pip install -U pip
-          ${HOME}/cp27/bin/python -m pip install -U setuptools wheel
-          echo "${HOME}/cp27/bin" >> $GITHUB_PATH
 
       - name: Install dependencies
         run: |
