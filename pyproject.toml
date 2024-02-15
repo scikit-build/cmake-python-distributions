@@ -49,6 +49,7 @@ ctest = "cmake:ctest"
 
 [tool.scikit-build]
 ninja.make-fallback = false
+sdist.include = ["src/cmake/_version.py"]
 wheel.py-api = "py2.py3"
 wheel.expand-macos-universal-tags = true
 wheel.install-dir = "cmake/data"
