@@ -1,11 +1,16 @@
 # -*- coding: utf-8 -*-
 import os
 import subprocess
+import sys
 import sysconfig
 import textwrap
 
 import pytest
-from importlib_metadata import distribution
+
+if sys.version_info < (3, 10):
+    from importlib_metadata import distribution
+else:
+    from importlib.metadata import distribution
 
 import cmake
 

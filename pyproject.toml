@@ -37,7 +37,7 @@ Source = "ttps://github.com/scikit-build/cmake-python-distributions"
 [project.optional-dependencies]
 test = [
   "coverage>=4.2",
-  "importlib_metadata>=2.0",
+  "importlib_metadata>=4.6; python_version<'3.10'",
   "pytest>=3.0.3",
   "pytest-cov>=2.4.0",
 ]
