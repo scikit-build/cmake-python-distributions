@@ -59,6 +59,7 @@ wheel.install-dir = "cmake/data"
 
 [tool.setuptools_scm]
 write_to = "src/cmake/_version.py"
+write_to_template = "version = '{version}'"
 
 [tool.cibuildwheel]
 build = "cp39-*"
