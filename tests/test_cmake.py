@@ -61,7 +61,9 @@ def _get_scripts():
     scripts = []
     for file in dist.files:
         if os.path.abspath(str(file.locate().parent)) in scripts_paths:
-            scripts.append(file.locate().resolve(strict=True))
+            script = file.locate().resolve()
+            assert script.exists()
+            scripts.append(script)
     return scripts
 
 
