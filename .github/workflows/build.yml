@@ -27,7 +27,7 @@ env:
 jobs:
   lint:
     name: Lint
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -44,43 +44,43 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: ubuntu-22.04
+          - os: ubuntu-latest
             arch: "x86_64"
             build: "manylinux_"
             use_qemu: false
-          - os: ubuntu-22.04
+          - os: ubuntu-latest
             arch: "x86_64"
             build: "musllinux_"
             use_qemu: false
-          - os: ubuntu-22.04
+          - os: ubuntu-latest
             arch: "i686"
             build: "manylinux_"
             use_qemu: false
-          - os: ubuntu-22.04
+          - os: ubuntu-latest
             arch: "i686"
             build: "musllinux_"
             use_qemu: false
-          - os: ubuntu-22.04
+          - os: ubuntu-latest
             arch: "aarch64"
             build: "manylinux_"
             use_qemu: true
-          - os: ubuntu-22.04
+          - os: ubuntu-latest
             arch: "aarch64"
             build: "musllinux_"
             use_qemu: true
-          - os: ubuntu-22.04
+          - os: ubuntu-latest
             arch: "ppc64le"
             build: "manylinux_"
             use_qemu: true
-          - os: ubuntu-22.04
+          - os: ubuntu-latest
             arch: "ppc64le"
             build: "musllinux_"
             use_qemu: true
-          - os: ubuntu-22.04
+          - os: ubuntu-latest
             arch: "s390x"
             build: "manylinux_"
             use_qemu: true
-          - os: ubuntu-22.04
+          - os: ubuntu-latest
             arch: "s390x"
             build: "musllinux_"
             use_qemu: true
@@ -96,7 +96,7 @@ jobs:
             arch: "x86"
             build: ""
             use_qemu: false
-          - os: macos-11
+          - os: macos-14
             arch: "universal2"
             build: ""
             use_qemu: false
@@ -127,7 +127,7 @@ jobs:
   build_manylinux2010_wheels:
     name: Build ${{ matrix.arch }} manylinux2010 wheels
     needs: [lint]
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
@@ -156,7 +156,7 @@ jobs:
   build_sdist:
     name: Build source distribution
     needs: [lint]
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
@@ -173,7 +173,7 @@ jobs:
   test_sdist:
     name: Test SDist with python ${{ matrix.python }}
     needs: [build_sdist]
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
@@ -211,7 +211,7 @@ jobs:
   check_dist:
     name: Check dist
     needs: [build_wheels, build_manylinux2010_wheels, build_sdist, test_sdist]
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
         with:
