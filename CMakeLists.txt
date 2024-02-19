@@ -109,6 +109,20 @@ if(CMakePythonDistributions_SUPERBUILD)
       )
   endfunction()
 
+  # Add an external project step named `forceconfigure` to `project_name` ensuring
+  # the project will always be reconfigured.
+  #
+  # Copied from ExternalProjectDependency.cmake (commontk/Artichoke@613e3739a)
+  function(cpd_ExternalProject_AlwaysConfigure proj)
+    _ep_get_step_stampfile(${proj} "configure" stampfile)
+    ExternalProject_Add_Step(${proj} forceconfigure
+      COMMAND ${CMAKE_COMMAND} -E remove ${stampfile}
+      COMMENT "Forcing configure step for '${proj}'"
+      DEPENDEES build
+      ALWAYS 1
+      )
+  endfunction()
+
   # Note: To minimize confusion between variables defined by CMake and
   #       variables used in this project. The following convention applies:
   #         CMakeProject_xxx : Variables defined in this project
@@ -375,6 +389,8 @@ set(CMAKE_EXE_LINKER_FLAGS \"-lstdc++ -lgcc -lrt\" CACHE STRING \"Initial cache\
       ${${PROJECT_NAME}_DEPENDS}
     )
   message(STATUS "SuperBuild -   ${PROJECT_NAME}")
+
+  cpd_ExternalProject_AlwaysConfigure(${PROJECT_NAME})
 
   # This adds an "install" target in the top-level directory. The
   # target will simply include the install rules associated with the
