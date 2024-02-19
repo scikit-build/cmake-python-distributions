@@ -61,9 +61,11 @@ def _get_scripts():
     scripts = []
     for file in dist.files:
         if os.path.abspath(str(file.locate().parent)) in scripts_paths:
-            script = file.locate().resolve()
-            assert script.exists()
-            scripts.append(script)
+            if sys.version_info < (3, 6):
+                # pre-3.6 behavior is strict
+                scripts.append(file.locate().resolve())
+            else:
+                scripts.append(file.locate().resolve(strict=True))
     return scripts
 
 
