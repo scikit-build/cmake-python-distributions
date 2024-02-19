@@ -128,6 +128,12 @@ if(CMakePythonDistributions_SUPERBUILD)
       )
   endif()
 
+  set(ep_download_extract_timestamp_arg)
+  if(CMAKE_VERSION VERSION_EQUAL "3.24" OR CMAKE_VERSION VERSION_GREATER "3.24")
+    # See https://cmake.org/cmake/help/latest/policy/CMP0135.html
+    set(ep_download_extract_timestamp_arg DOWNLOAD_EXTRACT_TIMESTAMP 1)
+  endif()
+
   #
   # CMakeProject_SOURCE_DIR: Always expect the sources (needed for `sdist`)
   #
@@ -145,6 +151,7 @@ if(CMakePythonDistributions_SUPERBUILD)
       BUILD_COMMAND ""
       BUILD_IN_SOURCE 1
       INSTALL_COMMAND ""
+      ${ep_download_extract_timestamp_arg}
       ${ep_download_no_progress_args}
       )
     message(STATUS "SuperBuild - CMakeProject-src-download")
@@ -338,6 +345,7 @@ set(CMAKE_EXE_LINKER_FLAGS \"-lstdc++ -lgcc -lrt\" CACHE STRING \"Initial cache\
       BUILD_COMMAND ""
       BUILD_IN_SOURCE 1
       INSTALL_COMMAND ""
+      ${ep_download_extract_timestamp_arg}
       ${ep_download_no_progress_args}
       )
     message(STATUS "SuperBuild - CMakeProject-binary-download")
