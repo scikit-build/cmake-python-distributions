@@ -29,7 +29,7 @@ if sys.version_info >= (3, 4):
                 resolved_script = script.locate().resolve(strict=True)
             cmake_executable_path = resolved_script.parents[1]
             break
-    CMAKE_DATA = cmake_executable_path if cmake_executable_path else None
+    CMAKE_DATA = str(cmake_executable_path) if cmake_executable_path else None
 else:
     CMAKE_DATA = os.path.join(os.path.dirname(__file__), "data")
 
