@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import argparse
 from pathlib import Path
 
@@ -9,7 +8,6 @@ nox.options.sessions = ["lint", "build", "tests"]
 BUILD_ENV = {
     "MACOSX_DEPLOYMENT_TARGET": "10.10",
 }
-
 
 built = ""
 
