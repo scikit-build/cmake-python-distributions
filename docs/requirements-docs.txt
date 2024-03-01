@@ -1,8 +1,9 @@
 docutils
 funcparserlib>=1.0.0
+furo
+importlib_metadata; python_version<"3.8"
 pillow<10
 pygments
 scikit-build
 sphinx
-sphinx_rtd_theme
 sphinxcontrib-blockdiag # old, not compatible with pillow 10+
