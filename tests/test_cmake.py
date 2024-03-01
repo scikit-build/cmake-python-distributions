@@ -1,11 +1,16 @@
 # -*- coding: utf-8 -*-
 import os
 import subprocess
+import sys
 import sysconfig
 import textwrap
 
 import pytest
-from importlib_metadata import distribution
+
+if sys.version_info < (3, 10):
+    from importlib_metadata import distribution
+else:
+    from importlib.metadata import distribution
 
 import cmake
 
@@ -56,7 +61,11 @@ def _get_scripts():
     scripts = []
     for file in dist.files:
         if os.path.abspath(str(file.locate().parent)) in scripts_paths:
-            scripts.append(file.locate().resolve(strict=True))
+            if sys.version_info < (3, 6):
+                # pre-3.6 behavior is strict
+                scripts.append(file.locate().resolve())
+            else:
+                scripts.append(file.locate().resolve(strict=True))
     return scripts
 
 

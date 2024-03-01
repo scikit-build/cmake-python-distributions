@@ -27,7 +27,7 @@ env:
 jobs:
   lint:
     name: Lint
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -44,43 +44,43 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: ubuntu-22.04
+          - os: ubuntu-latest
             arch: "x86_64"
             build: "manylinux_"
             use_qemu: false
-          - os: ubuntu-22.04
+          - os: ubuntu-latest
             arch: "x86_64"
             build: "musllinux_"
             use_qemu: false
-          - os: ubuntu-22.04
+          - os: ubuntu-latest
             arch: "i686"
             build: "manylinux_"
             use_qemu: false
-          - os: ubuntu-22.04
+          - os: ubuntu-latest
             arch: "i686"
             build: "musllinux_"
             use_qemu: false
-          - os: ubuntu-22.04
+          - os: ubuntu-latest
             arch: "aarch64"
             build: "manylinux_"
             use_qemu: true
-          - os: ubuntu-22.04
+          - os: ubuntu-latest
             arch: "aarch64"
             build: "musllinux_"
             use_qemu: true
-          - os: ubuntu-22.04
+          - os: ubuntu-latest
             arch: "ppc64le"
             build: "manylinux_"
             use_qemu: true
-          - os: ubuntu-22.04
+          - os: ubuntu-latest
             arch: "ppc64le"
             build: "musllinux_"
             use_qemu: true
-          - os: ubuntu-22.04
+          - os: ubuntu-latest
             arch: "s390x"
             build: "manylinux_"
             use_qemu: true
-          - os: ubuntu-22.04
+          - os: ubuntu-latest
             arch: "s390x"
             build: "musllinux_"
             use_qemu: true
@@ -96,8 +96,8 @@ jobs:
             arch: "x86"
             build: ""
             use_qemu: false
-          - os: macos-11
-            arch: "x86_64"
+          - os: macos-14
+            arch: "universal2"
             build: ""
             use_qemu: false
 
@@ -121,13 +121,13 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: (!matrix.use_qemu) || fromJSON(env.USE_QEMU)
         with:
-          name: Wheel-${{ matrix.os }}-${{ matrix.build }}${{ matrix.arch }}
+          name: Wheel-${{ runner.os }}-${{ matrix.build }}${{ matrix.arch }}
           path: ./wheelhouse/*.whl
 
   build_manylinux2010_wheels:
     name: Build ${{ matrix.arch }} manylinux2010 wheels
     needs: [lint]
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
@@ -153,10 +153,53 @@ jobs:
           name: Wheel-manylinux2010-${{ matrix.arch }}
           path: ./wheelhouse/*.whl
 
+  test_old_pythons:
+    name: Test wheel with python ${{ matrix.python }}
+    needs: [build_wheels]
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["2.7", "3.5"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        if: matrix.python != '2.7'
+        name: Install Python ${{ matrix.python }}
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Install Python ${{ matrix.python }}
+        if: matrix.python == '2.7'
+        shell: bash
+        run: |
+          nuget install python2 -Version 2.7.18 -OutputDirectory '${{ runner.temp }}'
+          echo '${{ runner.temp }}\python2.2.7.18\tools' >> $GITHUB_PATH
+
+      - name: Install dependencies
+        shell: bash
+        run: |
+          python -m pip install -U pip
+          python -m pip install pytest pytest-cov
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: Wheel-Windows-AMD64
+          path: wheelhouse
+
+      - name: Install wheel
+        shell: bash
+        run: |
+          python -m pip -V
+          python -m pip install "$(find wheelhouse -name '*.whl')[test]"
+
+      - name: Test installed SDist
+        run: python -m pytest ./tests
+
   build_sdist:
     name: Build source distribution
     needs: [lint]
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
@@ -173,36 +216,24 @@ jobs:
   test_sdist:
     name: Test SDist with python ${{ matrix.python }}
     needs: [build_sdist]
-    # 22.04 doesn't have 2.7 or 3.6
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        python: ["2.7", "3.6", "3.12"]
+        python: ["3.7", "3.12"]
 
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-        if: matrix.python != '2.7'
         name: Install Python ${{ matrix.python }}
         with:
           python-version: ${{ matrix.python }}
-
-      - name: Install Ubuntu Python 2.7
-        if: matrix.python == '2.7'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends python2 python3-virtualenv
-          virtualenv -p python2 ${HOME}/cp27
-          ${HOME}/cp27/bin/python -m pip install -U pip
-          ${HOME}/cp27/bin/python -m pip install -U setuptools wheel
-          echo "${HOME}/cp27/bin" >> $GITHUB_PATH
 
       - name: Install dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends libssl-dev
-          pip install -r requirements-test.txt
+          pip install pytest pytest-cov
 
       - uses: actions/download-artifact@v4
         with:
@@ -211,8 +242,9 @@ jobs:
 
       - name: Install SDist
         env:
-          SKBUILD_CONFIGURE_OPTIONS: "-DBUILD_CMAKE_FROM_SOURCE:BOOL=OFF"
+          CMAKE_ARGS: "-DBUILD_CMAKE_FROM_SOURCE:BOOL=OFF"
         run: |
+          pip -V
           pip install dist/*.tar.gz
           rm -rf dist
 
@@ -221,8 +253,8 @@ jobs:
 
   check_dist:
     name: Check dist
-    needs: [build_wheels, build_manylinux2010_wheels, build_sdist, test_sdist]
-    runs-on: ubuntu-22.04
+    needs: [build_wheels, build_manylinux2010_wheels, test_old_pythons, build_sdist, test_sdist]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
         with:

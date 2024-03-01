@@ -460,5 +460,4 @@ include\(\"${CMakeProject_BINARY_DIR}/cmake_install.cmake\")
       install(${type} ${file} DESTINATION "${relative_directory}" ${_permissions})
     endforeach()
   endif()
-
 endif()

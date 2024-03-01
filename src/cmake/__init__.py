@@ -3,6 +3,12 @@ import os
 import subprocess
 import sys
 
+if sys.version_info >= (3, 4):
+    if sys.version_info < (3, 10):
+        from importlib_metadata import distribution
+    else:
+        from importlib.metadata import distribution
+
 from ._version import version as __version__
 
 __all__ = ["__version__", "CMAKE_DATA", "CMAKE_BIN_DIR", "CMAKE_DOC_DIR", "CMAKE_SHARE_DIR", "cmake", "cpack", "ctest"]
@@ -12,27 +18,23 @@ def __dir__():
     return __all__
 
 
-CMAKE_DATA = os.path.join(os.path.dirname(__file__), 'data')
+if sys.version_info >= (3, 4):
+    cmake_executable_path = None
+    for script in distribution("cmake").files:
+        if str(script).startswith("cmake/data/bin/cmake"):
+            if sys.version_info < (3, 6):
+                # pre-3.6 behavior is strict
+                resolved_script = script.locate().resolve()
+            else:
+                resolved_script = script.locate().resolve(strict=True)
+            cmake_executable_path = resolved_script.parents[1]
+            break
+    CMAKE_DATA = str(cmake_executable_path) if cmake_executable_path else None
+else:
+    CMAKE_DATA = os.path.join(os.path.dirname(__file__), "data")
 
-
-# Support running tests from the source tree
-if not os.path.exists(CMAKE_DATA):
-    from skbuild.constants import CMAKE_INSTALL_DIR as SKBUILD_CMAKE_INSTALL_DIR
-    from skbuild.constants import set_skbuild_plat_name
-
-    if sys.platform.startswith("darwin"):
-        # Since building the project specifying --plat-name or CMAKE_OSX_* variables
-        # leads to different SKBUILD_DIR, the code below attempt to guess the most
-        # likely plat-name.
-        _skbuild_dirs = os.listdir(os.path.join(os.path.dirname(__file__), '..', '..', '_skbuild'))
-        if _skbuild_dirs:
-            _likely_plat_name = '-'.join(_skbuild_dirs[0].split('-')[:3])
-            set_skbuild_plat_name(_likely_plat_name)
-
-    _cmake_data = os.path.abspath(os.path.join(
-        os.path.dirname(__file__), '..', '..', SKBUILD_CMAKE_INSTALL_DIR(), 'src/cmake/data'))
-    if os.path.exists(_cmake_data):
-        CMAKE_DATA = _cmake_data
+assert CMAKE_DATA is not None
+assert os.path.exists(CMAKE_DATA)
 
 CMAKE_BIN_DIR = os.path.join(CMAKE_DATA, 'bin')
 CMAKE_DOC_DIR = os.path.join(CMAKE_DATA, 'doc')
