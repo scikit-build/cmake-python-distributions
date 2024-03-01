@@ -59,6 +59,7 @@ wheel.install-dir = "cmake/data"
 
 [tool.setuptools_scm]
 write_to = "src/cmake/_version.py"
+# Setuptools-scm includes type annotations in the default template
 write_to_template = "version = '{version}'"
 
 [tool.cibuildwheel]
