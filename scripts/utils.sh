@@ -2,7 +2,7 @@
 
 set -e
 
-# Copied from https://github.com/pypa/manylinux/blob/master/docker/build_scripts/build_utils.sh
+# Copied from https://github.com/pypa/manylinux/blob/main/docker/build_scripts/build_utils.sh
 function check_var {
     if [ -z "$1" ]; then
         echo "required variable not defined"
@@ -10,7 +10,7 @@ function check_var {
     fi
 }
 
-# Copied from https://github.com/pypa/manylinux/blob/master/docker/build_scripts/build_utils.sh
+# Copied from https://github.com/pypa/manylinux/blob/main/docker/build_scripts/build_utils.sh
 function check_sha256sum {
     local fname=$1
     check_var ${fname}
