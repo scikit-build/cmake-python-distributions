@@ -85,7 +85,7 @@ By default, the output associated to the configure and build steps of the
 `CMakeProject-build` external project are logged into files. This can be
 changed by setting the ``BUILD_VERBOSE`` option::
 
-   python -m build --wheel -Ccmake.define.BUILD_VERBOSE=ON 
+   python -m build --wheel -Ccmake.define.BUILD_VERBOSE=ON
 
 
 Optimizations
