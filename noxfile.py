@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import argparse
 from pathlib import Path
 
@@ -10,7 +9,6 @@ BUILD_ENV = {
     "MACOSX_DEPLOYMENT_TARGET": "10.10",
     "ARCHFLAGS": "-arch x86_64 -arch arm64",
 }
-
 
 built = ""
 

@@ -72,7 +72,7 @@ means that ``echo "Hello"`` should be copied and evaluated in the terminal.
 
   .. code::
 
-    $ git tag --sign -m "cmake-python-distributions $release" $release master
+    $ git tag --sign -m "cmake-python-distributions $release" $release main
 
   .. warning::
 

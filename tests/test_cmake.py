@@ -21,7 +21,7 @@ all_tools = pytest.mark.parametrize("tool", ["cmake", "cpack", "ctest"])
 
 def _run(program, args):
     func = getattr(cmake, program)
-    args = ["%s.py" % program] + args
+    args = [f"{program}.py", *args]
     with push_argv(args), pytest.raises(SystemExit) as excinfo:
         func()
     assert excinfo.value.code == 0

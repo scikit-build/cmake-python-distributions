@@ -16,7 +16,7 @@ except ImportError:
     raise SystemExit(
         "requests not available: "
         "consider installing it running 'pip install requests'"
-    )
+    ) from None
 
 ROOT_DIR = os.path.join(os.path.dirname(__file__), "..")
 

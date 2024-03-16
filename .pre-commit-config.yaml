@@ -16,7 +16,6 @@ repos:
   - id: mixed-line-ending
   - id: requirements-txt-fixer
   - id: trailing-whitespace
-  - id: fix-encoding-pragma
 
 - repo: https://github.com/astral-sh/ruff-pre-commit
   rev: "v0.2.2"

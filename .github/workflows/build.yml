@@ -12,7 +12,7 @@ on:
   pull_request:
   push:
     branches:
-      - master
+      - main
       - main
     tags:
       - "*.*.*"
@@ -153,49 +153,6 @@ jobs:
           name: Wheel-manylinux2010-${{ matrix.arch }}
           path: ./wheelhouse/*.whl
 
-  test_old_pythons:
-    name: Test wheel with python ${{ matrix.python }}
-    needs: [build_wheels]
-    runs-on: windows-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        python: ["2.7", "3.5"]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        if: matrix.python != '2.7'
-        name: Install Python ${{ matrix.python }}
-        with:
-          python-version: ${{ matrix.python }}
-
-      - name: Install Python ${{ matrix.python }}
-        if: matrix.python == '2.7'
-        shell: bash
-        run: |
-          nuget install python2 -Version 2.7.18 -OutputDirectory '${{ runner.temp }}'
-          echo '${{ runner.temp }}\python2.2.7.18\tools' >> $GITHUB_PATH
-
-      - name: Install dependencies
-        shell: bash
-        run: |
-          python -m pip install -U pip
-          python -m pip install pytest pytest-cov
-
-      - uses: actions/download-artifact@v4
-        with:
-          name: Wheel-Windows-AMD64
-          path: wheelhouse
-
-      - name: Install wheel
-        shell: bash
-        run: |
-          python -m pip -V
-          python -m pip install "$(find wheelhouse -name '*.whl')[test]"
-
-      - name: Test installed SDist
-        run: python -m pytest ./tests
-
   build_sdist:
     name: Build source distribution
     needs: [lint]
@@ -253,7 +210,7 @@ jobs:
 
   check_dist:
     name: Check dist
-    needs: [build_wheels, build_manylinux2010_wheels, test_old_pythons, build_sdist, test_sdist]
+    needs: [build_wheels, build_manylinux2010_wheels, build_sdist, test_sdist]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4

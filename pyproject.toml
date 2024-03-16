@@ -25,7 +25,7 @@ classifiers = [
     "Typing :: Typed"
 ]
 dynamic = ["version"]
-# requires-python = ">=3.7"  this is only required to build the wheel. We're still compatible with python 2.7
+requires-python = ">=3.7"
 
 [project.urls]
 Homepage = "https://cmake.org"
@@ -53,7 +53,7 @@ build-dir = "build/{wheel_tag}"
 metadata.version.provider = "scikit_build_core.metadata.setuptools_scm"
 ninja.make-fallback = false
 sdist.include = ["src/cmake/_version.py"]
-wheel.py-api = "py2.py3"
+wheel.py-api = "py3"
 wheel.expand-macos-universal-tags = true
 wheel.install-dir = "cmake/data"
 
@@ -120,9 +120,6 @@ extend-select = [
 ]
 ignore = [
   "PLR09",  # Too many X
-  "RUF005", # Python 3 needed
-  "B904",   # Python 3 needed
-  "SIM105", # Python 3 needed
 ]
 exclude = ["src/cmake/_version.py"]
 flake8-unused-arguments.ignore-variadic-names = true
@@ -130,4 +127,4 @@ flake8-unused-arguments.ignore-variadic-names = true
 [tool.ruff.lint.per-file-ignores]
 "docs/conf.py" = ["E402"]
 "*.pyi" = ["ARG001"]
-"noxfile.py" = ["PLW0603"] # Could be fixed if Python 2 dropped
+"noxfile.py" = ["PLW0603"]
