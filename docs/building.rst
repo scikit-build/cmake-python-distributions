@@ -5,10 +5,7 @@ Building the CMake Python wheel
 Overview
 --------
 
-This project has been designed to work with `scikit-build <https://scikit-build.readthedocs.io/>`_.
-
-It provides a `setup.py` and allows to create both source and binary distributions of
-CMake.
+This project has been designed to work with `scikit-build-core <https://scikit-build-core.readthedocs.io/>`_.
 
 This is done ensuring source files and build artifacts
 are copied and/or generated in expected locations.
@@ -27,9 +24,10 @@ Quick start
 
 Build the CMake Python wheel with the following command::
 
-    mkvirtualenv build-cmake
-    pip install -r requirements-dev.txt
-    python setup.py bdist_wheel
+    python3 -m venv .venv
+    source .venv/bin/activate
+    pip install -r requirements-dev.txt build
+    python -m build --wheel
 
 
 Source distribution (sdist)
@@ -44,7 +42,7 @@ can successfully glob the source files.
 The source distribution is generated using the following
 command::
 
-    python setup.py sdist
+    python -m build --sdist
 
 
 Binary distribution (build, bdist, bdist_wheel)
@@ -58,13 +56,13 @@ The project has two mode of operations:
 The binary distribution is generated using the following
 command::
 
-    python setup.py bdist_wheel
+    python -m build --wheel
 
 
 Changing the default mode is achieved by explicitly passing the option
 to CMake::
 
- python setup.py bdist_wheel -- -DBUILD_CMAKE_FROM_SOURCE:BOOL=ON
+ python -m build --wheel -Ccmake.define.BUILD_CMAKE_FROM_SOURCE=ON
 
 
 Default value for ``BUILD_CMAKE_FROM_SOURCE``
@@ -87,16 +85,8 @@ By default, the output associated to the configure and build steps of the
 `CMakeProject-build` external project are logged into files. This can be
 changed by setting the ``BUILD_VERBOSE`` option::
 
-    python setup.py bdist_wheel -- -DBUILD_VERBOSE:BOOL=1
+   python -m build --wheel -Ccmake.define.BUILD_VERBOSE=ON
 
-list of files copied into the distributions
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-By default, the complete list of files copied into the distributions are
-reported. This can be changed passing the ``--hide-listing`` option::
-
-    python setup.py --hide-listing sdist
-    python setup.py --hide-listing bdist_wheel
 
 Optimizations
 -------------
@@ -109,7 +99,7 @@ Caching downloads
 ^^^^^^^^^^^^^^^^^
 
 To avoid the re-download of CMake sources and/or binary packages, passing the
-option ``-DCMakePythonDistributions_ARCHIVE_DOWNLOAD_DIR:PATH=/path/to/cache``
+option ``-Ccmake.define.CMakePythonDistributions_ARCHIVE_DOWNLOAD_DIR=/path/to/cache``
 enables successive build to re-use existing archives instead of re-downloading them.
 
 Re-using build tree
@@ -126,6 +116,5 @@ Step 1: Standalone build::
 
 Step 2: Faster build reusing download and build directories::
 
-    python setup.py bdist_wheel -- \
-       -DCMakePythonDistributions_ARCHIVE_DOWNLOAD_DIR:PATH=/path/to/cache \
-       -DCMakeProject_BINARY_DIR:PATH=/path/to/standalone-build
+    python -m build -Ccmake.define.CMakePythonDistributions_ARCHIVE_DOWNLOAD_DIR=/path/to/cache
+                    -Ccmake.define.CMakeProject_BINARY_DIR=/path/to/standalone-build
