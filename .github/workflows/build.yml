@@ -219,7 +219,7 @@ jobs:
           merge-multiple: true
           path: dist
 
-      - run: pipx run twine check --strict
+      - run: pipx run twine check --strict dist/*
 
   upload_pypi:
     name: Upload to PyPI
