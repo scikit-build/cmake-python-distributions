@@ -13,7 +13,7 @@ on:
   push:
     branches:
       - main
-      - main
+      - py2-legacy
     tags:
       - "*.*.*"
 
@@ -112,7 +112,7 @@ jobs:
         if: matrix.use_qemu && fromJSON(env.USE_QEMU)
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@v2.17.0
+        uses: pypa/cibuildwheel@v2.17
         if: (!matrix.use_qemu) || fromJSON(env.USE_QEMU)
         env:
           CIBW_ARCHS: "${{ matrix.arch }}"
@@ -121,7 +121,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: (!matrix.use_qemu) || fromJSON(env.USE_QEMU)
         with:
-          name: Wheel-${{ runner.os }}-${{ matrix.build }}${{ matrix.arch }}
+          name: cibw-${{ runner.os }}-${{ matrix.build }}${{ matrix.arch }}
           path: ./wheelhouse/*.whl
 
   build_manylinux2010_wheels:
@@ -141,7 +141,7 @@ jobs:
           fetch-depth: 0  # required for versioneer to find tags
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@v2.17.0
+        uses: pypa/cibuildwheel@v2.17
         env:
           CIBW_ARCHS: "${{ matrix.arch }}"
           CIBW_BUILD: "cp39-manylinux_*"
@@ -150,7 +150,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: Wheel-manylinux2010-${{ matrix.arch }}
+          name: cibw-manylinux2010-${{ matrix.arch }}
           path: ./wheelhouse/*.whl
 
   build_sdist:
@@ -167,7 +167,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: SDist
+          name: cibw-sdist
           path: dist/*.tar.gz
 
   test_sdist:
@@ -194,7 +194,7 @@ jobs:
 
       - uses: actions/download-artifact@v4
         with:
-          name: SDist
+          name: cibw-sdist
           path: dist
 
       - name: Install SDist
@@ -215,9 +215,11 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          path: all
+          pattern: cibw-*
+          merge-multiple: true
+          path: dist
 
-      - run: pipx run twine check --strict all/*/*
+      - run: pipx run twine check --strict
 
   upload_pypi:
     name: Upload to PyPI
@@ -232,11 +234,8 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          path: all
-
-      - name: Merge files
-        run: |
-          mkdir dist
-          mv all/*/* dist/.
+          pattern: cibw-*
+          merge-multiple: true
+          path: dist
 
       - uses: pypa/gh-action-pypi-publish@release/v1
