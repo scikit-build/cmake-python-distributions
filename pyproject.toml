@@ -8,6 +8,10 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools_scm]
 write_to = "src/cmake/_version.py"
+write_to_template = """
+version = __version__ = {version!r}
+__version_tuple__ = version_tuple = {version_tuple!r}
+"""
 
 [tool.cibuildwheel]
 build = "cp39-*"
