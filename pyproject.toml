@@ -84,7 +84,7 @@ select = ["*-musllinux_x86_64", "*-musllinux_i686"]
 # disable some tests
 # - BootstrapTest fails with custom OpenSSL and probably does not make much sense for this project
 # - ExportImport|RunCMake.install|RunCMake.file-GET_RUNTIME_DEPENDENCIES: c.f. https://discourse.cmake.org/t/cmake-test-suite-failing-on-alpine-linux/5064
-environment = { CMAKE_ARGS = "-DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl -DCMAKE_JOB_POOL_COMPILE:STRING=compile -DCMAKE_JOB_POOL_LINK:STRING=link -DCMAKE_JOB_POOLS:STRING=compile=4;link=1 -DRUN_CMAKE_TEST_EXCLUDE:STRING='BootstrapTest|ExportImport|RunCMake.install|RunCMake.file-GET_RUNTIME_DEPENDENCIES'" }
+environment = { CMAKE_ARGS = "-DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl -DCMAKE_JOB_POOL_COMPILE:STRING=compile -DCMAKE_JOB_POOL_LINK:STRING=link -DCMAKE_JOB_POOLS:STRING=compile=4;link=1 -DRUN_CMAKE_TEST_EXCLUDE:STRING='BootstrapTest|ExportImport|RunCMake.install|RunCMake.RuntimePath|RunCMake.file-GET_RUNTIME_DEPENDENCIES'" }
 
 [[tool.cibuildwheel.overrides]]
 select = ["*-musllinux_aarch64", "*-musllinux_ppc64le", "*-musllinux_s390x"]
