@@ -35,7 +35,7 @@ if(CMakePythonDistributions_SUPERBUILD)
 
   option(RUN_CMAKE_TEST "Run CMake test suite when built from sources" ON)
 
-  set(RUN_CMAKE_TEST_EXCLUDE "BootstrapTest|RunCMake\.RuntimePath" CACHE STRING "CMake test suite exclusion regex")
+  set(RUN_CMAKE_TEST_EXCLUDE "BootstrapTest" CACHE STRING "CMake test suite exclusion regex")
 
   set(CMakePythonDistributions_ARCHIVE_DOWNLOAD_DIR "${CMAKE_BINARY_DIR}"
     CACHE PATH "Directory where to download archives"
