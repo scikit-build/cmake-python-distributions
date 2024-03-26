@@ -4,6 +4,7 @@ build-backend = "scikit_build_core.build"
 
 [project]
 name = "cmake"
+version = "3.29.0"
 description = "CMake is an open-source, cross-platform family of tools designed to build, test and package software"
 keywords = ["CMake", "build", "c++", "fortran", "cross-platform", "cross-compilation"]
 readme = "README.rst"
@@ -24,7 +25,6 @@ classifiers = [
     "Topic :: Software Development :: Build Tools",
     "Typing :: Typed"
 ]
-dynamic = ["version"]
 requires-python = ">=3.7"
 
 [project.urls]
@@ -50,17 +50,17 @@ ctest = "cmake:ctest"
 [tool.scikit-build]
 minimum-version = "0.8"
 build-dir = "build/{wheel_tag}"
-metadata.version.provider = "scikit_build_core.metadata.setuptools_scm"
 ninja.make-fallback = false
-sdist.include = ["src/cmake/_version.py"]
 wheel.py-api = "py3"
 wheel.expand-macos-universal-tags = true
 wheel.install-dir = "cmake/data"
 
-[tool.setuptools_scm]
-write_to = "src/cmake/_version.py"
-# Setuptools-scm includes type annotations in the default template
-write_to_template = "version = '{version}'"
+[[tool.scikit-build.generate]]
+path = "cmake/_version.py"
+template = '''
+version = "${version}"
+'''
+
 
 [tool.cibuildwheel]
 build = "cp39-*"
@@ -68,31 +68,31 @@ test-extras = "test"
 test-command = "pytest {project}/tests"
 build-verbosity = 1
 
+[tool.cibuildwheel.macos.environment]
+MACOSX_DEPLOYMENT_TARGET = "10.10"
+
 [tool.cibuildwheel.linux]
-before-all = [
-    './scripts/manylinux-build-and-install-openssl.sh',
-]
-environment = { CMAKE_ARGS = "-DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl -DCMAKE_JOB_POOL_COMPILE:STRING=compile -DCMAKE_JOB_POOL_LINK:STRING=link -DCMAKE_JOB_POOLS:STRING=compile=4;link=1 -DCMAKE_CXX_STANDARD:STRING=11" }
+before-all = "./scripts/manylinux-build-and-install-openssl.sh"
+
+[tool.cibuildwheel.linux.config-settings]
+"cmake.define.OPENSSL_ROOT_DIR" = "/usr/local/ssl"
+"cmake.define.CMAKE_JOB_POOL_COMPILE" = "compile"
+"cmake.define.CMAKE_JOB_POOL_LINK" = "link"
+"cmake.define.CMAKE_JOB_POOLS" = "compile=4;link=1"
 
 [[tool.cibuildwheel.overrides]]
-select = ["*-manylinux_aarch64", "*-manylinux_ppc64le", "*-manylinux_s390x"]
-# disable tests on those platforms, QEMU is taking to long for jobs to pass on GHA
-environment = { CMAKE_ARGS = "-DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl -DCMAKE_JOB_POOL_COMPILE:STRING=compile -DCMAKE_JOB_POOL_LINK:STRING=link -DCMAKE_JOB_POOLS:STRING=compile=4;link=1 -DCMAKE_CXX_STANDARD:STRING=11 -DRUN_CMAKE_TEST:BOOL=OFF" }
-
-[[tool.cibuildwheel.overrides]]
-select = ["*-musllinux_x86_64", "*-musllinux_i686"]
+select = ["*-musllinux_*",]
+inherit.config-settings = "append"
 # disable some tests
 # - BootstrapTest fails with custom OpenSSL and probably does not make much sense for this project
 # - ExportImport|RunCMake.install|RunCMake.file-GET_RUNTIME_DEPENDENCIES: c.f. https://discourse.cmake.org/t/cmake-test-suite-failing-on-alpine-linux/5064
-environment = { CMAKE_ARGS = "-DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl -DCMAKE_JOB_POOL_COMPILE:STRING=compile -DCMAKE_JOB_POOL_LINK:STRING=link -DCMAKE_JOB_POOLS:STRING=compile=4;link=1 -DRUN_CMAKE_TEST_EXCLUDE:STRING='BootstrapTest|ExportImport|RunCMake.install|RunCMake.RuntimePath|RunCMake.file-GET_RUNTIME_DEPENDENCIES'" }
+config-settings."cmake.define.RUN_CMAKE_TEST_EXCLUDE" = "BootstrapTest|ExportImport|RunCMake.install|RunCMake.RuntimePath|RunCMake.file-GET_RUNTIME_DEPENDENCIES"
 
 [[tool.cibuildwheel.overrides]]
-select = ["*-musllinux_aarch64", "*-musllinux_ppc64le", "*-musllinux_s390x"]
+select = ["*linux_aarch64", "*linux_ppc64le", "*linux_s390x"]
+inherit.config-settings = "append"
 # disable tests on those platforms, QEMU is taking to long for jobs to pass on GHA
-environment = { CMAKE_ARGS = "-DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl -DCMAKE_JOB_POOL_COMPILE:STRING=compile -DCMAKE_JOB_POOL_LINK:STRING=link -DCMAKE_JOB_POOLS:STRING=compile=4;link=1 -DRUN_CMAKE_TEST:BOOL=OFF" }
-
-[tool.cibuildwheel.macos.environment]
-MACOSX_DEPLOYMENT_TARGET = "10.10"
+config-settings."cmake.define.RUN_CMAKE_TEST" = "OFF"
 
 
 [tool.ruff]
@@ -100,13 +100,14 @@ src = ["src"]
 
 [tool.ruff.lint]
 extend-select = [
-  "B",           # flake8-bugbear
-  "I",           # isort
   "ARG",         # flake8-unused-arguments
+  "B",           # flake8-bugbear
   "C4",          # flake8-comprehensions
+  "EXE",         # flake8-executable
+  "G",           # flake8-logging-format
+  "I",           # isort
   "ICN",         # flake8-import-conventions
   "ISC",         # flake8-implicit-str-concat
-  "G",           # flake8-logging-format
   "PGH",         # pygrep-hooks
   "PIE",         # flake8-pie
   "PL",          # pylint
@@ -114,9 +115,7 @@ extend-select = [
   "RET",         # flake8-return
   "RUF",         # Ruff-specific
   "SIM",         # flake8-simplify
-  "EXE",         # flake8-executable
-  "NPY",         # NumPy specific rules
-  "PD",          # pandas-vet
+  "UP",          # pyupgrade
 ]
 ignore = [
   "PLR09",  # Too many X

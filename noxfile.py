@@ -1,4 +1,5 @@
 import argparse
+import re
 from pathlib import Path
 
 import nox
@@ -157,3 +158,16 @@ def bump_openssl(session: nox.Session) -> None:
         "scripts/manylinux-build-and-install-openssl.sh",
     )
     _bump(session, "OpenSSL", "openssl/openssl", "3.0", "scripts/update_openssl_version.py", files)
+
+
+@nox.session(venv_backend="none")
+def tag_release(session: nox.Session) -> None:
+    """
+    Print instructions for tagging a release and pushing it to GitHub.
+    """
+
+    session.log("Run the following commands to make a release:")
+    txt = Path("pyproject.toml").read_text()
+    current_version = next(iter(re.finditer(r'version = "([\d\.]+)"', txt))).group(1)
+    print(f"git tag --sign -m 'cmake-python-distributions {current_version}' {current_version} main")
+    print(f"git push origin {current_version}")
