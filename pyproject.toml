@@ -30,7 +30,7 @@ requires-python = ">=3.7"
 [project.urls]
 Homepage = "https://cmake.org"
 Documentation = "https://cmake-python-distributions.readthedocs.io"
-Source = "ttps://github.com/scikit-build/cmake-python-distributions"
+Source = "https://github.com/scikit-build/cmake-python-distributions"
 "Mailing list" = "https://groups.google.com/forum/#!forum/scikit-build"
 "Bug Tracker" = "https://github.com/scikit-build/cmake-python-distributions/issues"
 
