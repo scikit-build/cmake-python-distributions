@@ -70,6 +70,7 @@ The following platforms are supported with binary wheels:
   +---------------+--------------------------+
 
 The last version to provide ``manylinux1`` wheels was ``3.22.x``.
+The last version to provide Python 2 to Python 3.6 support was ``3.28.x``.
 
 Maintainers
 -----------
