@@ -2,7 +2,7 @@ import os
 import subprocess
 import sys
 
-if sys.version_info < (3, 10):
+if sys.version_info < (3, 8):
     from importlib_metadata import distribution
 else:
     from importlib.metadata import distribution
