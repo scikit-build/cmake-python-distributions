@@ -25,7 +25,7 @@ classifiers = [
     "Typing :: Typed"
 ]
 dependencies = [
-  "importlib_metadata>=2.0; python_version<'3.10'",
+  "importlib_metadata>=1.4; python_version<'3.8'",
 ]
 dynamic = ["version"]
 requires-python = ">=3.7"
