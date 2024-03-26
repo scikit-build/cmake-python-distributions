@@ -24,6 +24,9 @@ classifiers = [
     "Topic :: Software Development :: Build Tools",
     "Typing :: Typed"
 ]
+dependencies = [
+  "importlib_metadata>=2.0; python_version<'3.10'",
+]
 dynamic = ["version"]
 requires-python = ">=3.7"
 
@@ -37,7 +40,6 @@ Source = "https://github.com/scikit-build/cmake-python-distributions"
 [project.optional-dependencies]
 test = [
   "coverage>=4.2",
-  "importlib_metadata>=2.0; python_version<'3.10'",
   "pytest>=3.0.3",
   "pytest-cov>=2.4.0",
 ]
