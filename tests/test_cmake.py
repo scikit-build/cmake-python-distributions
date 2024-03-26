@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import os
 import subprocess
 import sys
@@ -61,11 +60,7 @@ def _get_scripts():
     scripts = []
     for file in dist.files:
         if os.path.abspath(str(file.locate().parent)) in scripts_paths:
-            if sys.version_info < (3, 6):
-                # pre-3.6 behavior is strict
-                scripts.append(file.locate().resolve())
-            else:
-                scripts.append(file.locate().resolve(strict=True))
+            scripts.append(file.locate().resolve(strict=True))
     return scripts
 
 
@@ -75,4 +70,4 @@ def test_cmake_script(tool):
     scripts = [script for script in _get_scripts() if script.stem == tool]
     assert len(scripts) == 1
     output = subprocess.check_output([str(scripts[0]), "--version"]).decode("ascii")
-    assert output.splitlines()[0] == "{} version {}".format(tool, expected_version)
+    assert output.splitlines()[0] == f"{tool} version {expected_version}"

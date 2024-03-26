@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.6)
+cmake_minimum_required(VERSION 3.15)
 
 #
 # For more details, see docs/building.rst
@@ -33,7 +33,13 @@ if(CMakePythonDistributions_SUPERBUILD)
 
   option(BUILD_VERBOSE "Build reporting additional information (e.g download progress, ...)" ON)
 
-  option(RUN_CMAKE_TEST "Run CMake test suite when built from sources" ON)
+  if("$ENV{CIBUILDWHEEL}")
+    set(CIBW ON)
+  else()
+    set(CIBW OFF)
+  endif()
+
+  option(RUN_CMAKE_TEST "Run CMake test suite when built from sources" "${CIBW}")
 
   set(RUN_CMAKE_TEST_EXCLUDE "BootstrapTest" CACHE STRING "CMake test suite exclusion regex")
 
