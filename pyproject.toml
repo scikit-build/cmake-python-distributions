@@ -53,6 +53,7 @@ ctest = "cmake:ctest"
 minimum-version = "0.8"
 build-dir = "build/{wheel_tag}"
 metadata.version.provider = "scikit_build_core.metadata.setuptools_scm"
+cmake.version = ""  # We are cmake, so don't request cmake
 ninja.make-fallback = false
 sdist.include = ["src/cmake/_version.py"]
 wheel.py-api = "py3"
