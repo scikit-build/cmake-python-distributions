@@ -4,6 +4,7 @@ build-backend = "scikit_build_core.build"
 
 [project]
 name = "cmake"
+version = "3.29.0"
 description = "CMake is an open-source, cross-platform family of tools designed to build, test and package software"
 keywords = ["CMake", "build", "c++", "fortran", "cross-platform", "cross-compilation"]
 readme = "README.rst"
@@ -24,10 +25,6 @@ classifiers = [
     "Topic :: Software Development :: Build Tools",
     "Typing :: Typed"
 ]
-dependencies = [
-  "importlib_metadata>=1.4; python_version<'3.8'",
-]
-dynamic = ["version"]
 requires-python = ">=3.7"
 
 [project.urls]
@@ -52,17 +49,17 @@ ctest = "cmake:ctest"
 [tool.scikit-build]
 minimum-version = "0.8"
 build-dir = "build/{wheel_tag}"
-metadata.version.provider = "scikit_build_core.metadata.setuptools_scm"
 ninja.make-fallback = false
-sdist.include = ["src/cmake/_version.py"]
 wheel.py-api = "py3"
 wheel.expand-macos-universal-tags = true
 wheel.install-dir = "cmake/data"
 
-[tool.setuptools_scm]
-write_to = "src/cmake/_version.py"
-# Setuptools-scm includes type annotations in the default template
-write_to_template = "version = '{version}'"
+[[tool.scikit-build.generate]]
+path = "cmake/_version.py"
+template = '''
+version = "${version}"
+'''
+
 
 [tool.cibuildwheel]
 build = "cp39-*"

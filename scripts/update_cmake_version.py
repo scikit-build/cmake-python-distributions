@@ -175,15 +175,23 @@ def update_docs(version):
 
 
 def update_tests(version):
-    pattern = re.compile(r'expected_version = "\d.(\d)+.\d"')
+    pattern = re.compile(r'expected_version = "\d.\d+.\d"')
     replacement = 'expected_version = "%s"' % version
     _update_file(
         os.path.join(ROOT_DIR, "tests/test_cmake.py"), pattern, replacement
     )
 
 
+def update_pyproject_toml(version):
+    pattern = re.compile(r'^version = "[\w\.]+"$')
+    replacement = 'version = "%s"' % version
+    _update_file(
+        os.path.join(ROOT_DIR, "pyproject.toml"), pattern, replacement
+    )
+
+
 def update_raw_versions(version):
-    pattern = re.compile(r"\d\.(\d)+\.\d")
+    pattern = re.compile(r"\d\.\d+\.\d")
     replacement = version
     _update_file(
         os.path.join(ROOT_DIR, "docs/update_cmake_version.rst"), pattern, replacement
@@ -216,6 +224,7 @@ def main():
         update_docs(args.cmake_version)
         update_tests(args.cmake_version)
         update_raw_versions(args.cmake_version)
+        update_pyproject_toml(args.cmake_version)
 
         if not args.quiet:
             msg = """\

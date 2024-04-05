@@ -1,4 +1,5 @@
 import argparse
+import re
 from pathlib import Path
 
 import nox
@@ -57,7 +58,7 @@ def tests(session: nox.Session) -> str:
 @nox.session(reuse_venv=True)
 def docs(session: nox.Session) -> None:
     """
-    Build the docs. Pass "--serve" to serve. Pass "-b linkcheck" to check links.
+    Build the docs. Pass "--non-interactive" to avoid serve. Pass "-- -b linkcheck" to check links.
     """
 
     parser = argparse.ArgumentParser()
@@ -66,16 +67,10 @@ def docs(session: nox.Session) -> None:
         "-b", dest="builder", default="html", help="Build target (default: html)"
     )
     args, posargs = parser.parse_known_args(session.posargs)
+    serve = args.builder == "html" and session.interactive
 
-    if args.builder != "html" and args.serve:
-        session.error("Must not specify non-HTML builder with --serve")
-
-    extra_installs = ["sphinx-autobuild"] if args.serve else []
-
-    wheel = build(session)
-    session.install("-r", "docs/requirements-docs.txt", *extra_installs)
-    session.install(f"./dist/{wheel}")
-
+    extra_installs = ["sphinx-autobuild"] if serve else []
+    session.install("-r", "docs/requirements.txt", *extra_installs)
     session.chdir("docs")
 
     if args.builder == "linkcheck":
@@ -93,11 +88,12 @@ def docs(session: nox.Session) -> None:
         *posargs,
     )
 
-    if args.serve:
-        session.run("sphinx-autobuild", *shared_args)
+    if serve:
+        session.run(
+            "sphinx-autobuild", "--open-browser", "--ignore=.build", *shared_args
+        )
     else:
         session.run("sphinx-build", "--keep-going", *shared_args)
-
 
 def _bump(session: nox.Session, name: str, repository: str, branch: str, script: str, files) -> None:
     parser = argparse.ArgumentParser()
@@ -139,6 +135,7 @@ def bump(session: nox.Session) -> None:
     Set to a new version, use -- <version>, otherwise will use the latest version.
     """
     files = (
+        "pyproject.toml",
         "CMakeUrls.cmake",
         "docs/index.rst",
         "README.rst",
@@ -157,3 +154,16 @@ def bump_openssl(session: nox.Session) -> None:
         "scripts/manylinux-build-and-install-openssl.sh",
     )
     _bump(session, "OpenSSL", "openssl/openssl", "3.0", "scripts/update_openssl_version.py", files)
+
+
+@nox.session(venv_backend="none")
+def tag_release(session: nox.Session) -> None:
+    """
+    Print instructions for tagging a release and pushing it to GitHub.
+    """
+
+    session.log("Run the following commands to make a release:")
+    txt = Path("pyproject.toml").read_text()
+    current_version = next(iter(re.finditer(r'^version = "([\d\.]+)"$', txt, flags=re.MULTILINE))).group(1)
+    print(f"git tag --sign -m 'cmake-python-distributions {current_version}' {current_version} main")
+    print(f"git push origin {current_version}")
