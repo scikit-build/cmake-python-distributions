@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Command line executable allowing to update OpenSSL version.
 """
@@ -37,7 +36,7 @@ def get_openssl_sha256(version, verbose=False):
     with _log("Collecting SHA256 from '%s'" % files_base_url):
         sha256 = requests.get(files_base_url).content.decode("ascii").strip()
         if verbose:
-            print("got sha256: {}".format(sha256))
+            print(f"got sha256: {sha256}")
         return sha256
 
 
@@ -45,7 +44,7 @@ def _update_file(filepath, regex, replacement):
     msg = "Updating %s" % os.path.relpath(filepath, ROOT_DIR)
     with _log(msg):
         pattern = re.compile(regex)
-        with open(filepath, "r") as doc_file:
+        with open(filepath) as doc_file:
             lines = doc_file.readlines()
             updated_content = []
             for line in lines:
