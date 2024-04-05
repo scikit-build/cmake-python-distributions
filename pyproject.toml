@@ -77,14 +77,14 @@ MACOSX_DEPLOYMENT_TARGET = "10.10"
 before-all = "./scripts/manylinux-build-and-install-openssl.sh"
 
 [tool.cibuildwheel.config-settings]
-config-settings."cmake.define.RUN_CMAKE_TEST" = "ON"
+"cmake.define.RUN_CMAKE_TEST" = "ON"
 
 [tool.cibuildwheel.linux.config-settings]
 "cmake.define.OPENSSL_ROOT_DIR" = "/usr/local/ssl"
 "cmake.define.CMAKE_JOB_POOL_COMPILE" = "compile"
 "cmake.define.CMAKE_JOB_POOL_LINK" = "link"
 "cmake.define.CMAKE_JOB_POOLS" = "compile=4;link=1"
-config-settings."cmake.define.RUN_CMAKE_TEST" = "ON"
+"cmake.define.RUN_CMAKE_TEST" = "ON"
 
 [[tool.cibuildwheel.overrides]]
 select = ["*-musllinux_*",]
