@@ -135,6 +135,7 @@ def bump(session: nox.Session) -> None:
     Set to a new version, use -- <version>, otherwise will use the latest version.
     """
     files = (
+        "pyproject.toml",
         "CMakeUrls.cmake",
         "docs/index.rst",
         "README.rst",
