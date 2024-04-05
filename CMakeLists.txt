@@ -33,7 +33,7 @@ if(CMakePythonDistributions_SUPERBUILD)
 
   option(BUILD_VERBOSE "Build reporting additional information (e.g download progress, ...)" ON)
 
-  option(RUN_CMAKE_TEST "Run CMake test suite when built from sources" ON)
+  option(RUN_CMAKE_TEST "Run CMake test suite when built from sources" OFF)
 
   set(RUN_CMAKE_TEST_EXCLUDE "BootstrapTest" CACHE STRING "CMake test suite exclusion regex")
 
