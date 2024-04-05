@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Command line executable allowing to update CMakeUrls.cmake given a CMake
 version.
@@ -68,9 +67,7 @@ def get_cmake_archive_urls_and_sha256s(version, verbose=False):
                         sha256 = line.split()[0].strip()
                         identifier = expected_files[file]
                         shas[identifier] = sha256
-        assert len(shas) == len(expected_files), "{} != {}".format(
-            len(shas), len(expected_files)
-        )
+        assert len(shas) == len(expected_files), f"{len(shas)} != {len(expected_files)}"
 
         # Get download URLs for each asset
         urls = {}
@@ -86,19 +83,19 @@ def get_cmake_archive_urls_and_sha256s(version, verbose=False):
             for identifier in set(expected_files.values()) - set(urls.keys()):
                 missing_files.append(expected_files_by_identifier[identifier])
             raise RuntimeError(
-                "Couldn't find {} at {}".format(missing_files, files_base_url)
+                f"Couldn't find {missing_files} at {files_base_url}"
             )
 
         # combine the URLs and SHA256s into a single dictionary
         zipped = {}
         for value in expected_files.values():
-            print("[{}]\n{}\n{}\n".format(value, urls[value], shas[value]))
+            print(f"[{value}]\n{urls[value]}\n{shas[value]}\n")
             zipped[value] = (urls[value], shas[value])
         assert len(zipped) == len(expected_files)
 
         if verbose:
             for identifier, (url, sha256) in zipped.items():
-                print("[{}]\n{}\n{}\n".format(identifier, url, sha256))
+                print(f"[{identifier}]\n{url}\n{sha256}\n")
 
         return zipped
 
@@ -150,7 +147,7 @@ def update_cmake_urls_script(version):
     cmake_urls_filename = "CMakeUrls.cmake"
     cmake_urls_filepath = os.path.join(ROOT_DIR, cmake_urls_filename)
 
-    msg = "Updating '{}' with CMake version {}".format(cmake_urls_filename, version)
+    msg = f"Updating '{cmake_urls_filename}' with CMake version {version}"
     with _log(msg), open(cmake_urls_filepath, "w") as cmake_file:
         cmake_file.write(content)
 
@@ -159,7 +156,7 @@ def _update_file(filepath, regex, replacement):
     msg = "Updating %s" % os.path.relpath(filepath, ROOT_DIR)
     with _log(msg):
         pattern = re.compile(regex)
-        with open(filepath, "r") as doc_file:
+        with open(filepath) as doc_file:
             lines = doc_file.readlines()
             updated_content = []
             for line in lines:
@@ -172,10 +169,7 @@ def update_docs(version):
     pattern = re.compile(
         r"CMake \d.(\d)+.\d <https://cmake.org/cmake/help/v\d.(\d)+/index.html>"
     )
-    replacement = "CMake {} <https://cmake.org/cmake/help/v{}/index.html>".format(
-        version,
-        _major_minor(version),
-    )
+    replacement = f"CMake {version} <https://cmake.org/cmake/help/v{_major_minor(version)}/index.html>"
     for filename in ["docs/index.rst", "README.rst"]:
         _update_file(os.path.join(ROOT_DIR, filename), pattern, replacement)
 
