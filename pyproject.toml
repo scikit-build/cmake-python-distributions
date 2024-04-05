@@ -70,31 +70,35 @@ test-extras = "test"
 test-command = "pytest {project}/tests"
 build-verbosity = 1
 
+[tool.cibuildwheel.macos.environment]
+MACOSX_DEPLOYMENT_TARGET = "10.10"
+
 [tool.cibuildwheel.linux]
-before-all = [
-    './scripts/manylinux-build-and-install-openssl.sh',
-]
-environment = { CMAKE_ARGS = "-DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl -DCMAKE_JOB_POOL_COMPILE:STRING=compile -DCMAKE_JOB_POOL_LINK:STRING=link -DCMAKE_JOB_POOLS:STRING=compile=4;link=1 -DCMAKE_CXX_STANDARD:STRING=11" }
+before-all = "./scripts/manylinux-build-and-install-openssl.sh"
+
+[tool.cibuildwheel.config-settings]
+"cmake.define.RUN_CMAKE_TEST" = "ON"
+
+[tool.cibuildwheel.linux.config-settings]
+"cmake.define.OPENSSL_ROOT_DIR" = "/usr/local/ssl"
+"cmake.define.CMAKE_JOB_POOL_COMPILE" = "compile"
+"cmake.define.CMAKE_JOB_POOL_LINK" = "link"
+"cmake.define.CMAKE_JOB_POOLS" = "compile=4;link=1"
+"cmake.define.RUN_CMAKE_TEST" = "ON"
 
 [[tool.cibuildwheel.overrides]]
-select = ["*-manylinux_aarch64", "*-manylinux_ppc64le", "*-manylinux_s390x"]
-# disable tests on those platforms, QEMU is taking to long for jobs to pass on GHA
-environment = { CMAKE_ARGS = "-DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl -DCMAKE_JOB_POOL_COMPILE:STRING=compile -DCMAKE_JOB_POOL_LINK:STRING=link -DCMAKE_JOB_POOLS:STRING=compile=4;link=1 -DCMAKE_CXX_STANDARD:STRING=11 -DRUN_CMAKE_TEST:BOOL=OFF" }
-
-[[tool.cibuildwheel.overrides]]
-select = ["*-musllinux_x86_64", "*-musllinux_i686"]
+select = ["*-musllinux_*",]
+inherit.config-settings = "append"
 # disable some tests
 # - BootstrapTest fails with custom OpenSSL and probably does not make much sense for this project
 # - ExportImport|RunCMake.install|RunCMake.file-GET_RUNTIME_DEPENDENCIES: c.f. https://discourse.cmake.org/t/cmake-test-suite-failing-on-alpine-linux/5064
-environment = { CMAKE_ARGS = "-DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl -DCMAKE_JOB_POOL_COMPILE:STRING=compile -DCMAKE_JOB_POOL_LINK:STRING=link -DCMAKE_JOB_POOLS:STRING=compile=4;link=1 -DRUN_CMAKE_TEST_EXCLUDE:STRING='BootstrapTest|ExportImport|RunCMake.install|RunCMake.RuntimePath|RunCMake.file-GET_RUNTIME_DEPENDENCIES'" }
+config-settings."cmake.define.RUN_CMAKE_TEST_EXCLUDE" = "BootstrapTest|ExportImport|RunCMake.install|RunCMake.RuntimePath|RunCMake.file-GET_RUNTIME_DEPENDENCIES"
 
 [[tool.cibuildwheel.overrides]]
-select = ["*-musllinux_aarch64", "*-musllinux_ppc64le", "*-musllinux_s390x"]
+select = ["*linux_aarch64", "*linux_ppc64le", "*linux_s390x"]
+inherit.config-settings = "append"
 # disable tests on those platforms, QEMU is taking to long for jobs to pass on GHA
-environment = { CMAKE_ARGS = "-DOPENSSL_ROOT_DIR:PATH=/usr/local/ssl -DCMAKE_JOB_POOL_COMPILE:STRING=compile -DCMAKE_JOB_POOL_LINK:STRING=link -DCMAKE_JOB_POOLS:STRING=compile=4;link=1 -DRUN_CMAKE_TEST:BOOL=OFF" }
-
-[tool.cibuildwheel.macos.environment]
-MACOSX_DEPLOYMENT_TARGET = "10.10"
+config-settings."cmake.define.RUN_CMAKE_TEST" = "OFF"
 
 
 [tool.ruff]
