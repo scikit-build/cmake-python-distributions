@@ -99,6 +99,13 @@ inherit.config-settings = "append"
 config-settings."cmake.define.RUN_CMAKE_TEST" = "OFF"
 
 
+[tool.mypy]
+files = ["src", "scripts"]
+python_version = "3.8"
+strict = true
+enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
+warn_unreachable = true
+
 [tool.ruff]
 src = ["src"]
 
