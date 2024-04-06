@@ -1,59 +1,66 @@
 #!/usr/bin/env python3
+#
+# /// script
+# dependencies = ["requests"]
+# ///
+
 """
 Command line executable allowing to update CMakeUrls.cmake given a CMake
 version.
 """
 
+from __future__ import annotations
+
 import argparse
 import contextlib
-import os
 import re
 import textwrap
+from pathlib import Path
 
-try:
-    import requests
-except ImportError:
-    raise SystemExit(
-        "requests not available: "
-        "consider installing it running 'pip install requests'"
-    ) from None
+import requests
 
-ROOT_DIR = os.path.join(os.path.dirname(__file__), "..")
+TYPE_CHECKING = False
+
+if TYPE_CHECKING:
+    from collections.abc import Generator, Mapping
+
+
+ROOT_DIR = Path(__file__).parent.parent.resolve()
 
 
 @contextlib.contextmanager
-def _log(txt, verbose=True):
+def _log(txt: str, verbose: bool = True) -> Generator[None, None, None]:
     if verbose:
         print(txt)
     yield
     if verbose:
-        print("%s - done" % txt)
+        print(f"{txt} - done")
 
 
-def _major_minor(version):
+def _major_minor(version: str) -> str:
     """Given a string of the form ``X.Y.Z``, returns ``X.Y``."""
     return ".".join(version.split(".")[:2])
 
 
-def get_cmake_archive_urls_and_sha256s(version, verbose=False):
+def get_cmake_archive_urls_and_sha256s(version: str, verbose: bool=False) -> dict[str,tuple[str, str]]:
     files_base_url = (
-        "https://api.github.com/repos/Kitware/CMake/releases/tags/v%s" % version
+        f"https://api.github.com/repos/Kitware/CMake/releases/tags/v{version}"
     )
 
-    with _log("Collecting URLs and SHA256s from '%s'" % files_base_url):
+    with _log(f"Collecting URLs and SHA256s from '{files_base_url}'"):
 
         assets = requests.get(files_base_url).json()["assets"]
 
-        sha_256_file = "cmake-%s-SHA-256.txt" % version
+        sha_256_file = f"cmake-{version}-SHA-256.txt"
 
         expected_files = {
-            "cmake-%s.tar.gz" % version: "unix_source",
-            "cmake-%s.zip" % version: "win_source",
-            "cmake-%s-linux-x86_64.tar.gz" % version: "linux64_binary",
-            "cmake-%s-macos10.10-universal.tar.gz" % version: "macos10_10_binary",
-            "cmake-%s-windows-i386.zip" % version: "win32_binary",
-            "cmake-%s-windows-x86_64.zip" % version: "win64_binary",
-            "cmake-%s-windows-arm64.zip" % version: "winarm64_binary",
+            f"cmake-{version}.tar.gz": "unix_source",
+            f"cmake-{version}.zip": "win_source",
+            f"cmake-{version}-linux-x86_64.tar.gz": "linux64_binary",
+            f"cmake-{version}-macos10.10-universal.tar.gz": "macos10_10_binary",
+            f"cmake-{version}-windows-i386.zip": "win32_binary",
+            f"cmake-{version}-windows-x86_64.zip": "win64_binary",
+            f"cmake-{version}-windows-arm64.zip": "winarm64_binary",
         }
 
         # Get SHA256s for each asset
@@ -100,13 +107,13 @@ def get_cmake_archive_urls_and_sha256s(version, verbose=False):
         return zipped
 
 
-def generate_cmake_variables(urls_and_sha256s):
+def generate_cmake_variables(urls_and_sha256s: Mapping[str, tuple[str, str]]) -> str:
     template_inputs = {}
 
     # Get SHA256s and URLs
     for var_prefix, urls_and_sha256s_values in urls_and_sha256s.items():
-        template_inputs["%s_url" % var_prefix] = urls_and_sha256s_values[0]
-        template_inputs["%s_sha256" % var_prefix] = urls_and_sha256s_values[1]
+        template_inputs[f"{var_prefix}_url"] = urls_and_sha256s_values[0]
+        template_inputs[f"{var_prefix}_sha256"] = urls_and_sha256s_values[1]
 
     return textwrap.dedent(
         """
@@ -142,63 +149,69 @@ def generate_cmake_variables(urls_and_sha256s):
     ).format(**template_inputs)
 
 
-def update_cmake_urls_script(version):
+def update_cmake_urls_script(version: str) -> set[str]:
     content = generate_cmake_variables(get_cmake_archive_urls_and_sha256s(version))
     cmake_urls_filename = "CMakeUrls.cmake"
-    cmake_urls_filepath = os.path.join(ROOT_DIR, cmake_urls_filename)
+    cmake_urls_filepath = ROOT_DIR / cmake_urls_filename
 
     msg = f"Updating '{cmake_urls_filename}' with CMake version {version}"
-    with _log(msg), open(cmake_urls_filepath, "w") as cmake_file:
+    with _log(msg), cmake_urls_filepath.open("w") as cmake_file:
         cmake_file.write(content)
 
+    return {cmake_urls_filename}
 
-def _update_file(filepath, regex, replacement):
-    msg = "Updating %s" % os.path.relpath(filepath, ROOT_DIR)
-    with _log(msg):
+
+def _update_file(filepath: Path, regex: re.Pattern[str], replacement: str) -> None:
+    with _log(f"Updating {filepath.relative_to(ROOT_DIR)}"):
         pattern = re.compile(regex)
-        with open(filepath) as doc_file:
-            lines = doc_file.readlines()
-            updated_content = []
-            for line in lines:
-                updated_content.append(re.sub(pattern, replacement, line))
-        with open(filepath, "w") as doc_file:
+        with filepath.open() as doc_file:
+            updated_content = [pattern.sub(replacement, line) for line in doc_file]
+        with filepath.open("w") as doc_file:
             doc_file.writelines(updated_content)
 
 
-def update_docs(version):
+def update_docs(version: str) -> set[str]:
     pattern = re.compile(
         r"CMake \d.(\d)+.\d <https://cmake.org/cmake/help/v\d.(\d)+/index.html>"
     )
     replacement = f"CMake {version} <https://cmake.org/cmake/help/v{_major_minor(version)}/index.html>"
-    for filename in ["docs/index.rst", "README.rst"]:
-        _update_file(os.path.join(ROOT_DIR, filename), pattern, replacement)
+    files = {"docs/index.rst", "README.rst"}
+    for filename in files:
+        _update_file(ROOT_DIR / filename, pattern, replacement)
+    return files
 
 
-def update_tests(version):
+def update_tests(version: str) -> set[str]:
     pattern = re.compile(r'expected_version = "\d.\d+.\d"')
-    replacement = 'expected_version = "%s"' % version
+    replacement = f'expected_version = "{version}"'
+    filename = "tests/test_cmake.py"
     _update_file(
-        os.path.join(ROOT_DIR, "tests/test_cmake.py"), pattern, replacement
+        ROOT_DIR / filename, pattern, replacement
     )
+    return {filename}
 
 
-def update_pyproject_toml(version):
+def update_pyproject_toml(version: str) -> set[str]:
     pattern = re.compile(r'^version = "[\w\.]+"$')
-    replacement = 'version = "%s"' % version
+    replacement = f'version = "{version}"'
+    filename = "pyproject.toml"
     _update_file(
-        os.path.join(ROOT_DIR, "pyproject.toml"), pattern, replacement
+        ROOT_DIR / filename, pattern, replacement
     )
+    return {filename}
 
 
-def update_raw_versions(version):
+def update_raw_versions(version: str) -> set[str]:
     pattern = re.compile(r"\d\.\d+\.\d")
     replacement = version
+    filename = "docs/update_cmake_version.rst"
     _update_file(
-        os.path.join(ROOT_DIR, "docs/update_cmake_version.rst"), pattern, replacement
+        ROOT_DIR / filename, pattern, replacement
     )
+    return {filename}
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "cmake_version",
@@ -217,25 +230,30 @@ def main():
         help="Hide the output",
     )
     args = parser.parse_args()
+
     if args.collect_only:
         get_cmake_archive_urls_and_sha256s(args.cmake_version, verbose=True)
-    else:
-        update_cmake_urls_script(args.cmake_version)
-        update_docs(args.cmake_version)
-        update_tests(args.cmake_version)
-        update_raw_versions(args.cmake_version)
-        update_pyproject_toml(args.cmake_version)
+        return
 
-        if not args.quiet:
-            msg = """\
-                Complete! Now run:
+    filenames = set()
+    filenames |= update_cmake_urls_script(args.cmake_version)
+    filenames |= update_docs(args.cmake_version)
+    filenames |= update_tests(args.cmake_version)
+    filenames |= update_raw_versions(args.cmake_version)
+    filenames |= update_pyproject_toml(args.cmake_version)
 
-                git switch -c update-to-cmake-{release}
-                git add -u CMakeUrls.cmake docs/index.rst README.rst tests/test_cmake.py docs/update_cmake_version.rst
-                git commit -m "Update to CMake {release}"
-                gh pr create --fill --body "Created by update_cmake_version.py"
-                """
-            print(textwrap.dedent(msg.format(release=args.cmake_version)))
+    if args.quiet:
+        return
+
+    msg = f"""\
+        Complete! Now run:
+
+        git switch -c update-to-cmake-{args.cmake_version}
+        git add -u {' '.join(filenames)}
+        git commit -m "Update to CMake {args.cmake_version}"
+        gh pr create --fill --body "Created by update_cmake_version.py"
+        """
+    print(textwrap.dedent(msg))
 
 
 if __name__ == "__main__":
