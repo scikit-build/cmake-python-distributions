@@ -28,6 +28,5 @@ repos:
   hooks:
   - id: mypy
     files: ^(src|scripts)
-    exclude: ^src/cmake/__init__.py$
     additional_dependencies: [types-requests]
     args: []
