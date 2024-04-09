@@ -17,20 +17,6 @@ Prerequisites
 
 * You have a `GPG signing key <https://help.github.com/articles/generating-a-new-gpg-key/>`_.
 
--------------------------
-Documentation conventions
--------------------------
-
-The commands reported below should be evaluated in the same terminal session.
-
-Commands to evaluate starts with a dollar sign. For example::
-
-  $ echo "Hello"
-  Hello
-
-means that ``echo "Hello"`` should be copied and evaluated in the terminal.
-
-
 
 ---------------------
 `PyPI`_: Step-by-step
@@ -39,40 +25,27 @@ means that ``echo "Hello"`` should be copied and evaluated in the terminal.
 1. Make sure that all CI tests are passing on `GitHub Actions`_.
 
 
-2. Download the latest sources
+2. Download the latest sources if you don't already have them
 
-  .. code::
+  .. code:: console
 
-    $ cd /tmp && \
-      git clone git@github.com:scikit-build/cmake-python-distributions cmake-python-distributions-release && \
-      cd cmake-python-distributions-release
-
-
-3. List all tags sorted by version
-
-  .. code::
-
-    $ git fetch --tags && \
-      git tag -l | sort -V
+    $ git clone git@github.com:scikit-build/cmake-python-distributions
+    $ cd cmake-python-distributions
 
 
-4. Choose the next release version number
+3. Ask nox for the instructions on what to type
 
-  .. code::
+  .. code:: console
 
-    $ release=X.Y.Z
-
-  .. warning::
-
-      To ensure the packages are uploaded on `PyPI`_, tags must match this regular
-      expression: ``^[0-9]+(\.[0-9]+)*(\.post[0-9]+)?$``.
+    $ nox -s tag_release
 
 
-5. Tag the release
+4. Run the suggested lines, probably something like this:
 
-  .. code::
+  .. code:: console
 
-    $ git tag --sign -m "cmake-python-distributions $release" $release main
+    $ git tag --sign -m 'cmake-python-distributions 3.29.1' 3.29.1 main
+    $ git push origin 3.29.1
 
   .. warning::
 
@@ -80,50 +53,13 @@ means that ``echo "Hello"`` should be copied and evaluated in the terminal.
       to sign the tag.
 
 
-6. Publish the release tag
+5. Check the status of the builds on `GitHub Actions`_.
 
-  .. code::
+6. Once the builds are completed, check that the distributions are available on `PyPI`_.
 
-    $ git push origin $release
-
-  .. note:: This will trigger builds on each CI services and automatically upload the wheels \
-            and source distribution on `PyPI`_.
-
-7. Check the status of the builds on `GitHub Actions`_.
-
-8. Once the builds are completed, check that the distributions are available on `PyPI`_.
-
-9. Make a GitHub release based on the tag. This will display the latest version
+7. Make a GitHub release based on the tag. This will display the latest version
    in the GitHub sidebar, and will notify release watchers of the release.
    Title it `Version X.Y.Z` and add a little note about what changed (Python only).
-
-10. Create a clean testing environment to test the installation
-
-  .. code::
-
-    $ pushd $(mktemp -d) && \
-      mkvirtualenv cmake-$release-install-test && \
-      pip install cmake && \
-      cmake --version
-
-  .. note::
-
-      If the ``mkvirtualenv`` command is not available, this means you do not have `virtualenvwrapper`_
-      installed, in that case, you could either install it or directly use `virtualenv`_ or `venv`_.
-
-11. Cleanup
-
-  .. code::
-
-    $ popd && \
-      deactivate  && \
-      rm -rf dist/* && \
-      rmvirtualenv cmake-$release-install-test
-
-
-.. _virtualenvwrapper: https://virtualenvwrapper.readthedocs.io/
-.. _virtualenv: https://virtualenv.pypa.io/en/latest
-.. _venv: https://docs.python.org/3/library/venv.html
 
 
 .. _GitHub Actions: https://github.com/scikit-build/cmake-python-distributions/actions/workflows/build.yml
