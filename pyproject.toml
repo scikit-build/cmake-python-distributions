@@ -86,7 +86,11 @@ before-all = "./scripts/manylinux-build-and-install-openssl.sh"
 
 [[tool.cibuildwheel.overrides]]
 select = ["*-musllinux_*",]
-inherit.config-settings = "append"
+config-settings."cmake.define.OPENSSL_ROOT_DIR" = "/usr/local/ssl"
+config-settings."cmake.define.CMAKE_JOB_POOL_COMPILE" = "compile"
+config-settings."cmake.define.CMAKE_JOB_POOL_LINK" = "link"
+config-settings."cmake.define.CMAKE_JOB_POOLS" = "compile=4;link=1"
+config-settings."cmake.define.RUN_CMAKE_TEST" = "ON"
 # disable some tests
 # - BootstrapTest fails with custom OpenSSL and probably does not make much sense for this project
 # - ExportImport|RunCMake.install|RunCMake.file-GET_RUNTIME_DEPENDENCIES: c.f. https://discourse.cmake.org/t/cmake-test-suite-failing-on-alpine-linux/5064
@@ -94,7 +98,10 @@ config-settings."cmake.define.RUN_CMAKE_TEST_EXCLUDE" = "BootstrapTest|ExportImp
 
 [[tool.cibuildwheel.overrides]]
 select = ["*linux_aarch64", "*linux_ppc64le", "*linux_s390x"]
-inherit.config-settings = "append"
+config-settings."cmake.define.OPENSSL_ROOT_DIR" = "/usr/local/ssl"
+config-settings."cmake.define.CMAKE_JOB_POOL_COMPILE" = "compile"
+config-settings."cmake.define.CMAKE_JOB_POOL_LINK" = "link"
+config-settings."cmake.define.CMAKE_JOB_POOLS" = "compile=4;link=1"
 # disable tests on those platforms, QEMU is taking to long for jobs to pass on GHA
 config-settings."cmake.define.RUN_CMAKE_TEST" = "OFF"
 
