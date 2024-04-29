@@ -71,3 +71,9 @@ def test_cmake_script(tool):
     assert len(scripts) == 1
     output = subprocess.check_output([str(scripts[0]), "--version"]).decode("ascii")
     assert output.splitlines()[0] == f"{tool} version {expected_version}"
+
+
+def test_cmake_module():
+    expected_version = "3.29.2"
+    output = subprocess.check_output([sys.executable, "-m", "cmake", "--version"]).decode("ascii")
+    assert output.splitlines()[0] == f"cmake version {expected_version}"
