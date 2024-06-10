@@ -70,6 +70,11 @@ build = "cp39-*"
 test-extras = "test"
 test-command = "pytest {project}/tests"
 build-verbosity = 1
+musllinux-x86_64-image = "musllinux_1_1"
+musllinux-i686-image = "musllinux_1_1"
+musllinux-aarch64-image = "musllinux_1_1"
+musllinux-ppc64le-image = "musllinux_1_1"
+musllinux-s390x-image = "musllinux_1_1"
 
 [tool.cibuildwheel.macos.environment]
 MACOSX_DEPLOYMENT_TARGET = "10.10"
