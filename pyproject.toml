@@ -52,11 +52,12 @@ ctest = "cmake:ctest"
 [tool.scikit-build]
 minimum-version = "0.8"
 build-dir = "build/{wheel_tag}"
-cmake.version = ""  # We are cmake, so don't request cmake
 ninja.make-fallback = false
 wheel.py-api = "py3"
 wheel.expand-macos-universal-tags = true
 wheel.install-dir = "cmake/data"
+wheel.cmake=false  # We are cmake, so don't request cmake
+sdist.cmake=false  # We are cmake, so don't request cmake
 
 [[tool.scikit-build.generate]]
 path = "cmake/_version.py"
