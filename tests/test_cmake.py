@@ -75,5 +75,5 @@ def test_cmake_script(tool):
 
 def test_cmake_main():
     expected_version = "3.29.2"
-    output = subprocess.run([sys.executable, "-m", "cmake", "--version"], text=True, capture_output=True).stdout
+    output = subprocess.run([sys.executable, "-m", "cmake", "--version"], text=True, capture_output=True, check=False).stdout
     assert output.splitlines()[0] == f"cmake version {expected_version}"
