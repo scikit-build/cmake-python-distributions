@@ -70,6 +70,7 @@ build = "cp39-*"
 test-extras = "test"
 test-command = "pytest {project}/tests"
 build-verbosity = 1
+build-frontend = "build[uv]"
 musllinux-x86_64-image = "musllinux_1_1"
 musllinux-i686-image = "musllinux_1_1"
 musllinux-aarch64-image = "musllinux_1_1"

@@ -107,6 +107,8 @@ jobs:
         with:
           fetch-depth: 0  # required for versioneer to find tags
 
+      - uses: yezz123/setup-uv@v4
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3.0.0
         if: matrix.use_qemu && fromJSON(env.USE_QEMU)
@@ -147,6 +149,7 @@ jobs:
           CIBW_BUILD: "cp39-manylinux_*"
           CIBW_MANYLINUX_X86_64_IMAGE: "manylinux2010"
           CIBW_MANYLINUX_I686_IMAGE: "manylinux2010"
+          CIBW_BUILD_FRONTEND: "build"
 
       - uses: actions/upload-artifact@v4
         with:
