@@ -201,10 +201,9 @@ def update_pyproject_toml(version: str) -> set[str]:
     return {filename}
 
 
-def update_raw_versions(version: str) -> set[str]:
+def update_raw_versions(version: str, filename: str) -> set[str]:
     pattern = re.compile(r"\d\.\d+\.\d")
     replacement = version
-    filename = "docs/update_cmake_version.rst"
     _update_file(
         ROOT_DIR / filename, pattern, replacement
     )
@@ -239,7 +238,8 @@ def main() -> None:
     filenames |= update_cmake_urls_script(args.cmake_version)
     filenames |= update_docs(args.cmake_version)
     filenames |= update_tests(args.cmake_version)
-    filenames |= update_raw_versions(args.cmake_version)
+    filenames |= update_raw_versions(args.cmake_version, "docs/update_cmake_version.rst")
+    filenames |= update_raw_versions(args.cmake_version, "docs/make_a_release.rst")
     filenames |= update_pyproject_toml(args.cmake_version)
 
     if args.quiet:
