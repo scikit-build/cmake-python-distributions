@@ -51,7 +51,7 @@ def test_cmake_https(tmpdir):
         """
     ))
 
-    _run("cmake", ["-DTMP_DIR:PATH=%s" % str(tmpdir), "-P", str(test_script)])
+    _run("cmake", [f"-DTMP_DIR:PATH={tmpdir}", "-P", str(test_script)])
 
 
 def _get_scripts():
