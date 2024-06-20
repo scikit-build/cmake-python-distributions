@@ -4,6 +4,8 @@ from pathlib import Path
 
 import nox
 
+nox.needs_version = ">=2024.3.2"
+nox.options.default_venv_backend = "uv|virtualenv"
 nox.options.sessions = ["lint", "build", "tests"]
 
 BUILD_ENV = {
