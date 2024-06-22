@@ -7,6 +7,7 @@ on:
       - 'scripts/update_cmake_version.py'
       - 'noxfile.py'
   workflow_dispatch:
+  push:
   schedule:
     - cron: '0 6 * * *'  # "At 06:00 every day."
 
