@@ -157,6 +157,11 @@ def bump_openssl(session: nox.Session) -> None:
     _bump(session, "OpenSSL", "openssl/openssl", "3.0", "scripts/update_openssl_version.py", files)
 
 
+def _get_version() -> str:
+    txt = Path("pyproject.toml").read_text()
+    return next(iter(re.finditer(r'^version = "([\d\.]+)"$', txt, flags=re.MULTILINE))).group(1)
+
+
 @nox.session(venv_backend="none")
 def tag_release(session: nox.Session) -> None:
     """
@@ -164,7 +169,16 @@ def tag_release(session: nox.Session) -> None:
     """
 
     session.log("Run the following commands to make a release:")
-    txt = Path("pyproject.toml").read_text()
-    current_version = next(iter(re.finditer(r'^version = "([\d\.]+)"$', txt, flags=re.MULTILINE))).group(1)
+    current_version = _get_version()
     print(f"git tag --sign -m 'cmake-python-distributions {current_version}' {current_version} main")
     print(f"git push origin {current_version}")
+
+
+@nox.session(venv_backend="none")
+def cmake_version(session: nox.Session) -> None:  # noqa: ARG001
+    """
+    Print upstream cmake version.
+    """
+
+    current_version = _get_version()
+    print(".".join(current_version.split(".")[:3]))
