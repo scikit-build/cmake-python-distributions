@@ -29,13 +29,13 @@ jobs:
     # run the GHA tests.
     - uses: actions/create-github-app-token@v1
       id: app-token
-      if: github.ref == 'refs/heads/master' && github.repository == 'scikit-build/cmake-python-distributions'
+      if: github.ref == 'refs/heads/main' && github.repository == 'scikit-build/cmake-python-distributions'
       with:
         app-id: ${{ secrets.SCIKIT_BUILD_BOT_APP_ID }}
         private-key: ${{ secrets.SCIKIT_BUILD_BOT_APP_PRIVATE_KEY }}
 
     - name: Create Pull Request
-      if: github.ref == 'refs/heads/master' && github.repository == 'scikit-build/cmake-python-distributions'
+      if: github.ref == 'refs/heads/main' && github.repository == 'scikit-build/cmake-python-distributions'
       uses: peter-evans/create-pull-request@v6
       with:
         commit-message: '[Bot] Update to CMake ${{ steps.bump-cmake.outputs.version }}'
