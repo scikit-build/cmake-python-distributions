@@ -234,11 +234,17 @@ jobs:
       url: https://pypi.org/p/cmake
     permissions:
       id-token: write
+      attestations: write
     steps:
       - uses: actions/download-artifact@v4
         with:
           pattern: cibw-*
           merge-multiple: true
           path: dist
+
+      - name: Generate artifact attestation for sdist and wheel
+        uses: actions/attest-build-provenance@bdd51370e0416ac948727f861e03c2f05d32d78e # v1.3.2
+        with:
+          subject-path: "dist/cmake-*"
 
       - uses: pypa/gh-action-pypi-publish@release/v1
