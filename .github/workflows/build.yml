@@ -110,7 +110,7 @@ jobs:
       - uses: yezz123/setup-uv@v4
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3.0.0
+        uses: docker/setup-qemu-action@v3.1.0
         if: matrix.use_qemu && fromJSON(env.USE_QEMU)
 
       - name: Build wheels
@@ -243,7 +243,7 @@ jobs:
           path: dist
 
       - name: Generate artifact attestation for sdist and wheel
-        uses: actions/attest-build-provenance@bdd51370e0416ac948727f861e03c2f05d32d78e # v1.3.2
+        uses: actions/attest-build-provenance@5e9cb68e95676991667494a6a4e59b8a2f13e1d0 # v1.3.3
         with:
           subject-path: "dist/cmake-*"
 
