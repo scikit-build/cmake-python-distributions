@@ -110,7 +110,7 @@ jobs:
       - uses: yezz123/setup-uv@v4
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3.1.0
+        uses: docker/setup-qemu-action@v3.2.0
         if: matrix.use_qemu && fromJSON(env.USE_QEMU)
 
       - name: Build wheels
