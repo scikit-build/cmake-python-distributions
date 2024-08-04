@@ -182,3 +182,13 @@ def cmake_version(session: nox.Session) -> None:  # noqa: ARG001
 
     current_version = _get_version()
     print(".".join(current_version.split(".")[:3]))
+
+
+@nox.session(venv_backend="none")
+def openssl_version(session: nox.Session) -> None:  # noqa: ARG001
+    """
+    Print upstream OpenSSL version.
+    """
+    txt = Path("scripts/manylinux-build-and-install-openssl.sh").read_text()
+    current_version = next(iter(re.finditer(r'^OPENSSL_ROOT=openssl-([\d\.]+)$', txt, flags=re.MULTILINE))).group(1)
+    print(".".join(current_version.split(".")[:3]))
