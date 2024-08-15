@@ -23,6 +23,8 @@ Latest Release
   +======================================================================+===========================================================================+
   | .. image:: https://img.shields.io/pypi/v/cmake.svg                   | .. image:: https://static.pepy.tech/badge/cmake                           |
   |     :target: https://pypi.python.org/pypi/cmake                      |     :target: https://pypi.python.org/pypi/cmake                           |
+  |                                                                      | .. image:: https://img.shields.io/pypi/dm/cmake                           |
+  |                                                                      |     :target: https://pypi.python.org/pypi/cmake                           |
   +----------------------------------------------------------------------+---------------------------------------------------------------------------+
 
 Build Status
