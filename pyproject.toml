@@ -126,8 +126,6 @@ strict = true
 enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
 warn_unreachable = true
 
-[tool.ruff]
-src = ["src"]
 
 [tool.ruff.lint]
 extend-select = [
