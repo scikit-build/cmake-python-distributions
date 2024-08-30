@@ -44,8 +44,8 @@ Prerequisites
 
   .. code:: console
 
-    $ git tag --sign -m 'cmake-python-distributions 3.30.2' 3.30.2 main
-    $ git push origin 3.30.2
+    $ git tag --sign -m 'cmake-python-distributions 3.30.3' 3.30.3 main
+    $ git push origin 3.30.3
 
   .. warning::
 
