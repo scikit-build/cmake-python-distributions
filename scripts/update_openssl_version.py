@@ -37,7 +37,7 @@ def _log(txt: str, verbose: bool=True) -> Generator[None, None, None]:
 
 def get_openssl_sha256(version: str, verbose: bool=False) -> str:
     files_base_url = (
-        f"https://www.openssl.org/source/openssl-{version}.tar.gz.sha256"
+        f"https://github.com/openssl/openssl/releases/download/openssl-{version}/openssl-{version}.tar.gz.sha256"
     )
     with _log(f"Collecting SHA256 from '{files_base_url}'"):
         sha256 = requests.get(files_base_url).content.decode("ascii").strip()

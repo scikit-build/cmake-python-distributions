@@ -11,7 +11,7 @@ MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 source $MY_DIR/utils.sh
 
 OPENSSL_ROOT=openssl-3.0.15
-OPENSSL_HASH=<?xml version='1.0' encoding='UTF-8'?><Error><Code>NoSuchKey</Code><Message>The specified key does not exist.</Message></Error>
+OPENSSL_HASH=23c666d0edf20f14249b3d8f0368acaee9ab585b09e1de82107c66e1f3ec9533
 
 cd /tmp
 
@@ -41,7 +41,7 @@ else
 fi
 
 # Download
-curl -fsSLO http://www.openssl.org/source/${OPENSSL_ROOT}.tar.gz
+curl -fsSLO https://github.com/openssl/openssl/releases/download/${OPENSSL_ROOT}/${OPENSSL_ROOT}.tar.gz
 check_sha256sum ${OPENSSL_ROOT}.tar.gz ${OPENSSL_HASH}
 tar -xzf ${OPENSSL_ROOT}.tar.gz
 rm -rf ${OPENSSL_ROOT}.tar.gz
