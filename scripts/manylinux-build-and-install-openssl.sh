@@ -10,8 +10,8 @@ set -o pipefail
 MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 source $MY_DIR/utils.sh
 
-OPENSSL_ROOT=openssl-3.0.14
-OPENSSL_HASH=eeca035d4dd4e84fc25846d952da6297484afa0650a6f84c682e39df3a4123ca
+OPENSSL_ROOT=openssl-3.0.15
+OPENSSL_HASH=23c666d0edf20f14249b3d8f0368acaee9ab585b09e1de82107c66e1f3ec9533
 
 cd /tmp
 
@@ -41,7 +41,7 @@ else
 fi
 
 # Download
-curl -fsSLO http://www.openssl.org/source/${OPENSSL_ROOT}.tar.gz
+curl -fsSLO https://github.com/openssl/openssl/releases/download/${OPENSSL_ROOT}/${OPENSSL_ROOT}.tar.gz
 check_sha256sum ${OPENSSL_ROOT}.tar.gz ${OPENSSL_HASH}
 tar -xzf ${OPENSSL_ROOT}.tar.gz
 rm -rf ${OPENSSL_ROOT}.tar.gz
