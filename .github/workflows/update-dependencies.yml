@@ -26,7 +26,7 @@ jobs:
           dependency_nice: "OpenSSL"
     steps:
     - uses: actions/checkout@v4
-    - uses: wntrblm/nox@2024.04.15
+    - uses: wntrblm/nox@2024.10.09
     - name: "Run update: bump ${{ matrix.dependency_nice }}"
       id: bump
       run: |
