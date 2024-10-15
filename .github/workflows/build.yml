@@ -176,11 +176,11 @@ jobs:
   test_sdist:
     name: Test SDist with python ${{ matrix.python }}
     needs: [build_sdist]
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        python: ["3.7", "3.13"]
+        python: ["3.8", "3.13"]
 
     steps:
       - uses: actions/checkout@v4
