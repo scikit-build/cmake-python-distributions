@@ -76,6 +76,7 @@ musllinux-i686-image = "musllinux_1_1"
 musllinux-aarch64-image = "musllinux_1_1"
 musllinux-ppc64le-image = "musllinux_1_1"
 musllinux-s390x-image = "musllinux_1_1"
+musllinux-armv7l-image = "musllinux_1_2"
 
 [tool.cibuildwheel.macos.environment]
 MACOSX_DEPLOYMENT_TARGET = "10.10"
@@ -106,7 +107,7 @@ config-settings."cmake.define.RUN_CMAKE_TEST" = "ON"
 config-settings."cmake.define.RUN_CMAKE_TEST_EXCLUDE" = "BootstrapTest|ExportImport|RunCMake.install|RunCMake.RuntimePath|RunCMake.file-GET_RUNTIME_DEPENDENCIES"
 
 [[tool.cibuildwheel.overrides]]
-select = ["*linux_aarch64", "*linux_ppc64le", "*linux_s390x"]
+select = ["*linux_aarch64", "*linux_armv7l", "*linux_ppc64le", "*linux_s390x"]
 config-settings."cmake.define.OPENSSL_ROOT_DIR" = "/usr/local/ssl"
 config-settings."cmake.define.CMAKE_JOB_POOL_COMPILE" = "compile"
 config-settings."cmake.define.CMAKE_JOB_POOL_LINK" = "link"
