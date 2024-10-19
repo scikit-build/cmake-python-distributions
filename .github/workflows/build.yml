@@ -84,6 +84,10 @@ jobs:
             arch: "s390x"
             build: "musllinux_"
             use_qemu: true
+          - os: ubuntu-latest
+            arch: "armv7l"
+            build: "musllinux_"
+            use_qemu: true
           - os: windows-2019
             arch: "AMD64"
             build: ""

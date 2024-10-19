@@ -53,18 +53,19 @@ The following platforms are supported with binary wheels:
   |               | | 32-bit                 |
   +---------------+--------------------------+
   | Linux Intel   | | manylinux2010+ 64-bit  |
-  |               | | musllinux 64-bit       |
+  |               | | musllinux_1_1+ 64-bit  |
   |               | | manylinux2010+ 32-bit  |
-  |               | | musllinux 32-bit       |
+  |               | | musllinux_1_1+ 32-bit  |
   +---------------+--------------------------+
   | Linux ARM     | | manylinux2014+ AArch64 |
-  |               | | musllinux AArch64      |
+  |               | | musllinux_1_1+ AArch64 |
+  |               | | musllinux_1_2+ armv7l  |
   +---------------+--------------------------+
   | Linux PowerPC | | manylinux2014+ ppc64le |
-  |               | | musllinux ppc64le      |
+  |               | | musllinux_1_1+ ppc64le |
   +---------------+--------------------------+
   | Linux IBM Z   | | manylinux2014+ s390x   |
-  |               | | musllinux s390x        |
+  |               | | musllinux_1_1+ s390x   |
   +---------------+--------------------------+
   | macOS 10.10+  | Intel                    |
   +---------------+--------------------------+
