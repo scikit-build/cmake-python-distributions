@@ -52,6 +52,10 @@ def _program_exit(name: str, *args: str) -> NoReturn:
     os.execl(os.path.join(CMAKE_BIN_DIR, name), name, *args)
 
 
+def ccmake() -> NoReturn:
+    _program_exit('ccmake', *sys.argv[1:])
+
+
 def cmake() -> NoReturn:
     _program_exit('cmake', *sys.argv[1:])
 

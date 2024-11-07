@@ -272,7 +272,7 @@ set(CMAKE_EXE_LINKER_FLAGS \"-lstdc++ -lgcc -lrt\" CACHE STRING \"Initial cache\
         BUILD_ALWAYS 1
         ${_cmake_args}
         CMAKE_CACHE_ARGS
-          -DBUILD_CursesDialog:BOOL=OFF
+          -DBUILD_CursesDialog:BOOL=ON
           -DCMAKE_USE_OPENSSL:BOOL=ON
           -DBUILD_TESTING:BOOL=ON
           -DCMake_INSTALL_DEPENDENCIES:BOOL=ON
@@ -287,24 +287,6 @@ set(CMAKE_EXE_LINKER_FLAGS \"-lstdc++ -lgcc -lrt\" CACHE STRING \"Initial cache\
         )
 
         set(CMAKEPROJECT_BUILD_LAST_STEP "build")
-
-        find_program(STRIP_EXECUTABLE strip)
-        if(STRIP_EXECUTABLE)
-
-          set(cmake_executable "${CMakeProject_BINARY_DIR}/bin/cmake")
-          set(cpack_executable "${CMakeProject_BINARY_DIR}/bin/cpack")
-          set(ctest_executable "${CMakeProject_BINARY_DIR}/bin/ctest")
-
-          ExternalProject_Add_Step(CMakeProject-build strip_executables
-            DEPENDEES ${CMAKEPROJECT_BUILD_LAST_STEP}
-            COMMENT "Stripping CMake executables"
-            COMMAND ${STRIP_EXECUTABLE} ${cmake_executable}
-            COMMAND ${STRIP_EXECUTABLE} ${cpack_executable}
-            COMMAND ${STRIP_EXECUTABLE} ${ctest_executable}
-            USES_TERMINAL 1
-            )
-          set(CMAKEPROJECT_BUILD_LAST_STEP "strip_executables")
-        endif()
 
         if(RUN_CMAKE_TEST)
           include(ProcessorCount)
