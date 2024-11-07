@@ -1,8 +1,7 @@
 docutils
 funcparserlib>=1.0.0
 furo
-pillow<10
 pygments
 sphinx
-sphinxcontrib-blockdiag # old, not compatible with pillow 10+
+sphinxcontrib-mermaid
 tomli; python_version<"3.11"

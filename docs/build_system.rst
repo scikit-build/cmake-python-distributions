@@ -15,67 +15,77 @@ composed of multiple project called `external project`. Here is the list of `ext
 The flow chart represented below illustrates which external projects are included based on the configure
 options and describes the role of each one:
 
-.. blockdiag::
+.. mermaid::
     :align: center
-    :desctable:
 
-    blockdiag {
-        orientation = portrait
-        node_width = 200;
-        node_height = 60;
+    flowchart LR
+        subgraph OP[Outer Project]
+            style OP fill:#FFF0D7
+            configure["CMakeLists.tct"]
+            ask_download{"Download source?"}
+            download_source["Download Source archive"]
+            reuse_source_dir["Re-use source directory"]
+            ask_build{"Build from Source?"}
+            download_binaries["CMakeProject-binary-download"]
+            build_cmake["CMakeProject-build"]
+            strip_executables["Strip executables"]
+            ask_inner_build{"Which files to install?"}
+            install_pre_built["Install prebuilt binaries"]
+            install_cmake_project["Install CMake project"]
+
+            configure --> ask_download
+
+            subgraph EP1[ExternalProject: CMakeProject-src-download]
+                style EP1 fill:#E7CA92
+                ask_download -->|yes| download_source
+                ask_download -->|no| reuse_source_dir
+            end
+
+            download_source --> ask_build
+            reuse_source_dir --> ask_build
+
+            subgraph EP2[External Projects]
+                style EP2 fill:#E7CA92
+                ask_build -->|no| download_binaries
+                ask_build -->|yes| build_cmake
+                build_cmake --> strip_executables
+            end
+
+            download_binaries --> ask_inner_build
+            strip_executables --> ask_inner_build
+
+            subgraph IP[Inner Project: CMakePythonDistributions]
+                style IP fill:#a1acc2
+                ask_inner_build -->|no| install_pre_built
+                ask_inner_build -->|yes| install_cmake_project
+            end
+        end
 
 
-        group{
-            label = "Outer Project";
-            color = "#FFF0D7";
-
-            // properties
-            configure [shape = beginpoint, label = "CMakeLists", description="CMake configuration file"];
-            ask_download [label ="Download source ?", shape = diamond, description = "If option ``CMakeProject_SOURCE_DIR`` is set, skip source download."];
-            download_source [label ="Download Source archive", description = "External project downloading archives from https://cmake.org/files/."]
-            reuse_source_dir [label ="Re-use source directory", description = "Empty external project."]
-
-            // connections
-            configure ->ask_download
-
-            group{
-                label = "ExternalProject: CMakeProject-src-download";
-                color = "#E7CA92";
-                ask_download ->  download_source [label = "yes"];
-                ask_download -> reuse_source_dir  [label = "no"];
-            }
-            download_source -> ask_build
-            reuse_source_dir -> ask_build
-
-            // properties
-            ask_build [label = "Build from Source ?", shape = diamond, description = "Answer based on option ``BUILD_CMAKE_FROM_SOURCE``"];
-            download_binaries[label = "CMakeProject-binary-download", description = "External project downloading pre-built binary archives from https://cmake.org/files/."]
-            build_cmake[label = "CMakeProject-build", description = "External project building CMake from source."]
-            strip_executables[label = "Strip executables", description = "If possible, reduce wheel size stripping cmake, cpack and ctest executables"]
-
-            // connections
-            group{
-                label = "External Projects";
-                color = "#E7CA92";
-                ask_build -> download_binaries [label = "no"];
-                ask_build -> build_cmake [label = "yes"];
-                build_cmake -> strip_executables
-            }
-            download_binaries -> ask_inner_build
-            strip_executables -> ask_inner_build
-
-            // properties
-            ask_inner_build [label = "Which files to install?", shape = diamond, description = "Answer based on option ``BUILD_CMAKE_FROM_SOURCE``"];
-            install_pre_built[label = "Install prebuilt binaries", description = "Recursively glob all files and explicitly add install rules."];
-            install_cmake_project[label = "Install CMake project", description = "Achieved by including ``${CMakeProject_BINARY_DIR}/cmake_install.cmake``."];
-
-            group{
-                label = "Inner Project: CMakePythonDistributions";
-                color = "#67789A";
-
-                // connections
-                ask_inner_build -> install_pre_built [label = "no"];
-                ask_inner_build -> install_cmake_project [label = "yes"];
-            }
-        }
-    }
++----------------------------------------+--------------------------------------------------------------------------+
+| **Node Title**                         | **Description**                                                          |
++========================================+==========================================================================+
+| CMakeLists                             | CMake configuration file                                                 |
++----------------------------------------+--------------------------------------------------------------------------+
+| Download source ?                      | If option ``CMakeProject_SOURCE_DIR`` is set, skip source download.      |
++----------------------------------------+--------------------------------------------------------------------------+
+| Download Source archive                | External project downloading archives from https://cmake.org/files/.     |
++----------------------------------------+--------------------------------------------------------------------------+
+| Re-use source directory                | Empty external project.                                                  |
++----------------------------------------+--------------------------------------------------------------------------+
+| Build from Source ?                    | Answer based on option ``BUILD_CMAKE_FROM_SOURCE``                       |
++----------------------------------------+--------------------------------------------------------------------------+
+| CMakeProject-binary-download           | External project downloading pre-built binary archives from              |
+|                                        | https://cmake.org/files/.                                                |
++----------------------------------------+--------------------------------------------------------------------------+
+| CMakeProject-build                     | External project building CMake from source.                             |
++----------------------------------------+--------------------------------------------------------------------------+
+| Strip executables                      | If possible, reduce wheel size stripping cmake, cpack and ctest          |
+|                                        | executables                                                              |
++----------------------------------------+--------------------------------------------------------------------------+
+| Which files to install?                | Answer based on option ``BUILD_CMAKE_FROM_SOURCE``                       |
++----------------------------------------+--------------------------------------------------------------------------+
+| Install prebuilt binaries              | Recursively glob all files and explicitly add install rules.             |
++----------------------------------------+--------------------------------------------------------------------------+
+| Install CMake project                  | Achieved by including ``${CMakeProject_BINARY_DIR}/cmake_install.cmake`` |
++----------------------------------------+--------------------------------------------------------------------------+
