@@ -46,14 +46,19 @@ CMAKE_SHARE_DIR = os.path.join(CMAKE_DATA, 'share')
 def _program(name: str, args: Iterable[str]) -> int:
     return subprocess.call([os.path.join(CMAKE_BIN_DIR, name), *args], close_fds=False)
 
+def _program_exit(name: str, *args: str) -> NoReturn:
+    if sys.platform.startswith("win"):
+        raise SystemExit(_program(name, args))
+    os.execl(os.path.join(CMAKE_BIN_DIR, name), name, *args)
+
 
 def cmake() -> NoReturn:
-    raise SystemExit(_program('cmake', sys.argv[1:]))
+    _program_exit('cmake', *sys.argv[1:])
 
 
 def cpack() -> NoReturn:
-    raise SystemExit(_program('cpack', sys.argv[1:]))
+    _program_exit('cpack', *sys.argv[1:])
 
 
 def ctest() -> NoReturn:
-    raise SystemExit(_program('ctest', sys.argv[1:]))
+    _program_exit('ctest', *sys.argv[1:])
