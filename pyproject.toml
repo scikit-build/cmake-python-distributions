@@ -4,7 +4,7 @@ build-backend = "scikit_build_core.build"
 
 [project]
 name = "cmake"
-version = "3.31.0"
+version = "3.31.0.1"
 description = "CMake is an open-source, cross-platform family of tools designed to build, test and package software"
 keywords = ["CMake", "build", "c++", "fortran", "cross-platform", "cross-compilation"]
 readme = "README.rst"
