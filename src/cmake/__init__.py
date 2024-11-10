@@ -49,7 +49,8 @@ def _program(name: str, args: Iterable[str]) -> int:
 def _program_exit(name: str, *args: str) -> NoReturn:
     if sys.platform.startswith("win"):
         raise SystemExit(_program(name, args))
-    os.execl(os.path.join(CMAKE_BIN_DIR, name), name, *args)
+    cmake_exe = os.path.join(CMAKE_BIN_DIR, name)
+    os.execl(cmake_exe, cmake_exe, *args)
 
 
 def ccmake() -> NoReturn:
