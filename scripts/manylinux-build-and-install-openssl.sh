@@ -33,7 +33,7 @@ if ! perl -e 'use 5.10.0' &> /dev/null; then
 	popd
 	export PATH=/tmp/perl-openssl/bin:${PATH}
 else
-	if [ "${AUDITWHEEL_PLAT:0:9}" == "manylinux" ]; then
+	if [ "${AUDITWHEEL_PLAT:0:9}" == "manylinux" ] && command -v yum >/dev/null 2>&1; then
 		# more perl modules are needed than the bare minimum already installed in CentOS
 		# c.f. https://github.com/openssl/openssl/blob/openssl-3.0.0/NOTES-PERL.md#general-notes
 		yum -y install perl-core
