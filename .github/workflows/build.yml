@@ -86,6 +86,10 @@ jobs:
             use_qemu: true
           - os: ubuntu-latest
             arch: "armv7l"
+            build: "manylinux_"
+            use_qemu: true
+          - os: ubuntu-latest
+            arch: "armv7l"
             build: "musllinux_"
             use_qemu: true
           - os: windows-2019
@@ -118,7 +122,7 @@ jobs:
         if: matrix.use_qemu && fromJSON(env.USE_QEMU)
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@v2.21
+        uses: pypa/cibuildwheel@v2.22
         if: (!matrix.use_qemu) || fromJSON(env.USE_QEMU)
         env:
           CIBW_ARCHS: "${{ matrix.arch }}"
