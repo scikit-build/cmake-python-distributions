@@ -151,7 +151,7 @@ jobs:
           fetch-depth: 0  # required for versioneer to find tags
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@v2.21
+        uses: pypa/cibuildwheel@v2.22
         env:
           CIBW_ARCHS: "${{ matrix.arch }}"
           CIBW_BUILD: "cp39-manylinux_*"
@@ -192,7 +192,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v3
+      - uses: astral-sh/setup-uv@v4
 
       - name: Setup environment
         run: |
