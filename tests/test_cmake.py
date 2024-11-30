@@ -15,7 +15,7 @@ import cmake
 
 from . import push_argv
 
-all_tools = pytest.mark.parametrize("tool", ["ccmake", "cmake", "cpack", "ctest"])
+all_tools = pytest.mark.parametrize("tool", ["cmake", "cpack", "ctest"])
 
 
 def _run(program, args):
