@@ -70,6 +70,11 @@ version = "${version}"
 if.env.CMAKE_PYTHON_DIST_FORCE_NINJA_DEP = true
 ninja.make-fallback = false
 
+[[tool.scikit-build.overrides]]
+if.state = "metadata_wheel"
+wheel.cmake = false
+wheel.platlib = true
+
 
 [tool.cibuildwheel]
 build = "cp39-*"
