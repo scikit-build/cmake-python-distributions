@@ -48,70 +48,94 @@ def get_requires_for_build_wheel(
 
 def _bootstrap_build(temp_path: str, config_settings: dict[str, list[str] | str] | None = None) -> str:
     import hashlib
+    import platform
     import re
     import shutil
     import subprocess
     import tarfile
     import urllib.request
+    import zipfile
     from pathlib import Path
 
     env = os.environ.copy()
     temp_path_ = Path(temp_path)
 
-    if "MAKE" not in env:
-        make_path = None
-        make_candidates = ("gmake", "make", "smake")
-        for candidate in make_candidates:
-            make_path = shutil.which(candidate)
-            if make_path is not None:
-                break
-        if make_path is None:
-            msg = f"Could not find a make program. Tried {make_candidates!r}"
-            raise ValueError(msg)
-        env["MAKE"] = make_path
-    make_path = env["MAKE"]
-
-    archive_path = temp_path_
+    archive_dir = temp_path_
     if config_settings:
-        archive_path = Path(config_settings.get("cmake.define.CMakePythonDistributions_ARCHIVE_DOWNLOAD_DIR", archive_path))
-        archive_path.mkdir(parents=True, exist_ok=True)
+        archive_dir = Path(config_settings.get("cmake.define.CMakePythonDistributions_ARCHIVE_DOWNLOAD_DIR", archive_dir))
+        archive_dir.mkdir(parents=True, exist_ok=True)
+
+    if os.name == "posix":
+        if "MAKE" not in env:
+            make_path = None
+            make_candidates = ("gmake", "make", "smake")
+            for candidate in make_candidates:
+                make_path = shutil.which(candidate)
+                if make_path is not None:
+                    break
+            if make_path is None:
+                msg = f"Could not find a make program. Tried {make_candidates!r}"
+                raise ValueError(msg)
+            env["MAKE"] = make_path
+        make_path = env["MAKE"]
+        kind = "unix_source"
+    else:
+        assert os.name == "nt"
+        machine = platform.machine()
+        kinds = {
+            "x86": "win32_binary",
+            "AMD64": "win64_binary",
+            "ARM64": "winarm64_binary",
+        }
+        if machine not in kinds:
+            msg = f"Could not find CMake required to build on a {machine} system"
+            raise ValueError(msg)
+        kind = kinds[machine]
+
 
     cmake_urls = Path("CMakeUrls.cmake").read_text()
-    source_url = re.findall(r'set\(unix_source_url\s+"(?P<data>.*)"\)$', cmake_urls, flags=re.MULTILINE)[0]
-    source_sha256 = re.findall(r'set\(unix_source_sha256\s+"(?P<data>.*)"\)$', cmake_urls, flags=re.MULTILINE)[0]
+    archive_url = re.findall(rf'set\({kind}_url\s+"(?P<data>.*)"\)$', cmake_urls, flags=re.MULTILINE)[0]
+    archive_sha256 = re.findall(rf'set\({kind}_sha256\s+"(?P<data>.*)"\)$', cmake_urls, flags=re.MULTILINE)[0]
 
-    tarball_name = source_url.rsplit("/", maxsplit=1)[1]
-    assert tarball_name.endswith(".tar.gz")
-    source_tarball = archive_path / tarball_name
-    if not source_tarball.exists():
-        with urllib.request.urlopen(source_url) as response:
-            source_tarball.write_bytes(response.read())
+    archive_name = archive_url.rsplit("/", maxsplit=1)[1]
+    archive_path = archive_dir / archive_name
+    if not archive_path.exists():
+        with urllib.request.urlopen(archive_url) as response:
+            archive_path.write_bytes(response.read())
 
-    sha256 = hashlib.sha256(source_tarball.read_bytes()).hexdigest()
-    if source_sha256.lower() != sha256.lower():
-        msg = f"Invalid sha256 for {source_url!r}. Expected {source_sha256!r}, got {sha256!r}"
+    sha256 = hashlib.sha256(archive_path.read_bytes()).hexdigest()
+    if archive_sha256.lower() != sha256.lower():
+        msg = f"Invalid sha256 for {archive_url!r}. Expected {archive_sha256!r}, got {sha256!r}"
         raise ValueError(msg)
 
-    tar_filter_kwargs = {"filter": "tar"} if hasattr(tarfile, "tar_filter") else {}
-    with tarfile.open(source_tarball) as tar:
-        tar.extractall(path=temp_path_, **tar_filter_kwargs)
+    if os.name == "posix":
+        assert archive_name.endswith(".tar.gz")
+        tar_filter_kwargs = {"filter": "tar"} if hasattr(tarfile, "tar_filter") else {}
+        with tarfile.open(archive_path) as tar:
+            tar.extractall(path=temp_path_, **tar_filter_kwargs)
 
-    parallel_str = env.get("CMAKE_BUILD_PARALLEL_LEVEL", "1")
-    parallel = max(0, int(parallel_str) if parallel_str.isdigit() else 1) or os.cpu_count() or 1
+        parallel_str = env.get("CMAKE_BUILD_PARALLEL_LEVEL", "1")
+        parallel = max(0, int(parallel_str) if parallel_str.isdigit() else 1) or os.cpu_count() or 1
 
-    bootstrap_path = next(temp_path_.glob("cmake-*/bootstrap"))
-    prefix_path = temp_path_ / "cmake-install"
-    bootstrap_args = [f"--prefix={prefix_path}", "--no-qt-gui", "--no-debugger", "--parallel={parallel}", "--", "-DBUILD_TESTING=OFF", "-DBUILD_CursesDialog:BOOL=OFF"]
-    previous_cwd = Path().absolute()
-    os.chdir(bootstrap_path.parent)
-    try:
-        subprocess.run([bootstrap_path, *bootstrap_args], env=env, check=True)
-        subprocess.run([make_path, "-j", f"{parallel}"], env=env, check=True)
-        subprocess.run([make_path, "install"], env=env, check=True)
-    finally:
-        os.chdir(previous_cwd)
+        bootstrap_path = next(temp_path_.glob("cmake-*/bootstrap"))
+        prefix_path = temp_path_ / "cmake-install"
+        cmake_path = prefix_path / "bin" / "cmake"
+        bootstrap_args = [f"--prefix={prefix_path}", "--no-qt-gui", "--no-debugger", "--parallel={parallel}", "--", "-DBUILD_TESTING=OFF", "-DBUILD_CursesDialog:BOOL=OFF"]
+        previous_cwd = Path().absolute()
+        os.chdir(bootstrap_path.parent)
+        try:
+            subprocess.run([bootstrap_path, *bootstrap_args], env=env, check=True)
+            subprocess.run([make_path, "-j", f"{parallel}"], env=env, check=True)
+            subprocess.run([make_path, "install"], env=env, check=True)
+        finally:
+            os.chdir(previous_cwd)
+    else:
+        assert archive_name.endswith(".zip")
+        with zipfile.ZipFile(archive_path) as zip_:
+            zip_.extractall(path=temp_path_)
+        cmake_path = next(temp_path_.glob("cmake-*/bin/cmake.exe"))
 
-    return str(prefix_path / "bin" / "cmake")
+    return str(cmake_path)
 
 
 def build_wheel(
@@ -124,7 +148,7 @@ def build_wheel(
     try:
         return _orig.build_wheel(wheel_directory, config_settings, metadata_directory)
     except CMakeNotFoundError:
-        if os.name != "posix":
+        if os.name not in {"posix", "nt"}:
             raise
     # Let's try bootstrapping CMake
     import tempfile
