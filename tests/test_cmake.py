@@ -15,7 +15,7 @@ import cmake
 
 from . import push_argv
 
-all_tools = pytest.mark.parametrize("tool", ["cmake", "cpack", "ctest"])
+all_tools = pytest.mark.parametrize("tool", ["ccmake", "cmake", "cpack", "ctest"])
 
 
 def _run(program, args):
@@ -27,11 +27,13 @@ def _run(program, args):
 
 
 @all_tools
-def test_cmake_module(tool):
+def test_cmake_module(tool, monkeypatch):
+    monkeypatch.setattr(sys, "platform", "win32")  # do not use os.execl
     _run(tool, ["--version"])
 
 
-def test_cmake_https(tmpdir):
+def test_cmake_https(tmpdir, monkeypatch):
+    monkeypatch.setattr(sys, "platform", "win32")  # do not use os.execl
     test_script = tmpdir.join("cmake-test-https-download.cmake")
     test_script.write(textwrap.dedent(
         """
