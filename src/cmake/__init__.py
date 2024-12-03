@@ -18,7 +18,7 @@ if TYPE_CHECKING:
     from typing import Iterable, NoReturn
 
 
-__all__ = ["__version__", "CMAKE_DATA", "CMAKE_BIN_DIR", "CMAKE_DOC_DIR", "CMAKE_SHARE_DIR", "cmake", "cpack", "ctest"]
+__all__ = ["CMAKE_BIN_DIR", "CMAKE_DATA", "CMAKE_DOC_DIR", "CMAKE_SHARE_DIR", "__version__", "cmake", "cpack", "ctest"]
 
 
 def __dir__() -> list[str]:
