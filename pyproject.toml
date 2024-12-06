@@ -1,6 +1,7 @@
 [build-system]
-requires = ["scikit-build-core"]
-build-backend = "scikit_build_core.build"
+requires = ["scikit-build-core>=0.10"]
+build-backend = "backend"
+backend-path = ["_build_backend"]
 
 [project]
 name = "cmake"
@@ -51,10 +52,10 @@ cpack = "cmake:cpack"
 ctest = "cmake:ctest"
 
 [tool.scikit-build]
-minimum-version = "0.8"
+minimum-version = "build-system.requires"
 build-dir = "build/{wheel_tag}"
-cmake.version = ""  # We are cmake, so don't request cmake
-ninja.make-fallback = false
+cmake.version = ">=3.13"  # Since 3.24.0, CMake requires CMake 3.13+ to build itself
+ninja.make-fallback = true
 wheel.py-api = "py3"
 wheel.expand-macos-universal-tags = true
 wheel.install-dir = "cmake/data"
@@ -65,6 +66,10 @@ template = '''
 version = "${version}"
 '''
 
+[[tool.scikit-build.overrides]]
+if.env.CMAKE_PYTHON_DIST_FORCE_NINJA_DEP = true
+ninja.make-fallback = false
+
 
 [tool.cibuildwheel]
 build = "cp39-*"
@@ -72,6 +77,7 @@ test-extras = "test"
 test-command = "pytest {project}/tests"
 build-verbosity = 1
 build-frontend = "build[uv]"
+environment = { CMAKE_PYTHON_DIST_FORCE_NINJA_DEP = "1" }
 musllinux-x86_64-image = "musllinux_1_1"
 musllinux-i686-image = "musllinux_1_1"
 musllinux-aarch64-image = "musllinux_1_1"
@@ -79,8 +85,10 @@ musllinux-ppc64le-image = "musllinux_1_1"
 musllinux-s390x-image = "musllinux_1_1"
 musllinux-armv7l-image = "musllinux_1_2"
 
-[tool.cibuildwheel.macos.environment]
-MACOSX_DEPLOYMENT_TARGET = "10.10"
+[[tool.cibuildwheel.overrides]]
+select = "*-macos*"
+inherit.environment = "append"
+environment = { MACOSX_DEPLOYMENT_TARGET = "10.10" }
 
 [tool.cibuildwheel.linux]
 before-all = "./scripts/manylinux-build-and-install-openssl.sh"
