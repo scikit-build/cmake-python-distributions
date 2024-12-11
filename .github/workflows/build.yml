@@ -219,9 +219,65 @@ jobs:
       - name: Test installed SDist
         run: .venv/bin/pytest ./tests
 
+  bootstrap_build:
+    name: Source only build on ${{ matrix.os }}
+    needs: [lint]
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ["ubuntu-latest", "windows-latest", "macos-latest"]
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        id: python
+        with:
+          python-version: "3.x"
+
+      - name: Remove cmake and ninja
+        shell: bash
+        run: |
+          # Remove cmake and ninja
+          set -euxo pipefail
+          # https://github.com/scikit-build/scikit-build-core/blob/3943920fa267dc83f9295279bea1c774c0916f13/src/scikit_build_core/program_search.py#L51
+          # https://github.com/scikit-build/scikit-build-core/blob/3943920fa267dc83f9295279bea1c774c0916f13/src/scikit_build_core/program_search.py#L70
+          for TOOL in cmake cmake3 ninja-build ninja samu; do
+            while which ${TOOL}; do
+              if [ "$RUNNER_OS" == "Windows" ]; then
+                rm -f "$(which ${TOOL})"
+              else
+                sudo rm -f $(which -a ${TOOL})
+              fi
+            done
+          done
+
+      - name: Build SDist
+        run: pipx run --python '${{ steps.python.outputs.python-path }}' build --sdist
+
+      - name: Install dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libssl-dev
+
+      - name: Install SDist
+        shell: bash
+        env:
+          CMAKE_ARGS: "-DBUILD_CMAKE_FROM_SOURCE:BOOL=OFF"
+          CMAKE_BUILD_PARALLEL_LEVEL: "4"
+          MACOSX_DEPLOYMENT_TARGET: "10.10"
+        run: |
+          python -m pip install -v --no-binary='cmake,ninja' dist/*.tar.gz
+          rm -rf dist
+
+      - name: Test installed SDist
+        shell: bash
+        run: python -m pip install pytest pytest-cov && pytest ./tests
+
   check_dist:
     name: Check dist
-    needs: [build_wheels, build_manylinux2010_wheels, build_sdist, test_sdist]
+    needs: [build_wheels, build_manylinux2010_wheels, build_sdist, test_sdist, bootstrap_build]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
