@@ -40,7 +40,12 @@ def get_openssl_sha256(version: str, verbose: bool=False) -> str:
         f"https://github.com/openssl/openssl/releases/download/openssl-{version}/openssl-{version}.tar.gz.sha256"
     )
     with _log(f"Collecting SHA256 from '{files_base_url}'"):
-        sha256 = requests.get(files_base_url).content.decode("ascii").strip()
+        parts = requests.get(files_base_url).content.decode("ascii").strip().split()
+        sha256 = parts[0]
+        if len(parts) > 1:
+            expected_parts = 2  #  f"{sha256} {filename}""
+            assert len(parts) == expected_parts
+            assert parts[1] == f"openssl-{version}.tar.gz"
         if verbose:
             print("got sha256:", sha256)
         return sha256
