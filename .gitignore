@@ -67,3 +67,6 @@ wheelhouse/
 
 # Version
 _version.py
+
+CMakeCache.txt
+CMakeFiles

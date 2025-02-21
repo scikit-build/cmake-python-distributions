@@ -1,41 +1,44 @@
+# /// script
+# dependencies = ["nox>=2025.2.9"]
+# ///
+
 import argparse
 import re
 from pathlib import Path
 
 import nox
 
-nox.needs_version = ">=2024.3.2"
+nox.needs_version = ">=2025.2.9"
 nox.options.default_venv_backend = "uv|virtualenv"
-nox.options.sessions = ["lint", "build", "tests"]
 
 BUILD_ENV = {
     "MACOSX_DEPLOYMENT_TARGET": "10.10",
     "ARCHFLAGS": "-arch x86_64 -arch arm64",
 }
 
-built = ""
+wheel = ""
 
 
 @nox.session
 def build(session: nox.Session) -> str:
     """
-    Make an SDist and a wheel. Only runs once.
+    Make an SDist and a wheel.
     """
-    global built
-    if not built:
-        session.log(
-            "The files produced locally by this job are not intended to be redistributable"
-        )
-        session.install("build")
-        tmpdir = session.create_tmp()
-        session.run("python", "-m", "build", "--outdir", tmpdir, env=BUILD_ENV)
-        (wheel_path,) = Path(tmpdir).glob("*.whl")
-        (sdist_path,) = Path(tmpdir).glob("*.tar.gz")
-        Path("dist").mkdir(exist_ok=True)
-        wheel_path.rename(f"dist/{wheel_path.name}")
-        sdist_path.rename(f"dist/{sdist_path.name}")
-        built = wheel_path.name
-    return built
+    session.log(
+        "The files produced locally by this job are not intended to be redistributable"
+    )
+    extra = ["--installer=uv"] if session.venv_backend == "uv" else []
+    session.install("build")
+    tmpdir = session.create_tmp()
+    session.run("python", "-m", "build", "--outdir", tmpdir, *extra, env=BUILD_ENV)
+    (wheel_path,) = Path(tmpdir).glob("*.whl")
+    (sdist_path,) = Path(tmpdir).glob("*.tar.gz")
+    Path("dist").mkdir(exist_ok=True)
+    wheel_path.rename(f"dist/{wheel_path.name}")
+    sdist_path.rename(f"dist/{sdist_path.name}")
+
+    global wheel
+    wheel = f"dist/{sdist_path.name}"
 
 
 @nox.session
@@ -47,24 +50,26 @@ def lint(session: nox.Session) -> str:
     session.run("pre-commit", "run", "-a")
 
 
-@nox.session
+@nox.session(requires=["build"])
 def tests(session: nox.Session) -> str:
     """
     Run the tests.
     """
-    wheel = build(session)
-    session.install(f"./dist/{wheel}[test]")
+    pyproject = nox.project.load_toml("pyproject.toml")
+    deps = nox.project.dependency_groups(pyproject, "test")
+    session.install(wheel, *deps)
     session.run("pytest", *session.posargs)
 
 
-@nox.session(reuse_venv=True)
+@nox.session(reuse_venv=True, default=False)
 def docs(session: nox.Session) -> None:
     """
     Build the docs. Pass "--non-interactive" to avoid serve. Pass "-- -b linkcheck" to check links.
     """
+    pyproject = nox.project.load_toml("pyproject.toml")
+    deps = nox.project.dependency_groups(pyproject, "docs")
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--serve", action="store_true", help="Serve after building")
     parser.add_argument(
         "-b", dest="builder", default="html", help="Build target (default: html)"
     )
@@ -72,7 +77,7 @@ def docs(session: nox.Session) -> None:
     serve = args.builder == "html" and session.interactive
 
     extra_installs = ["sphinx-autobuild"] if serve else []
-    session.install("-r", "docs/requirements.txt", *extra_installs)
+    session.install(*deps, *extra_installs)
     session.chdir("docs")
 
     if args.builder == "linkcheck":
@@ -130,7 +135,7 @@ def _bump(session: nox.Session, name: str, repository: str, branch: str, script:
         )
 
 
-@nox.session
+@nox.session(default=False)
 def bump(session: nox.Session) -> None:
     """
     Set to a new version, use -- <version>, otherwise will use the latest version.
@@ -146,7 +151,7 @@ def bump(session: nox.Session) -> None:
     _bump(session, "CMake", "kitware/cmake", "", "scripts/update_cmake_version.py", files)
 
 
-@nox.session(name="bump-openssl")
+@nox.session(name="bump-openssl", default=False)
 def bump_openssl(session: nox.Session) -> None:
     """
     Set openssl to a new version, use -- <version>, otherwise will use the latest version.
@@ -162,7 +167,7 @@ def _get_version() -> str:
     return next(iter(re.finditer(r'^version = "([\d\.]+)"$', txt, flags=re.MULTILINE))).group(1)
 
 
-@nox.session(venv_backend="none")
+@nox.session(venv_backend="none", default=False)
 def tag_release(session: nox.Session) -> None:
     """
     Print instructions for tagging a release and pushing it to GitHub.
@@ -174,7 +179,7 @@ def tag_release(session: nox.Session) -> None:
     print(f"git push origin {current_version}")
 
 
-@nox.session(venv_backend="none")
+@nox.session(venv_backend="none", default=False)
 def cmake_version(session: nox.Session) -> None:  # noqa: ARG001
     """
     Print upstream cmake version.
@@ -184,7 +189,7 @@ def cmake_version(session: nox.Session) -> None:  # noqa: ARG001
     print(".".join(current_version.split(".")[:3]))
 
 
-@nox.session(venv_backend="none")
+@nox.session(venv_backend="none", default=False)
 def openssl_version(session: nox.Session) -> None:  # noqa: ARG001
     """
     Print upstream OpenSSL version.

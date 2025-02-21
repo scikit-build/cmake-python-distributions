@@ -3,14 +3,12 @@
 
 version: 2
 
-sphinx:
-   configuration: docs/conf.py
-
 build:
   os: ubuntu-22.04
   tools:
     python: "3.12"
-
-python:
-  install:
-    - requirements: docs/requirements.txt
+  commands:
+    - asdf plugin add uv
+    - asdf install uv latest
+    - asdf global uv latest
+    - uv run --only-group docs sphinx-build -T -b html -d docs/_build/doctrees -D language=en docs $READTHEDOCS_OUTPUT/html
