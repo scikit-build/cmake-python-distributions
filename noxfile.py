@@ -38,7 +38,7 @@ def build(session: nox.Session) -> str:
     sdist_path.rename(f"dist/{sdist_path.name}")
 
     global wheel
-    wheel = f"dist/{sdist_path.name}"
+    wheel = f"dist/{wheel_path.name}"
 
 
 @nox.session

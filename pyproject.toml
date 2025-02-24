@@ -48,7 +48,7 @@ ctest = "cmake:ctest"
 [dependency-groups]
 test = [
   "coverage>=4.2",
-  "pytest>=3.0.3",
+  "pytest>=6",
   "pytest-cov>=2.4.0",
 ]
 docs = [
@@ -86,6 +86,11 @@ ninja.make-fallback = false
 if.state = "metadata_wheel"
 wheel.cmake = false
 wheel.platlib = true
+
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+testpaths = ["tests"]
 
 
 [tool.cibuildwheel]
