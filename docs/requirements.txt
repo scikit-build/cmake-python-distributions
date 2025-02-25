@@ -1,7 +1,0 @@
-docutils
-funcparserlib>=1.0.0
-furo
-pygments
-sphinx
-sphinxcontrib-mermaid
-tomli; python_version<"3.11"
