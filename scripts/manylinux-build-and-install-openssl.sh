@@ -48,7 +48,7 @@ rm -rf ${OPENSSL_ROOT}.tar.gz
 
 # Configure
 pushd ${OPENSSL_ROOT}
-./config no-shared -fPIC --prefix=/usr/local/ssl --openssldir=/usr/local/ssl > /dev/null
+./config no-shared no-tests -fPIC --prefix=/usr/local/ssl --openssldir=/usr/local/ssl > /dev/null
 
 # Build
 make -j$(nproc) > /dev/null
