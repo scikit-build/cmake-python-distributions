@@ -99,6 +99,7 @@ test-groups = ["test"]
 test-command = "pytest {project}/tests"
 build-verbosity = 1
 build-frontend = "build[uv]"
+config-settings."cmake.define.RUN_CMAKE_TEST" = "ON"
 environment = { CMAKE_PYTHON_DIST_FORCE_NINJA_DEP = "1" }
 musllinux-x86_64-image = "musllinux_1_1"
 musllinux-i686-image = "musllinux_1_1"
@@ -112,26 +113,21 @@ select = "*-macos*"
 inherit.environment = "append"
 environment = { MACOSX_DEPLOYMENT_TARGET = "10.10" }
 
-[tool.cibuildwheel.linux]
-before-all = "./scripts/manylinux-build-and-install-openssl.sh"
-
-[tool.cibuildwheel.config-settings]
-"cmake.define.RUN_CMAKE_TEST" = "ON"
-
-[tool.cibuildwheel.linux.config-settings]
-"cmake.define.OPENSSL_ROOT_DIR" = "/usr/local/ssl"
-"cmake.define.CMAKE_JOB_POOL_COMPILE" = "compile"
-"cmake.define.CMAKE_JOB_POOL_LINK" = "link"
-"cmake.define.CMAKE_JOB_POOLS" = "compile=4;link=1"
-"cmake.define.RUN_CMAKE_TEST" = "ON"
-
 [[tool.cibuildwheel.overrides]]
-select = ["*-musllinux_*",]
+select = "*-*linux*"
+before-all = "./scripts/manylinux-build-and-install-openssl.sh"
+inherit.environment = "prepend"
+environment = { PKG_CONFIG_PATH = "/usr/local/ssl/lib/pkgconfig" }
+inherit.config-settings = "prepend"
 config-settings."cmake.define.OPENSSL_ROOT_DIR" = "/usr/local/ssl"
+config-settings."cmake.define.OPENSSL_USE_STATIC_LIBS" = "ON"
 config-settings."cmake.define.CMAKE_JOB_POOL_COMPILE" = "compile"
 config-settings."cmake.define.CMAKE_JOB_POOL_LINK" = "link"
 config-settings."cmake.define.CMAKE_JOB_POOLS" = "compile=4;link=1"
-config-settings."cmake.define.RUN_CMAKE_TEST" = "ON"
+
+[[tool.cibuildwheel.overrides]]
+select = ["*-musllinux_*",]
+inherit.config-settings = "append"
 # disable some tests
 # - BootstrapTest fails with custom OpenSSL and probably does not make much sense for this project
 # - ExportImport|RunCMake.install|RunCMake.file-GET_RUNTIME_DEPENDENCIES: c.f. https://discourse.cmake.org/t/cmake-test-suite-failing-on-alpine-linux/5064
@@ -139,10 +135,7 @@ config-settings."cmake.define.RUN_CMAKE_TEST_EXCLUDE" = "BootstrapTest|ExportImp
 
 [[tool.cibuildwheel.overrides]]
 select = ["*linux_ppc64le", "*linux_s390x"]
-config-settings."cmake.define.OPENSSL_ROOT_DIR" = "/usr/local/ssl"
-config-settings."cmake.define.CMAKE_JOB_POOL_COMPILE" = "compile"
-config-settings."cmake.define.CMAKE_JOB_POOL_LINK" = "link"
-config-settings."cmake.define.CMAKE_JOB_POOLS" = "compile=4;link=1"
+inherit.config-settings = "append"
 # disable tests on those platforms, QEMU is taking to long for jobs to pass on GHA
 config-settings."cmake.define.RUN_CMAKE_TEST" = "OFF"
 

@@ -241,6 +241,13 @@ if(CMakePythonDistributions_SUPERBUILD)
         message(STATUS "SuperBuild -   CMakeProject-build - OPENSSL_ROOT_DIR: ${OPENSSL_ROOT_DIR}")
       endif()
 
+      if(DEFINED OPENSSL_USE_STATIC_LIBS)
+        list(APPEND _cmake_cache_args
+          -DOPENSSL_USE_STATIC_LIBS:BOOL=${OPENSSL_USE_STATIC_LIBS}
+          )
+        message(STATUS "SuperBuild -   CMakeProject-build - OPENSSL_USE_STATIC_LIBS: ${OPENSSL_USE_STATIC_LIBS}")
+      endif()
+
       if(DEFINED CMAKE_CXX_STANDARD)
         list(APPEND _cmake_cache_args
           -DCMAKE_CXX_STANDARD:STRING=${CMAKE_CXX_STANDARD}
