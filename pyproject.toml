@@ -126,12 +126,21 @@ config-settings."cmake.define.CMAKE_JOB_POOL_LINK" = "link"
 config-settings."cmake.define.CMAKE_JOB_POOLS" = "compile=4;link=1"
 
 [[tool.cibuildwheel.overrides]]
-select = ["*-musllinux_*",]
+select = ["*-musllinux_*"]
 inherit.config-settings = "append"
 # disable some tests
 # - BootstrapTest fails with custom OpenSSL and probably does not make much sense for this project
 # - ExportImport|RunCMake.install|RunCMake.file-GET_RUNTIME_DEPENDENCIES: c.f. https://discourse.cmake.org/t/cmake-test-suite-failing-on-alpine-linux/5064
 config-settings."cmake.define.RUN_CMAKE_TEST_EXCLUDE" = "BootstrapTest|ExportImport|RunCMake.install|RunCMake.RuntimePath|RunCMake.file-GET_RUNTIME_DEPENDENCIES"
+
+[[tool.cibuildwheel.overrides]]
+select = ["*-musllinux_armv7l"]
+inherit.config-settings = "append"
+# disable some tests
+# - BootstrapTest fails with custom OpenSSL and probably does not make much sense for this project
+# - ExportImport|RunCMake.install|RunCMake.file-GET_RUNTIME_DEPENDENCIES: c.f. https://discourse.cmake.org/t/cmake-test-suite-failing-on-alpine-linux/5064
+# - CTestTestFdSetSize fails on gcc14+ with "error: implicit declaration of function 'usleep'""
+config-settings."cmake.define.RUN_CMAKE_TEST_EXCLUDE" = "BootstrapTest|CTestTestFdSetSize|ExportImport|RunCMake.install|RunCMake.RuntimePath|RunCMake.file-GET_RUNTIME_DEPENDENCIES"
 
 [[tool.cibuildwheel.overrides]]
 select = ["*linux_ppc64le", "*linux_s390x"]
