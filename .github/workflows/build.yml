@@ -115,7 +115,10 @@ jobs:
         with:
           fetch-depth: 0  # required for versioneer to find tags
 
-      - uses: yezz123/setup-uv@v4
+      - uses: astral-sh/setup-uv@v5
+        if: (!matrix.use_qemu) || fromJSON(env.USE_QEMU)
+        with:
+          enable-cache: false
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3.6.0
@@ -193,11 +196,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: false
 
       - name: Setup environment
         run: |
           uv venv --python ${{ matrix.python }}
-          uv pip install pytest pytest-cov
+          uv pip install --group test
 
       - name: Install dependencies
         run: |
