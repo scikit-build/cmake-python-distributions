@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.15...4.0)
 
 #
 # For more details, see docs/building.rst
@@ -70,7 +70,7 @@ if(CMakePythonDistributions_SUPERBUILD)
     set(binary_archive "linux64_binary")
   endif()
   if(APPLE)
-    if("${CMAKE_OSX_DEPLOYMENT_TARGET}" VERSION_LESS "10.10")
+    if(CMAKE_OSX_DEPLOYMENT_TARGET AND "${CMAKE_OSX_DEPLOYMENT_TARGET}" VERSION_LESS "10.10")
       message(FATAL_ERROR "Unsupported macOS deployment target: ${CMAKE_OSX_DEPLOYMENT_TARGET} is less than 10.10")
     else()
       set(binary_archive "macos10_10_binary")
