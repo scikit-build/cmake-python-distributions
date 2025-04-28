@@ -38,12 +38,6 @@ Source = "https://github.com/scikit-build/cmake-python-distributions"
 "Mailing list" = "https://groups.google.com/forum/#!forum/scikit-build"
 "Bug Tracker" = "https://github.com/scikit-build/cmake-python-distributions/issues"
 
-[project.scripts]
-ccmake = "cmake:ccmake"
-cmake = "cmake:cmake"
-cpack = "cmake:cpack"
-ctest = "cmake:ctest"
-
 
 [dependency-groups]
 test = [
