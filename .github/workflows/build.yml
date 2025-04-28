@@ -115,7 +115,7 @@ jobs:
         with:
           fetch-depth: 0  # required for versioneer to find tags
 
-      - uses: astral-sh/setup-uv@v5
+      - uses: astral-sh/setup-uv@v6
         if: (!matrix.use_qemu) || fromJSON(env.USE_QEMU)
         with:
           enable-cache: false
@@ -195,7 +195,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v5
+      - uses: astral-sh/setup-uv@v6
         with:
           enable-cache: false
 
