@@ -450,11 +450,11 @@ include\(\"${CMakeProject_BINARY_DIR}/cmake_install.cmake\")
       install(${type} ${file} DESTINATION "${relative_directory}" ${_permissions})
     endforeach()
 
-    # Prepare entry points
-    foreach(program IN ITEMS cmake ctest cpack ccmake)
-      configure_file(scripts/entry-point.py.in "${CMAKE_CURRENT_BINARY_DIR}/bin/${program}")
-      message(STATUS "INSTALLING TO: ${SKBUILD_SCRIPTS_DIR}")
-      install(PROGRAMS "${CMAKE_CURRENT_BINARY_DIR}/bin/${program}" DESTINATION "${SKBUILD_SCRIPTS_DIR}")
-    endforeach()
-  endif()
+    endif()
+  # Prepare entry points
+  foreach(program IN ITEMS cmake ctest cpack ccmake)
+    configure_file(scripts/entry-point.py.in "${CMAKE_CURRENT_BINARY_DIR}/bin/${program}")
+    message(STATUS "INSTALLING TO: ${SKBUILD_SCRIPTS_DIR}")
+    install(PROGRAMS "${CMAKE_CURRENT_BINARY_DIR}/bin/${program}" DESTINATION "${SKBUILD_SCRIPTS_DIR}")
+  endforeach()
 endif()
