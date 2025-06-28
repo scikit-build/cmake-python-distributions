@@ -26,9 +26,6 @@ classifiers = [
     "Topic :: Software Development :: Build Tools",
     "Typing :: Typed"
 ]
-dependencies = [
-  "importlib_metadata>=1.4; python_version<'3.8'",
-]
 requires-python = ">=3.8"
 
 [project.urls]
