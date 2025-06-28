@@ -152,7 +152,7 @@ inherit.config-settings = "append"
 config-settings."cmake.define.RUN_CMAKE_TEST" = "OFF"
 
 [[tool.cibuildwheel.overrides]]
-select = ["*-musllinux_s390x"]
+select = ["*-musllinux_{ppc64le,s390x}"]
 build-frontend = "pip"
 
 
