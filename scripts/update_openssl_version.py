@@ -45,7 +45,7 @@ def get_openssl_sha256(version: str, verbose: bool=False) -> str:
         if len(parts) > 1:
             expected_parts = 2  #  f"{sha256} {filename}""
             assert len(parts) == expected_parts
-            assert parts[1] == f"openssl-{version}.tar.gz"
+            assert parts[1].lstrip("*") == f"openssl-{version}.tar.gz"
         if verbose:
             print("got sha256:", sha256)
         return sha256

@@ -159,7 +159,7 @@ def bump_openssl(session: nox.Session) -> None:
     files = (
         "scripts/manylinux-build-and-install-openssl.sh",
     )
-    _bump(session, "OpenSSL", "openssl/openssl", "3.0", "scripts/update_openssl_version.py", files)
+    _bump(session, "OpenSSL", "openssl/openssl", "3.5", "scripts/update_openssl_version.py", files)
 
 
 def _get_version() -> str:
