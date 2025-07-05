@@ -3,13 +3,9 @@ import subprocess
 import sys
 import sysconfig
 import textwrap
+from importlib.metadata import distribution
 
 import pytest
-
-if sys.version_info < (3, 8):
-    from importlib_metadata import distribution
-else:
-    from importlib.metadata import distribution
 
 import cmake
 

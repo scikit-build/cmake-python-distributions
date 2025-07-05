@@ -52,21 +52,21 @@ The following platforms are supported with binary wheels:
   | Windows       | | 64-bit                  |
   |               | | 32-bit                  |
   +---------------+---------------------------+
-  | Linux Intel   | | manylinux2010+  x86_64  |
-  |               | | musllinux_1_1+  x86_64  |
-  |               | | manylinux2010+  i686    |
-  |               | | musllinux_1_1+  i686    |
+  | Linux Intel   | | manylinux2014+  x86_64  |
+  |               | | musllinux_1_2+  x86_64  |
+  |               | | manylinux2014+  i686    |
+  |               | | musllinux_1_2+  i686    |
   +---------------+---------------------------+
   | Linux ARM     | | manylinux2014+  AArch64 |
-  |               | | musllinux_1_1+  AArch64 |
+  |               | | musllinux_1_2+  AArch64 |
   |               | | manylinux_2_31+ armv7l  |
   |               | | musllinux_1_2+  armv7l  |
   +---------------+---------------------------+
   | Linux PowerPC | | manylinux2014+  ppc64le |
-  |               | | musllinux_1_1+  ppc64le |
+  |               | | musllinux_1_2+  ppc64le |
   +---------------+---------------------------+
   | Linux IBM Z   | | manylinux2014+  s390x   |
-  |               | | musllinux_1_1+  s390x   |
+  |               | | musllinux_1_2+  s390x   |
   +---------------+---------------------------+
   | Linux RISC-V  | | manylinux_2_35+ riscv64 |
   |               | | musllinux_1_2+  riscv64 |
@@ -77,6 +77,7 @@ The following platforms are supported with binary wheels:
   +---------------+---------------------------+
 
 The last version to provide ``manylinux1`` wheels was ``3.22.x``.
+The last version to provide Python 3.7 support and ``manylinux2010`` wheels was ``4.0.3``.
 The last version to provide Python 2 to Python 3.6 support was ``3.28.x``.
 
 Maintainers
