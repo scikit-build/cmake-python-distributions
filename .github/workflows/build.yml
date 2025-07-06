@@ -92,7 +92,7 @@ jobs:
             arch: "armv7l"
             build: "musllinux_"
             use_qemu: false
-          - os: windows-2019
+          - os: windows-2022
             arch: "AMD64"
             build: ""
             use_qemu: false
@@ -100,7 +100,7 @@ jobs:
             arch: "ARM64"
             build: ""
             use_qemu: false
-          - os: windows-2019
+          - os: windows-2022
             arch: "x86"
             build: ""
             use_qemu: false
@@ -312,7 +312,7 @@ jobs:
           path: dist
 
       - name: Generate artifact attestation for sdist and wheel
-        uses: actions/attest-build-provenance@c074443f1aee8d4aeeae555aebba3282517141b2 # v2.2.3
+        uses: actions/attest-build-provenance@e8998f949152b193b063cb0ec769d69d929409be # v2.4.0
         with:
           subject-path: "dist/cmake-*"
 

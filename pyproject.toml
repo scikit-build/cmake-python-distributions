@@ -5,7 +5,7 @@ backend-path = ["_build_backend"]
 
 [project]
 name = "cmake"
-version = "4.0.1"
+version = "4.0.3"
 description = "CMake is an open-source, cross-platform family of tools designed to build, test and package software"
 keywords = ["CMake", "build", "c++", "fortran", "cross-platform", "cross-compilation"]
 readme = "README.rst"
@@ -181,6 +181,7 @@ exclude = ["src/cmake/_version.py"]
 flake8-unused-arguments.ignore-variadic-names = true
 
 [tool.ruff.lint.per-file-ignores]
+"_build_backend/backend.py" = ["PLC0415"]
 "docs/conf.py" = ["E402"]
 "*.pyi" = ["ARG001"]
 "noxfile.py" = ["PLW0603"]
