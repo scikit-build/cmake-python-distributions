@@ -1,14 +1,7 @@
-#!python
+#!python -E
 
-import os
 import sys
-import sysconfig
 
-# Scripts can be broken by pip's build isolation hacks
-# See: https://github.com/pypa/pip/blob/102d8187a1f5a4cd5de7a549fd8a9af34e89a54f/src/pip/_internal/build_env.py#L87
-pl = sysconfig.get_paths()['platlib']
-if pl not in sys.path:
-    sys.path.append(pl)
 
 from cmake import ${program}
 
