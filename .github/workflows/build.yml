@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       use_qemu:
-        description: 'Use qemu to build linux ppc64le & s390x'
+        description: 'Use qemu to build linux ppc64le, s390x & riscv64'
         required: true
         default: true
   schedule:
@@ -82,6 +82,14 @@ jobs:
             use_qemu: true
           - os: ubuntu-latest
             arch: "s390x"
+            build: "musllinux_"
+            use_qemu: true
+          - os: ubuntu-latest
+            arch: "riscv64"
+            build: "manylinux_"
+            use_qemu: true
+          - os: ubuntu-latest
+            arch: "riscv64"
             build: "musllinux_"
             use_qemu: true
           - os: ubuntu-24.04-arm
