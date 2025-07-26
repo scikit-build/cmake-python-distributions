@@ -94,6 +94,7 @@ testpaths = ["tests"]
 
 
 [tool.cibuildwheel]
+archs = ["auto64", "auto32"]
 build = "cp39-*"
 test-groups = ["test"]
 test-command = "pytest {project}/tests"
@@ -101,11 +102,17 @@ build-verbosity = 1
 build-frontend = "build[uv]"
 config-settings."cmake.define.RUN_CMAKE_TEST" = "ON"
 environment = { CMAKE_PYTHON_DIST_FORCE_NINJA_DEP = "1" }
-musllinux-x86_64-image = "musllinux_1_1"
-musllinux-i686-image = "musllinux_1_1"
-musllinux-aarch64-image = "musllinux_1_1"
-musllinux-ppc64le-image = "musllinux_1_1"
-musllinux-s390x-image = "musllinux_1_1"
+manylinux-x86_64-image = "manylinux2014"
+manylinux-i686-image = "manylinux2014"
+manylinux-aarch64-image = "manylinux2014"
+manylinux-ppc64le-image = "manylinux2014"
+manylinux-s390x-image = "manylinux2014"
+manylinux-armv7l-image = "manylinux_2_31"
+musllinux-x86_64-image = "quay.io/pypa/musllinux_1_1_x86_64:2024.10.26-1"
+musllinux-i686-image = "quay.io/pypa/musllinux_1_1_i686:2024.10.26-1"
+musllinux-aarch64-image = "quay.io/pypa/musllinux_1_1_aarch64:2024.10.26-1"
+musllinux-ppc64le-image = "quay.io/pypa/musllinux_1_1_ppc64le:2024.10.26-1"
+musllinux-s390x-image = "quay.io/pypa/musllinux_1_1_s390x:2024.10.26-1"
 musllinux-armv7l-image = "musllinux_1_2"
 
 [[tool.cibuildwheel.overrides]]
