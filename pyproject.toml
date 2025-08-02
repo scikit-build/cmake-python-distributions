@@ -108,12 +108,14 @@ manylinux-aarch64-image = "manylinux2014"
 manylinux-ppc64le-image = "manylinux2014"
 manylinux-s390x-image = "manylinux2014"
 manylinux-armv7l-image = "manylinux_2_31"
+manylinux-riscv64-image = "manylinux_2_39"
 musllinux-x86_64-image = "quay.io/pypa/musllinux_1_1_x86_64:2024.10.26-1"
 musllinux-i686-image = "quay.io/pypa/musllinux_1_1_i686:2024.10.26-1"
 musllinux-aarch64-image = "quay.io/pypa/musllinux_1_1_aarch64:2024.10.26-1"
 musllinux-ppc64le-image = "quay.io/pypa/musllinux_1_1_ppc64le:2024.10.26-1"
 musllinux-s390x-image = "quay.io/pypa/musllinux_1_1_s390x:2024.10.26-1"
 musllinux-armv7l-image = "musllinux_1_2"
+musllinux-riscv64-image = "musllinux_1_2"
 
 [[tool.cibuildwheel.overrides]]
 select = "*-macos*"
@@ -150,13 +152,13 @@ inherit.config-settings = "append"
 config-settings."cmake.define.RUN_CMAKE_TEST_EXCLUDE" = "BootstrapTest|CTestTestFdSetSize|ExportImport|RunCMake.install|RunCMake.RuntimePath|RunCMake.file-GET_RUNTIME_DEPENDENCIES"
 
 [[tool.cibuildwheel.overrides]]
-select = ["*linux_ppc64le", "*linux_s390x"]
+select = ["*linux_ppc64le", "*linux_s390x", "*linux_riscv64"]
 inherit.config-settings = "append"
 # disable tests on those platforms, QEMU is taking to long for jobs to pass on GHA
 config-settings."cmake.define.RUN_CMAKE_TEST" = "OFF"
 
 [[tool.cibuildwheel.overrides]]
-select = ["*-musllinux_s390x"]
+select = ["*-musllinux_{s390x,riscv64}"]
 build-frontend = "pip"
 
 
