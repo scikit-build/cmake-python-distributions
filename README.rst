@@ -68,7 +68,7 @@ The following platforms are supported with binary wheels:
   | Linux IBM Z   | | manylinux2014+  s390x   |
   |               | | musllinux_1_1+  s390x   |
   +---------------+---------------------------+
-  | Linux RISC-V  | | manylinux_2_39+ riscv64 |
+  | Linux RISC-V  | | manylinux_2_35+ riscv64 |
   |               | | musllinux_1_2+  riscv64 |
   +---------------+---------------------------+
   | macOS 10.10+  | Intel                     |
