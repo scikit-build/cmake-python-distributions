@@ -137,7 +137,7 @@ jobs:
         if: (!matrix.use_qemu) || fromJSON(env.USE_QEMU)
         env:
           CIBW_ARCHS: "${{ matrix.arch }}"
-          CIBW_BUILD: "cp39-${{ matrix.build }}*"
+          CIBW_BUILD: "cp310-${{ matrix.build }}*"
 
       - uses: actions/upload-artifact@v4
         if: (!matrix.use_qemu) || fromJSON(env.USE_QEMU)
