@@ -189,8 +189,11 @@ if(CMakePythonDistributions_SUPERBUILD)
     #
     if(NOT DEFINED CMakeProject_BINARY_DIR)
 
-      # glibc check
+      # cmake cache arguments
+      set(_cmake_cache_args)
+
       if(UNIX AND NOT APPLE)
+        # glibc check
         # as of CMake 3.23.0, the minimum supported version of libuv is 1.28.0.
         # this implies that the minimum supported glibc version is 2.12
         # https://github.com/libuv/libuv/blob/v1.x/SUPPORTED_PLATFORMS.md
@@ -206,10 +209,25 @@ if(CMakePythonDistributions_SUPERBUILD)
             message(FATAL_ERROR "GLIBC ${GLIBC_MAJOR}.${GLIBC_MINOR} not supported")
           endif()
         endif()
+
+        # Y2K38 support
+        include(CMakePushCheckState)
+        cmake_push_check_state(RESET)
+        set(CMAKE_REQUIRED_DEFINITIONS -D_FILE_OFFSET_BITS=64 -D_TIME_BITS=64)
+        set(CMAKE_EXTRA_INCLUDE_FILES "time.h")
+        include(CheckTypeSize)
+        check_type_size(time_t SIZEOF_TIME_T LANGUAGE CXX)
+        cmake_pop_check_state()
+        if(HAVE_SIZEOF_TIME_T)
+          if(SIZEOF_TIME_T LESS 8)
+            list(APPEND _cmake_cache_args
+              -DCMake_TEST_NO_64BIT_TIME:BOOL=TRUE
+              )
+            message(STATUS "SuperBuild -   CMakeProject-build - 64-bit time tests disabled")
+          endif()
+        endif()
       endif()
 
-      # cmake cache arguments
-      set(_cmake_cache_args)
       if(DEFINED CMAKE_BUILD_TYPE)
         list(APPEND _cmake_cache_args
           -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
