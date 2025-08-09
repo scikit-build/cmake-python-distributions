@@ -3,12 +3,8 @@ from __future__ import annotations
 import os
 import subprocess
 import sys
+from importlib.metadata import distribution
 from pathlib import Path
-
-if sys.version_info < (3, 8):
-    from importlib_metadata import distribution
-else:
-    from importlib.metadata import distribution
 
 from ._version import version as __version__
 

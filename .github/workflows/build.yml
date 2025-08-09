@@ -137,42 +137,12 @@ jobs:
         if: (!matrix.use_qemu) || fromJSON(env.USE_QEMU)
         env:
           CIBW_ARCHS: "${{ matrix.arch }}"
-          CIBW_BUILD: "cp39-${{ matrix.build }}*"
+          CIBW_BUILD: "cp310-${{ matrix.build }}*"
 
       - uses: actions/upload-artifact@v4
         if: (!matrix.use_qemu) || fromJSON(env.USE_QEMU)
         with:
           name: cibw-${{ runner.os }}-${{ matrix.build }}${{ matrix.arch }}
-          path: ./wheelhouse/*.whl
-
-  build_manylinux2010_wheels:
-    name: Build ${{ matrix.arch }} manylinux2010 wheels
-    needs: [lint]
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - arch: "x86_64"
-          - arch: "i686"
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # required for versioneer to find tags
-
-      - name: Build wheels
-        uses: pypa/cibuildwheel@v3.1
-        env:
-          CIBW_ARCHS: "${{ matrix.arch }}"
-          CIBW_BUILD: "cp39-manylinux_*"
-          CIBW_MANYLINUX_X86_64_IMAGE: "quay.io/pypa/manylinux2010_x86_64:2022-08-05-4535177"
-          CIBW_MANYLINUX_I686_IMAGE: "quay.io/pypa/manylinux2010_i686:2022-08-05-4535177"
-          CIBW_BUILD_FRONTEND: "build"
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: cibw-manylinux2010-${{ matrix.arch }}
           path: ./wheelhouse/*.whl
 
   build_sdist:
@@ -290,7 +260,7 @@ jobs:
 
   check_dist:
     name: Check dist
-    needs: [build_wheels, build_manylinux2010_wheels, build_sdist, test_sdist, bootstrap_build]
+    needs: [build_wheels, build_sdist, test_sdist, bootstrap_build]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
