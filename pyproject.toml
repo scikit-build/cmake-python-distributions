@@ -132,6 +132,13 @@ config-settings."cmake.define.CMAKE_JOB_POOL_LINK" = "link"
 config-settings."cmake.define.CMAKE_JOB_POOLS" = "compile=4;link=1"
 
 [[tool.cibuildwheel.overrides]]
+select = ["*-manylinux_armv7l"]
+inherit.config-settings = "append"
+# disable some tests
+# - RunCMake.CompilerId fails because architecture id is not detected properly for gfortran on Ubuntu 20.04 https://gitlab.kitware.com/cmake/cmake/-/issues/27129
+config-settings."cmake.define.RUN_CMAKE_TEST_EXCLUDE" = "RunCMake.CompilerId"
+
+[[tool.cibuildwheel.overrides]]
 select = ["*-musllinux_*"]
 inherit.config-settings = "append"
 # disable some tests
