@@ -187,7 +187,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends libssl-dev
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v5
         with:
           name: cibw-sdist
           path: dist
@@ -263,7 +263,7 @@ jobs:
     needs: [build_wheels, build_sdist, test_sdist, bootstrap_build]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v5
         with:
           pattern: cibw-*
           merge-multiple: true
@@ -283,7 +283,7 @@ jobs:
       id-token: write
       attestations: write
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v5
         with:
           pattern: cibw-*
           merge-multiple: true
