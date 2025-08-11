@@ -5,7 +5,7 @@ backend-path = ["_build_backend"]
 
 [project]
 name = "cmake"
-version = "4.0.3"
+version = "4.1.0"
 description = "CMake is an open-source, cross-platform family of tools designed to build, test and package software"
 keywords = ["CMake", "build", "c++", "fortran", "cross-platform", "cross-compilation"]
 readme = "README.rst"
@@ -130,6 +130,13 @@ config-settings."cmake.define.OPENSSL_USE_STATIC_LIBS" = "ON"
 config-settings."cmake.define.CMAKE_JOB_POOL_COMPILE" = "compile"
 config-settings."cmake.define.CMAKE_JOB_POOL_LINK" = "link"
 config-settings."cmake.define.CMAKE_JOB_POOLS" = "compile=4;link=1"
+
+[[tool.cibuildwheel.overrides]]
+select = ["*-manylinux_armv7l"]
+inherit.config-settings = "append"
+# disable some tests
+# - RunCMake.CompilerId fails because architecture id is not detected properly for gfortran on Ubuntu 20.04 https://gitlab.kitware.com/cmake/cmake/-/issues/27129
+config-settings."cmake.define.RUN_CMAKE_TEST_EXCLUDE" = "RunCMake.CompilerId"
 
 [[tool.cibuildwheel.overrides]]
 select = ["*-musllinux_*"]
