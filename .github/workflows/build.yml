@@ -133,7 +133,7 @@ jobs:
         if: matrix.use_qemu && fromJSON(env.USE_QEMU)
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@v3.1
+        uses: pypa/cibuildwheel@v3.2
         if: (!matrix.use_qemu) || fromJSON(env.USE_QEMU)
         env:
           CIBW_ARCHS: "${{ matrix.arch }}"
