@@ -129,7 +129,7 @@ jobs:
           enable-cache: false
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3.6.0
+        uses: docker/setup-qemu-action@v3.7.0
         if: matrix.use_qemu && fromJSON(env.USE_QEMU)
 
       - name: Build wheels
