@@ -46,6 +46,12 @@ check_sha256sum ${OPENSSL_ROOT}.tar.gz ${OPENSSL_HASH}
 tar -xzf ${OPENSSL_ROOT}.tar.gz
 rm -rf ${OPENSSL_ROOT}.tar.gz
 
+LIBATOMIC=
+if [ "${AUDITWHEEL_ARCH}" == "i686" ]; then
+	LIBATOMIC=-latomic
+fi
+export LDLIBS="${LIBATOMIC}"
+
 # Configure
 pushd ${OPENSSL_ROOT}
 ./config no-shared no-tests -fPIC --prefix=/usr/local/ssl --openssldir=/usr/local/ssl > /dev/null
