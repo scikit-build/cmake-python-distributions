@@ -9,6 +9,7 @@ on:
     branches:
       - main
       - py2-legacy
+      - v3.x
     tags:
       - "*.*.*"
 
