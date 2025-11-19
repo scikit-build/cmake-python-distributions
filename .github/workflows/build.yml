@@ -93,7 +93,7 @@ jobs:
             arch: "armv7l"
             build: "musllinux_"
             use_qemu: false
-          - os: windows-2019
+          - os: windows-2022
             arch: "AMD64"
             build: ""
             use_qemu: false
@@ -101,11 +101,11 @@ jobs:
             arch: "ARM64"
             build: ""
             use_qemu: false
-          - os: windows-2019
+          - os: windows-2022
             arch: "x86"
             build: ""
             use_qemu: false
-          - os: macos-14
+          - os: macos-15
             arch: "universal2"
             build: ""
             use_qemu: false
