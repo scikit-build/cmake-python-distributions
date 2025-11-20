@@ -1,11 +1,11 @@
 
 #-----------------------------------------------------------------------------
 # CMake sources
-set(unix_source_url          "https://github.com/Kitware/CMake/releases/download/v4.1.3/cmake-4.1.3.tar.gz")
-set(unix_source_sha256       "765879a53d178bf1e1509768de4c9a672dabaa20047a9f3809571558e783be88")
+set(unix_source_url          "https://github.com/Kitware/CMake/releases/download/v4.2.0/cmake-4.2.0.tar.gz")
+set(unix_source_sha256       "4104e94657d247c811cb29985405a360b78130b5d51e7f6daceb2447830bd579")
 
-set(windows_source_url       "https://github.com/Kitware/CMake/releases/download/v4.1.3/cmake-4.1.3.zip")
-set(windows_source_sha256    "540d8d8ea74c13bf83b367373e071e73d11471c293a68a41084ae6bb02cb61a8")
+set(windows_source_url       "https://github.com/Kitware/CMake/releases/download/v4.2.0/cmake-4.2.0.zip")
+set(windows_source_sha256    "86eb030b4b0df6d9d9b0f769c6e922941cf57c6200353a4e2c599cc678e7a33e")
 
 #-----------------------------------------------------------------------------
 # CMake binaries
@@ -13,17 +13,17 @@ set(windows_source_sha256    "540d8d8ea74c13bf83b367373e071e73d11471c293a68a4108
 set(linux32_binary_url       "NA")  # Linux 32-bit binaries not available
 set(linux32_binary_sha256    "NA")
 
-set(linux64_binary_url       "https://github.com/Kitware/CMake/releases/download/v4.1.3/cmake-4.1.3-linux-x86_64.tar.gz")
-set(linux64_binary_sha256    "507e9c721d3a0084df30661c4731980daa18f077fdcc71f7d342a21b07b07920")
+set(linux64_binary_url       "https://github.com/Kitware/CMake/releases/download/v4.2.0/cmake-4.2.0-linux-x86_64.tar.gz")
+set(linux64_binary_sha256    "bbcebd4c433eab3af03a8c80bb5d84e8dfc3ff8a4ab9d01547b21240c23f7c2c")
 
-set(macos10_10_binary_url    "https://github.com/Kitware/CMake/releases/download/v4.1.3/cmake-4.1.3-macos10.10-universal.tar.gz")
-set(macos10_10_binary_sha256 "e6ab486400d51133bc577b055e9e276b121c1bbc6eb84a43c816eaeb628671bd")
+set(macos10_10_binary_url    "https://github.com/Kitware/CMake/releases/download/v4.2.0/cmake-4.2.0-macos10.10-universal.tar.gz")
+set(macos10_10_binary_sha256 "0e384422648a1d76387d488044cc75fcd688d9638d77a5cad2ab38a1510d51c7")
 
-set(win32_binary_url         "https://github.com/Kitware/CMake/releases/download/v4.1.3/cmake-4.1.3-windows-i386.zip")
-set(win32_binary_sha256      "86165b662284d5c5c43478eff0470d1e9a2ea49602bad5f210e87ade68ba76cf")
+set(win32_binary_url         "https://github.com/Kitware/CMake/releases/download/v4.2.0/cmake-4.2.0-windows-i386.zip")
+set(win32_binary_sha256      "aaa3c5f810f2720c63e3b6b5677d0f57fdff705f85e1de2043d716421469d63b")
 
-set(win64_binary_url         "https://github.com/Kitware/CMake/releases/download/v4.1.3/cmake-4.1.3-windows-x86_64.zip")
-set(win64_binary_sha256      "010d496453fdc5d11f88dbbcc0a5e54c5db7d9e04e008f516087d9d163301d89")
+set(win64_binary_url         "https://github.com/Kitware/CMake/releases/download/v4.2.0/cmake-4.2.0-windows-x86_64.zip")
+set(win64_binary_sha256      "cf35a516c4f5f4646b301e51c8e24b168cc012c3b1453b8f675303b54eb0ef45")
 
-set(winarm64_binary_url      "https://github.com/Kitware/CMake/releases/download/v4.1.3/cmake-4.1.3-windows-arm64.zip")
-set(winarm64_binary_sha256   "4b3ec4917d0d04bf9a83d171f3be552c9214e75597893b40bd10309033265ec5")
+set(winarm64_binary_url      "https://github.com/Kitware/CMake/releases/download/v4.2.0/cmake-4.2.0-windows-arm64.zip")
+set(winarm64_binary_sha256   "9eb3e88083dda569a4086c48517f5d49bd7b505dada79075ea7cb6e2ac6e0a1e")
