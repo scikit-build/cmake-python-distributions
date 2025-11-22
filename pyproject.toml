@@ -150,12 +150,6 @@ inherit.config-settings = "append"
 config-settings."cmake.define.RUN_CMAKE_TEST_EXCLUDE" = "BootstrapTest|CTestTestFdSetSize|ExportImport|RunCMake.install|RunCMake.RuntimePath|RunCMake.file-GET_RUNTIME_DEPENDENCIES"
 
 [[tool.cibuildwheel.overrides]]
-select = ["*linux_ppc64le", "*linux_s390x", "*linux_riscv64"]
-inherit.config-settings = "append"
-# disable tests on those platforms, QEMU is taking to long for jobs to pass on GHA
-config-settings."cmake.define.RUN_CMAKE_TEST" = "OFF"
-
-[[tool.cibuildwheel.overrides]]
 select = ["*-musllinux_{ppc64le,s390x,riscv64}"]
 build-frontend = "pip"
 
