@@ -243,6 +243,7 @@ if(CMakePythonDistributions_SUPERBUILD)
         CMAKE_JOB_POOLS
         CMAKE_JOB_POOL_COMPILE
         CMAKE_JOB_POOL_LINK
+        CMAKE_LINKER_TYPE
         )
         if(DEFINED ${var_name})
           list(APPEND _cmake_cache_args

@@ -20,19 +20,19 @@ case "${STATIC_CLANG_ARCH}" in
 	s390x) GO_ARCH=s390x;;
 	*) echo "No static-clang toolchain for ${CLANG_ARCH}">2; exit 1;;
 esac
-STATIC_CLANG_VERSION=21.1.5.0
+STATIC_CLANG_VERSION=21.1.6.0
 STATIC_CLANG_FILENAME="static-clang-linux-${GO_ARCH}.tar.xz"
 STATIC_CLANG_URL="https://github.com/mayeut/static-clang-images/releases/download/v${STATIC_CLANG_VERSION}/${STATIC_CLANG_FILENAME}"
 pushd /tmp
 cat<<'EOF' | grep "${STATIC_CLANG_FILENAME}" > "${STATIC_CLANG_FILENAME}.sha256"
-7af47b1c41dd1e76e08d33f13f7fe33eb43849040f69499516f3f01708b12ae0  static-clang-linux-386.tar.xz
-395463d070de084f249bf08d3a8a88a42f19bce24cad37b45c78d48a62a73bdc  static-clang-linux-amd64.tar.xz
-294839579cf4d2fb5343b6ee1e1613f126c765664e253f2109725d5f49db6aa3  static-clang-linux-arm.tar.xz
-7476d44530b560c5bdc1b085c8651810c2fece201410d831c47b2d3b8101c1b2  static-clang-linux-arm64.tar.xz
-dcdb642827b5da8570b312c1a877bdf4a2b0f7e3004394a3b216134c3178f346  static-clang-linux-loong64.tar.xz
-6b247ae1ce6d095375cd4f37a0484f0c91f8457e3c3f3bb7f9c125a414b19bed  static-clang-linux-ppc64le.tar.xz
-fb0cce0e1fecceb6d3eb2e095297731107c0803605815b37a5cbcec270700088  static-clang-linux-riscv64.tar.xz
-18cbfc7471a40a091b02b2999303dfa3f87368dd01e65d0d3ca7b216826ac84f  static-clang-linux-s390x.tar.xz
+3f92a131d27ca606dae8230550236a0c897a7f5990d61a293814e0abea8d0e1f  static-clang-linux-386.tar.xz
+3fc6a3500cb9514b2c3af6d4a95676842769c301f872b6cea8c15576a64e756c  static-clang-linux-amd64.tar.xz
+82ea0c148ec75f72a2f6f61cc877561efe9675c6e59a1a2c4d130f088f9dc868  static-clang-linux-arm.tar.xz
+9b5ad28877b6d56aff530164f7f88590e5d3441a1fddd7a73370539783056120  static-clang-linux-arm64.tar.xz
+2adccbcad99d033222c8a63872739919375a7aef2339ce2e8ab7dcfc938502b1  static-clang-linux-loong64.tar.xz
+5f551911ad73ecbbcf278e6d05a04bc68bd0dc4918a6a145352072f7734959c6  static-clang-linux-ppc64le.tar.xz
+90f5beda1004bec124607df1f9fc0a70c2b9f382b82ab1db2703ebd131c920ef  static-clang-linux-riscv64.tar.xz
+e4047765a5e64bace4be36f6aae4d859e96bc1298d3ff5ba6b7d6100ea7d23f7  static-clang-linux-s390x.tar.xz
 EOF
 curl -fsSLO "${STATIC_CLANG_URL}"
 sha256sum -c "${STATIC_CLANG_FILENAME}.sha256"
@@ -57,24 +57,11 @@ case "${AUDITWHEEL_POLICY}-${AUDITWHEEL_ARCH}" in
 esac
 GCC_TRIPLE=$(gcc -dumpmachine)
 
-if [ "${AUDITWHEEL_ARCH}" == "riscv64" ]; then
-	# the LDFLAGS from pyproject.toml seems not to be taken into account when building CMake (no problem with OpenSSL)
-	# FAILED: [code=1] Source/kwsys/cmsysTestProcess
-	#  : && /opt/clang/bin/clang -D_POSIX_C_SOURCE=199506L -D_POSIX_SOURCE=1 -D_SVID_SOURCE=1 -D_BSD_SOURCE=1 -O3 -DNDEBUG  -lstdc++ -lgcc -lrt Source/kwsys/CMakeFiles/cmsysTestProcess.dir/testProcess.c.o  -o Source/kwsys/cmsysTestProcess  Source/kwsys/libcmsys_c.a && :
-	#  /usr/bin/riscv64-linux-gnu-ld: -march=rv64i2p1_m2p0_a2p1_f2p2_d2p2_c2p0_zicsr2p0_zifencei2p0_zmmul1p0_zaamo1p0_zalrsc1p0: unsupported ISA subset `z'
-	#  /usr/bin/riscv64-linux-gnu-ld: failed to merge target specific data of file Source/kwsys/libcmsys_c.a(ProcessUNIX.c.o)
-	#  /usr/bin/riscv64-linux-gnu-ld: -march=rv64i2p1_m2p0_a2p1_f2p2_d2p2_c2p0_zicsr2p0_zifencei2p0_zmmul1p0_zaamo1p0_zalrsc1p0: unsupported ISA subset `z'
-	#  /usr/bin/riscv64-linux-gnu-ld: failed to merge target specific data of file Source/kwsys/libcmsys_c.a(System.c.o)
-	#  clang: error: linker command failed with exit code 1 (use -v to see invocation)
-	IMPLICIT_LLD="-fuse-ld=lld"
-fi
-
 cat<<EOF >"${TOOLCHAIN_PATH}/bin/${AUDITWHEEL_PLAT}.cfg"
 	-target ${TARGET_TRIPLE}
 	${M_ARCH:-}
 	--gcc-toolchain=${DEVTOOLSET_ROOTPATH:-}/usr
 	--gcc-triple=${GCC_TRIPLE}
-	${IMPLICIT_LLD:-}
 EOF
 
 cat<<EOF >"${TOOLCHAIN_PATH}/bin/clang.cfg"
