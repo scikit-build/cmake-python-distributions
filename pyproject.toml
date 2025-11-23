@@ -150,6 +150,22 @@ inherit.config-settings = "append"
 config-settings."cmake.define.RUN_CMAKE_TEST_EXCLUDE" = "BootstrapTest|CTestTestFdSetSize|ExportImport|RunCMake.install|RunCMake.RuntimePath|RunCMake.file-GET_RUNTIME_DEPENDENCIES"
 
 [[tool.cibuildwheel.overrides]]
+select = ["*-musllinux_ppc64le", "*-musllinux_s390x"]
+inherit.config-settings = "append"
+# disable some tests
+# - BootstrapTest fails with custom OpenSSL and probably does not make much sense for this project
+# - ExportImport|RunCMake.install|RunCMake.file-GET_RUNTIME_DEPENDENCIES: c.f. https://discourse.cmake.org/t/cmake-test-suite-failing-on-alpine-linux/5064
+# - RunCMake.execute_process fails because QEMU prints on stderr on SIGSEGV
+config-settings."cmake.define.RUN_CMAKE_TEST_EXCLUDE" = "BootstrapTest|CTestTestFdSetSize|ExportImport|RunCMake.install|RunCMake.RuntimePath|RunCMake.file-GET_RUNTIME_DEPENDENCIES|RunCMake.execute_process"
+
+[[tool.cibuildwheel.overrides]]
+select = ["*-manylinux_ppc64le", "*-manylinux_s390x"]
+inherit.config-settings = "append"
+# disable some tests
+# - RunCMake.execute_process fails because QEMU prints on stderr on SIGSEGV
+config-settings."cmake.define.RUN_CMAKE_TEST_EXCLUDE" = "RunCMake.execute_process"
+
+[[tool.cibuildwheel.overrides]]
 select = ["*-musllinux_{ppc64le,s390x,riscv64}"]
 build-frontend = "pip"
 
