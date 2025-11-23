@@ -138,8 +138,9 @@ config-settings."cmake.define.CMAKE_JOB_POOLS" = "compile=4;link=1"
 select = ["*-manylinux_armv7l"]
 inherit.config-settings = "append"
 # disable some tests
+# - BootstrapTest fails with custom OpenSSL and probably does not make much sense for this project
 # - RunCMake.CompilerId fails because architecture id is not detected properly for gfortran on Ubuntu 20.04 https://gitlab.kitware.com/cmake/cmake/-/issues/27129
-config-settings."cmake.define.RUN_CMAKE_TEST_EXCLUDE" = "RunCMake.CompilerId"
+config-settings."cmake.define.RUN_CMAKE_TEST_EXCLUDE" = "BootstrapTest|RunCMake.CompilerId"
 
 [[tool.cibuildwheel.overrides]]
 select = ["*-musllinux_*"]
@@ -162,8 +163,9 @@ config-settings."cmake.define.RUN_CMAKE_TEST_EXCLUDE" = "BootstrapTest|CTestTest
 select = ["*-manylinux_ppc64le", "*-manylinux_s390x"]
 inherit.config-settings = "append"
 # disable some tests
+# - BootstrapTest fails with custom OpenSSL and probably does not make much sense for this project
 # - RunCMake.execute_process fails because QEMU prints on stderr on SIGSEGV
-config-settings."cmake.define.RUN_CMAKE_TEST_EXCLUDE" = "RunCMake.execute_process"
+config-settings."cmake.define.RUN_CMAKE_TEST_EXCLUDE" = "BootstrapTest|RunCMake.execute_process"
 
 [[tool.cibuildwheel.overrides]]
 select = ["*-musllinux_{ppc64le,s390x,riscv64}"]
