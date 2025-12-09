@@ -120,7 +120,7 @@ def _bootstrap_build(temp_path: str, config_settings: dict[str, list[str] | str]
         bootstrap_path = next(temp_path_.glob("cmake-*/bootstrap"))
         prefix_path = temp_path_ / "cmake-install"
         cmake_path = prefix_path / "bin" / "cmake"
-        bootstrap_args = [f"--prefix={prefix_path}", "--no-qt-gui", "--no-debugger", "--parallel={parallel}", "--", "-DBUILD_TESTING=OFF", "-DBUILD_CursesDialog:BOOL=OFF"]
+        bootstrap_args = [f"--prefix={prefix_path}", "--no-qt-gui", "--no-debugger", f"--parallel={parallel}", "--", "-DBUILD_TESTING=OFF", "-DBUILD_CursesDialog:BOOL=OFF"]
         previous_cwd = Path().absolute()
         os.chdir(bootstrap_path.parent)
         try:
