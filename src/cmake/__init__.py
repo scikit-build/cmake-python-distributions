@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import shutil
 import subprocess
 import sys
 from importlib.metadata import distribution
@@ -50,7 +51,7 @@ def _program_exit(name: str, *args: str) -> NoReturn:
 
 
 def ccmake() -> NoReturn:
-    if not (Path(CMAKE_BIN_DIR) / "ccmake").exists():
+    if shutil.which("ccmake", path=CMAKE_BIN_DIR) is None:
         raise FileNotFoundError(
             f"'ccmake' is not available in cmake installation at '{CMAKE_BIN_DIR}'. "
             "Perhaps 'ccmake' is not yet inclucded to the package for this platform."
