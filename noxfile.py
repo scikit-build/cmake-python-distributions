@@ -116,7 +116,7 @@ def _bump(session: nox.Session, name: str, repository: str, branch: str, script:
         session.install("lastversion", "requests")
         lastversion_args = []
         if branch:
-            lastversion_args.extend(("--branch", branch))
+            lastversion_args.extend(("--branch", branch, "--only", f"{branch}."))
         lastversion_args.append(repository)
         version = session.run("lastversion", *lastversion_args, log=False, silent=True).strip()
     else:
