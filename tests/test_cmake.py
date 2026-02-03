@@ -64,7 +64,7 @@ def _get_scripts():
 
 @all_tools
 def test_cmake_script(tool):
-    expected_version = "4.2.2"
+    expected_version = "4.2.3"
     scripts = [script for script in _get_scripts() if script.stem == tool]
     assert len(scripts) == 1
     output = subprocess.check_output([str(scripts[0]), "--version"]).decode("ascii")
@@ -72,6 +72,6 @@ def test_cmake_script(tool):
 
 
 def test_cmake_main():
-    expected_version = "4.2.2"
+    expected_version = "4.2.3"
     output = subprocess.run([sys.executable, "-m", "cmake", "--version"], text=True, capture_output=True, check=False).stdout
     assert output.splitlines()[0] == f"cmake version {expected_version}"
