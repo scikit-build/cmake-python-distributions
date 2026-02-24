@@ -387,6 +387,7 @@ set(CMAKE_EXE_LINKER_FLAGS \"-lstdc++ -lgcc -lrt\" CACHE STRING \"Initial cache\
     UPDATE_COMMAND ""
     CMAKE_CACHE_ARGS
       -D${PROJECT_NAME}_SUPERBUILD:BOOL=0
+      -DSKBUILD_SCRIPTS_DIR:PATH=${SKBUILD_SCRIPTS_DIR}
       -DBUILD_CMAKE_FROM_SOURCE:BOOL=${BUILD_CMAKE_FROM_SOURCE}
       -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
       ${${PROJECT_NAME}_CMAKE_CACHE_ARG}
@@ -467,5 +468,12 @@ include\(\"${CMakeProject_BINARY_DIR}/cmake_install.cmake\")
       endif()
       install(${type} ${file} DESTINATION "${relative_directory}" ${_permissions})
     endforeach()
-  endif()
+
+    endif()
+  # Prepare entry points
+  foreach(program IN ITEMS cmake ctest cpack ccmake)
+    configure_file(scripts/entry-point.py.in "${CMAKE_CURRENT_BINARY_DIR}/bin/${program}")
+    message(STATUS "INSTALLING TO: ${SKBUILD_SCRIPTS_DIR}")
+    install(PROGRAMS "${CMAKE_CURRENT_BINARY_DIR}/bin/${program}" DESTINATION "${SKBUILD_SCRIPTS_DIR}")
+  endforeach()
 endif()
