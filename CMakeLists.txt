@@ -274,19 +274,6 @@ if(CMakePythonDistributions_SUPERBUILD)
         message(STATUS "SuperBuild -   CMakeProject-build - CMAKE_CXX_STANDARD: ${CMAKE_CXX_STANDARD}")
       endif()
 
-      set(_cmake_args )
-      if(UNIX AND (NOT APPLE AND NOT CMAKE_SYSTEM_NAME STREQUAL "FreeBSD"))
-        # Since CMAKE_C_FLAGS and CMAKE_EXE_LINKER_FLAGS arguments contain spaces, we generate an initial
-        # cache file.
-        file(WRITE "${CMAKE_BINARY_DIR}/initial-cache.txt"
-"set(CMAKE_C_FLAGS \"-D_POSIX_C_SOURCE=199506L -D_POSIX_SOURCE=1 -D_SVID_SOURCE=1 -D_BSD_SOURCE=1\" CACHE STRING \"Initial cache\" FORCE)
-set(CMAKE_EXE_LINKER_FLAGS \"-lstdc++ -lgcc -lrt\" CACHE STRING \"Initial cache\" FORCE)
-")
-        set(_cmake_args
-          CMAKE_ARGS -C "${CMAKE_BINARY_DIR}/initial-cache.txt"
-          )
-      endif()
-
       # cmake
       set(CMakeProject_BINARY_DIR ${CMAKE_BINARY_DIR}/CMakeProject-build)
 
@@ -296,7 +283,6 @@ set(CMAKE_EXE_LINKER_FLAGS \"-lstdc++ -lgcc -lrt\" CACHE STRING \"Initial cache\
         DOWNLOAD_COMMAND ""
         UPDATE_COMMAND ""
         BUILD_ALWAYS 1
-        ${_cmake_args}
         CMAKE_CACHE_ARGS
           -DBUILD_CursesDialog:BOOL=ON
           -DCMAKE_USE_OPENSSL:BOOL=ON
