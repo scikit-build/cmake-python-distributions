@@ -283,7 +283,6 @@ if(CMakePythonDistributions_SUPERBUILD)
         DOWNLOAD_COMMAND ""
         UPDATE_COMMAND ""
         BUILD_ALWAYS 1
-        ${_cmake_args}
         CMAKE_CACHE_ARGS
           -DBUILD_CursesDialog:BOOL=ON
           -DCMAKE_USE_OPENSSL:BOOL=ON
