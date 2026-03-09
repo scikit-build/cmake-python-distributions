@@ -51,6 +51,7 @@ The following platforms are supported with binary wheels:
   +===============+===========================+
   | Windows       | | 64-bit                  |
   |               | | 32-bit                  |
+  |               | | ARM                     |
   +---------------+---------------------------+
   | Linux Intel   | | manylinux2014+  x86_64  |
   |               | | musllinux_1_2+  x86_64  |
@@ -84,7 +85,6 @@ Maintainers
 -----------
 
 * `How to update CMake version? <https://cmake-python-distributions.readthedocs.io/en/latest/update_cmake_version.html>`_
-
 * `How to make a release? <https://cmake-python-distributions.readthedocs.io/en/latest/make_a_release.html>`_
 
 Miscellaneous
