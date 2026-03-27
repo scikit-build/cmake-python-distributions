@@ -55,22 +55,22 @@ jobs:
           - os: ubuntu-24.04-arm
             arch: "aarch64"
             build: "musllinux_"
-          - os: ubuntu-latest
+          - os: ubuntu-24.04-arm
             arch: "ppc64le"
             build: "manylinux_"
-          - os: ubuntu-latest
+          - os: ubuntu-24.04-arm
             arch: "ppc64le"
             build: "musllinux_"
-          - os: ubuntu-latest
+          - os: ubuntu-24.04-arm
             arch: "s390x"
             build: "manylinux_"
-          - os: ubuntu-latest
+          - os: ubuntu-24.04-arm
             arch: "s390x"
             build: "musllinux_"
-          - os: ubuntu-latest
+          - os: ubuntu-24.04-arm
             arch: "riscv64"
             build: "manylinux_"
-          - os: ubuntu-latest
+          - os: ubuntu-24.04-arm
             arch: "riscv64"
             build: "musllinux_"
           - os: ubuntu-24.04-arm

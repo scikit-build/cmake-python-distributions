@@ -138,8 +138,9 @@ config-settings."cmake.define.CMAKE_JOB_POOLS" = "compile=4;link=1"
 select = ["*-manylinux_armv7l"]
 inherit.config-settings = "append"
 # disable some tests
+# - BootstrapTest fails with custom OpenSSL and probably does not make much sense for this project
 # - RunCMake.CompilerId fails because architecture id is not detected properly for gfortran on Ubuntu 20.04 https://gitlab.kitware.com/cmake/cmake/-/issues/27129
-config-settings."cmake.define.RUN_CMAKE_TEST_EXCLUDE" = "RunCMake.CompilerId"
+config-settings."cmake.define.RUN_CMAKE_TEST_EXCLUDE" = "BootstrapTest|RunCMake.CompilerId"
 
 [[tool.cibuildwheel.overrides]]
 select = ["*-musllinux_*"]
@@ -150,10 +151,21 @@ inherit.config-settings = "append"
 config-settings."cmake.define.RUN_CMAKE_TEST_EXCLUDE" = "BootstrapTest|CTestTestFdSetSize|ExportImport|RunCMake.install|RunCMake.RuntimePath|RunCMake.file-GET_RUNTIME_DEPENDENCIES"
 
 [[tool.cibuildwheel.overrides]]
-select = ["*linux_ppc64le", "*linux_s390x", "*linux_riscv64"]
+select = ["*-musllinux_ppc64le", "*-musllinux_s390x"]
 inherit.config-settings = "append"
-# disable tests on those platforms, QEMU is taking to long for jobs to pass on GHA
-config-settings."cmake.define.RUN_CMAKE_TEST" = "OFF"
+# disable some tests
+# - BootstrapTest fails with custom OpenSSL and probably does not make much sense for this project
+# - ExportImport|RunCMake.install|RunCMake.file-GET_RUNTIME_DEPENDENCIES: c.f. https://discourse.cmake.org/t/cmake-test-suite-failing-on-alpine-linux/5064
+# - RunCMake.execute_process fails because QEMU prints on stderr on SIGSEGV
+config-settings."cmake.define.RUN_CMAKE_TEST_EXCLUDE" = "BootstrapTest|CTestTestFdSetSize|ExportImport|RunCMake.install|RunCMake.RuntimePath|RunCMake.file-GET_RUNTIME_DEPENDENCIES|RunCMake.execute_process"
+
+[[tool.cibuildwheel.overrides]]
+select = ["*-manylinux_ppc64le", "*-manylinux_s390x"]
+inherit.config-settings = "append"
+# disable some tests
+# - BootstrapTest fails with custom OpenSSL and probably does not make much sense for this project
+# - RunCMake.execute_process fails because QEMU prints on stderr on SIGSEGV
+config-settings."cmake.define.RUN_CMAKE_TEST_EXCLUDE" = "BootstrapTest|RunCMake.execute_process"
 
 [[tool.cibuildwheel.overrides]]
 select = ["*-musllinux_{ppc64le,s390x,riscv64}"]
