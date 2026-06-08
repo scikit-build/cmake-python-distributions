@@ -97,16 +97,16 @@ jobs:
         with:
           fetch-depth: 0  # required for versioneer to find tags
 
-      - uses: astral-sh/setup-uv@v8.1.0
+      - uses: astral-sh/setup-uv@v8.2.0
         with:
           enable-cache: false
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v4.0.0
+        uses: docker/setup-qemu-action@v4.1.0
         if: matrix.arch == 'ppc64le' || matrix.arch == 'riscv64' || matrix.arch == 's390x'
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@v3.4
+        uses: pypa/cibuildwheel@v4.0
         env:
           CIBW_ARCHS: "${{ matrix.arch }}"
           CIBW_BUILD: "cp310-${{ matrix.build }}*"
@@ -144,7 +144,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
-      - uses: astral-sh/setup-uv@v8.1.0
+      - uses: astral-sh/setup-uv@v8.2.0
         with:
           enable-cache: false
 
