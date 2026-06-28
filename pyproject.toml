@@ -105,7 +105,7 @@ manylinux-aarch64-image = "manylinux2014"
 manylinux-ppc64le-image = "manylinux2014"
 manylinux-s390x-image = "manylinux2014"
 manylinux-armv7l-image = "manylinux_2_31"
-manylinux-riscv64-image = "ghcr.io/mayeut/manylinux_2_31:2025.11.22-1"
+manylinux-riscv64-image = "ghcr.io/mayeut/manylinux_2_31:2026.06.16-1"
 musllinux-x86_64-image = "musllinux_1_2"
 musllinux-i686-image = "musllinux_1_2"
 musllinux-aarch64-image = "musllinux_1_2"
@@ -121,7 +121,7 @@ environment = { MACOSX_DEPLOYMENT_TARGET = "10.10" }
 
 [[tool.cibuildwheel.overrides]]
 select = "*-*linux*"
-before-all = "./scripts/install-static-clang.sh && ./scripts/manylinux-build-and-install-openssl.sh"
+before-all = "manylinux-install-clang && ./scripts/manylinux-build-and-install-openssl.sh"
 inherit.environment = "prepend"
 environment = { CC = "/opt/clang/bin/clang", CXX = "/opt/clang/bin/clang++", LDFLAGS = "-fuse-ld=lld -Wl,--build-id", PKG_CONFIG_PATH = "/usr/local/ssl/lib/pkgconfig" }
 inherit.environment-pass = "prepend"
