@@ -94,10 +94,9 @@ def get_cmake_archive_urls_and_sha256s(version: str, verbose: bool=False) -> dic
             )
 
         # combine the URLs and SHA256s into a single dictionary
-        zipped = {}
-        for value in expected_files.values():
-            print(f"[{value}]\n{urls[value]}\n{shas[value]}\n")
-            zipped[value] = (urls[value], shas[value])
+        zipped = {
+            value: (urls[value], shas[value]) for value in expected_files.values()
+        }
         assert len(zipped) == len(expected_files)
 
         if verbose:
