@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from typing import Iterable, NoReturn
 
 
-__all__ = ["CMAKE_BIN_DIR", "CMAKE_DATA", "CMAKE_DOC_DIR", "CMAKE_SHARE_DIR", "__version__", "cmake", "cpack", "ctest"]
+__all__ = ["CMAKE_BIN_DIR", "CMAKE_DATA", "CMAKE_DOC_DIR", "CMAKE_SHARE_DIR", "__version__", "ccmake", "cmake", "cpack", "ctest"]
 
 
 def __dir__() -> list[str]:
@@ -54,7 +54,7 @@ def ccmake() -> NoReturn:
     if shutil.which("ccmake", path=CMAKE_BIN_DIR) is None:
         raise FileNotFoundError(
             f"'ccmake' is not available in cmake installation at '{CMAKE_BIN_DIR}'. "
-            "Perhaps 'ccmake' is not yet inclucded to the package for this platform."
+            "Perhaps 'ccmake' is not yet included in the package for this platform."
         )
     _program_exit('ccmake', *sys.argv[1:])
 
