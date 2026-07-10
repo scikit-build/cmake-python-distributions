@@ -13,6 +13,18 @@ such as ITK and VTK.
 
 The CMake python wheels provide `CMake 4.4.0 <https://cmake.org/cmake/help/v4.4/index.html>`_.
 
+Installation
+------------
+
+.. code:: console
+
+    pip install cmake
+
+The ``cmake``, ``ccmake``, ``cpack``, and ``ctest`` executables are then
+available on ``PATH`` (``ccmake`` is not included on Windows). The package is
+also commonly used as a build-time dependency, for example in a
+``pyproject.toml`` ``build-system.requires`` list.
+
 Latest Release
 --------------
 
@@ -97,7 +109,8 @@ Miscellaneous
 License
 -------
 
-This project is maintained by Jean-Christophe Fillion-Robin from Kitware Inc.
+This project was created by Jean-Christophe Fillion-Robin from Kitware Inc. and
+is maintained by the `scikit-build <https://github.com/scikit-build>`_ community.
 It is covered by the `Apache License, Version 2.0 <https://www.apache.org/licenses/LICENSE-2.0>`_.
 
 CMake is distributed under the OSI-approved BSD 3-clause License.

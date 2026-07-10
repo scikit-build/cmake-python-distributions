@@ -1,10 +1,5 @@
-.. CMake Python Distributions documentation main file, created by
-   sphinx-quickstart on Wed Nov  9 02:28:46 2016.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
-Welcome to CMake Python Distributions's documentation!
-======================================================
+CMake Python Distributions
+==========================
 
 `CMake <https://cmake.org>`_ is used to control the software compilation
 process using simple platform and compiler independent configuration files,
@@ -48,7 +43,8 @@ Indices and tables
 Resources
 =========
 
-This project is maintained by Jean-Christophe Fillion-Robin from Kitware Inc.
+This project was created by Jean-Christophe Fillion-Robin from Kitware Inc. and
+is maintained by the `scikit-build <https://github.com/scikit-build>`_ community.
 It is covered by the `Apache License, Version 2.0 <https://www.apache.org/licenses/LICENSE-2.0>`_.
 
 CMake is distributed under the OSI-approved BSD 3-clause License.
