@@ -147,6 +147,7 @@ def bump(session: nox.Session) -> None:
         "README.rst",
         "tests/test_cmake.py",
         "docs/update_cmake_version.rst",
+        "docs/make_a_release.rst",
     )
     _bump(session, "CMake", "kitware/cmake", "", "scripts/update_cmake_version.py", files)
 
@@ -197,3 +198,7 @@ def openssl_version(session: nox.Session) -> None:  # noqa: ARG001
     txt = Path("scripts/manylinux-build-and-install-openssl.sh").read_text()
     current_version = next(iter(re.finditer(r'^OPENSSL_ROOT=openssl-([\d\.]+)$', txt, flags=re.MULTILINE))).group(1)
     print(".".join(current_version.split(".")[:3]))
+
+
+if __name__ == "__main__":
+    nox.main()

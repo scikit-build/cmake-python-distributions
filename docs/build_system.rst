@@ -3,9 +3,9 @@ Understanding the Build-system
 ==============================
 
 
-The build system is described by the ``CMakeLists.txt`` and is composed of few projects each responsible
-for a specific task. Once configured, the `Outer Project` is responsible for driving the overall build
-composed of multiple project called `external project`. Here is the list of `external project`:
+The build system is described by ``CMakeLists.txt`` and is composed of a few projects, each responsible
+for a specific task. Once configured, the `Outer Project` drives the overall build, which is
+composed of multiple `external projects`:
 
 * ``CMakeProject-src-download``
 * ``CMakeProject-binary-download``
@@ -21,7 +21,7 @@ options and describes the role of each one:
     flowchart LR
         subgraph OP[Outer Project]
             style OP fill:#FFF0D7
-            configure["CMakeLists.tct"]
+            configure["CMakeLists.txt"]
             ask_download{"Download source?"}
             download_source["Download Source archive"]
             reuse_source_dir["Re-use source directory"]

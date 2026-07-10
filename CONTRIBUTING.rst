@@ -65,15 +65,17 @@ Ready to contribute? Here's how to set up `cmake-python-distributions` for local
 
     $ git clone git@github.com:your_name_here/cmake-python-distributions.git
 
-3. Make sure you have ``nox`` installed (preferably use ``pipx`` or ``brew``
-   (macOS) if you have those)::
+3. Make sure you have ``nox`` installed (with ``uv``, ``pipx``, ``brew``
+   (macOS), or ``pip``)::
 
     $ pip install nox
     $ cd cmake-python-distributions/
 
+   Alternatively, ``uv run noxfile.py`` runs ``nox`` without installing it.
+
 4. Create a branch for local development::
 
-    $ git checkout -b name-of-your-bugfix-or-feature
+    $ git switch -c name-of-your-bugfix-or-feature
 
    Now you can make your changes locally.
 
@@ -98,13 +100,11 @@ Before you submit a pull request, check that it meets these guidelines:
 
 1. The pull request should include tests.
 
-2. If the pull request adds functionality, the docs should be updated. Put
-   your new functionality into a function with a docstring, and add the
-   feature to the list in `README.rst`.
+2. If the pull request adds functionality, the docs should be updated.
 
-3. The pull request should work for Python 2.7, and 3.6+.
+3. The pull request should work for Python 3.8+.
    Check `GitHub Actions <https://github.com/scikit-build/cmake-python-distributions/actions/workflows/build.yml>`_
-   and make sure that the tests pass for all supported Python versions.
+   and make sure that the tests pass for all supported platforms.
 
 
 Tips
@@ -112,6 +112,6 @@ Tips
 
 To run a subset of tests::
 
-	$ pytest tests/test_cmake.py
-    # OR
-    $ nox -s tests -- tests/test_cmake.py
+    $ nox -s tests -- -k test_cmake_main
+
+The tests run against the built wheel, so ``nox -s tests`` rebuilds it first.

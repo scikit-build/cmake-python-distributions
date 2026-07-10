@@ -19,39 +19,24 @@ If using nox, run::
 
 And follow the instructions it gives you. Leave off the version to bump to the latest version. Add `--commit` to run the commit procedure.
 
-Classic procedure:
-------------------
+Classic procedure
+-----------------
 
-1. Install `requests`::
+1. Execute the `scripts/update_cmake_version.py` command line tool with the
+   desired ``X.Y.Z`` CMake version available for download (the script carries
+   inline dependency metadata, so ``uv run`` handles the ``requests``
+   dependency). For example::
 
-    $ pip install requests
-
-2. Execute `scripts/update_cmake_version.py` command line tool with the desired
-   ``X.Y.Z`` CMake version available for download. For example::
-
-    $ release=4.4.0
-    $ ./scripts/update_cmake_version.py $release
+    $ uv run scripts/update_cmake_version.py 4.4.0
     Collecting URLs and SHA256s from 'https://api.github.com/repos/Kitware/CMake/releases/tags/v4.4.0'
     [...]
-    Collecting URLs and SHA256s from 'https://api.github.com/repos/Kitware/CMake/releases/tags/v4.4.0' - done
-    Updating 'CMakeUrls.cmake' with CMake version 4.4.0
-    Updating 'CMakeUrls.cmake' with CMake version 4.4.0 - done
-    Updating docs/index.rst
-    Updating docs/index.rst - done
-    Updating README.rst
-    Updating README.rst - done
-    Updating tests/test_cmake.py
-    Updating tests/test_cmake.py - done
 
-3. Create a topic named `update-to-cmake-X.Y.Z` and commit the changes.
-   For example::
+   It updates ``CMakeUrls.cmake``, ``pyproject.toml``, ``README.rst``,
+   ``tests/test_cmake.py``, and the version references in ``docs/``, then
+   prints the commands for the next step.
 
-    release=4.4.0
-    git switch -c update-to-cmake-$release
-    git add -u CMakeUrls.cmake docs/index.rst README.rst tests/test_cmake.py docs/update_cmake_version.rst
-    git commit -m "Update to CMake $release"
+2. Run the printed commands to create a topic named `update-to-cmake-X.Y.Z`,
+   commit the changes, and create a `Pull Request`.
 
-4. Push the topic and create a `Pull Request`.
-
-5. If all CI tests are passing, merge the topic and consider :doc:`making a new
+3. If all CI tests are passing, merge the topic and consider :doc:`making a new
    release </make_a_release>`.
