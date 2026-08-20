@@ -32,7 +32,7 @@ jobs:
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       with:
         persist-credentials: false
-    - uses: wntrblm/nox@3284968a16fa5bd7fc0cc64a69a531404ccb4756 # 2026.07.11
+    - uses: wntrblm/nox@57f9e10c4eef84277dcd692d0056420c947674f9 # 2026.08.10
     - name: "Run update: bump ${{ matrix.dependency_nice }}"
       id: bump
       run: |
