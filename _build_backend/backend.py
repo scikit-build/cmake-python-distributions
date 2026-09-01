@@ -1,15 +1,19 @@
 from __future__ import annotations
 
 import os
+from pathlib import Path
 
 from scikit_build_core import build as _orig
+
+# Archives are downloaded here (gitignored). The sdist bundles the unix source
+# tarball in this directory so a build from the sdist needs no network.
+_ARCHIVE_DIR = Path("archive-cache")
 
 if hasattr(_orig, "prepare_metadata_for_build_editable"):
     prepare_metadata_for_build_editable = _orig.prepare_metadata_for_build_editable
 if hasattr(_orig, "prepare_metadata_for_build_wheel"):
     prepare_metadata_for_build_wheel = _orig.prepare_metadata_for_build_wheel
 build_editable = _orig.build_editable
-build_sdist = _orig.build_sdist
 get_requires_for_build_editable = _orig.get_requires_for_build_editable
 get_requires_for_build_sdist = _orig.get_requires_for_build_sdist
 
@@ -46,24 +50,66 @@ def get_requires_for_build_wheel(
     return packages
 
 
-def _bootstrap_build(temp_path: str, config_settings: dict[str, list[str] | str] | None = None) -> str:
+def _fetch_archive(kind: str, archive_dir: Path) -> Path:
+    """
+    Return the path to the ``kind`` archive listed in ``CMakeUrls.cmake``,
+    downloading it into ``archive_dir`` if it is not already there. The SHA256
+    is always verified.
+    """
     import hashlib
-    import platform
     import re
+    import urllib.request
+
+    cmake_urls = Path("CMakeUrls.cmake").read_text()
+    archive_url = re.findall(rf'set\({kind}_url\s+"(?P<data>.*)"\)$', cmake_urls, flags=re.MULTILINE)[0]
+    archive_sha256 = re.findall(rf'set\({kind}_sha256\s+"(?P<data>.*)"\)$', cmake_urls, flags=re.MULTILINE)[0]
+
+    archive_name = archive_url.rsplit("/", maxsplit=1)[1]
+    archive_path = archive_dir / archive_name
+    if not archive_path.exists():
+        archive_dir.mkdir(parents=True, exist_ok=True)
+        with urllib.request.urlopen(archive_url) as response:
+            archive_path.write_bytes(response.read())
+
+    sha256 = hashlib.sha256(archive_path.read_bytes()).hexdigest()
+    if archive_sha256.lower() != sha256.lower():
+        msg = f"Invalid sha256 for {archive_url!r}. Expected {archive_sha256!r}, got {sha256!r}"
+        raise ValueError(msg)
+
+    return archive_path
+
+
+def build_sdist(
+    sdist_directory: str,
+    config_settings: dict[str, list[str] | str] | None = None,
+) -> str:
+    archive_path = _fetch_archive("unix_source", _ARCHIVE_DIR)
+
+    settings: dict[str, list[str] | str] = dict(config_settings or {})
+    include = settings.get("sdist.include", [])
+    if isinstance(include, str):
+        include = include.split(";")
+    settings["sdist.include"] = [*include, archive_path.as_posix()]
+    return _orig.build_sdist(sdist_directory, settings)
+
+
+def _bootstrap_build(temp_path: str, config_settings: dict[str, list[str] | str] | None = None) -> str:
+    import platform
     import shutil
     import subprocess
     import tarfile
-    import urllib.request
     import zipfile
-    from pathlib import Path
 
     env = os.environ.copy()
     temp_path_ = Path(temp_path)
 
-    archive_dir = temp_path_
+    archive_dir = _ARCHIVE_DIR
     if config_settings:
-        archive_dir = Path(config_settings.get("cmake.define.CMakePythonDistributions_ARCHIVE_DOWNLOAD_DIR", archive_dir))
-        archive_dir.mkdir(parents=True, exist_ok=True)
+        archive_dir_setting = config_settings.get("cmake.define.CMakePythonDistributions_ARCHIVE_DOWNLOAD_DIR")
+        if isinstance(archive_dir_setting, list):
+            archive_dir_setting = archive_dir_setting[-1]
+        if archive_dir_setting:
+            archive_dir = Path(archive_dir_setting)
 
     if os.name == "posix":
         if "MAKE" not in env:
@@ -92,21 +138,8 @@ def _bootstrap_build(temp_path: str, config_settings: dict[str, list[str] | str]
             raise ValueError(msg)
         kind = kinds[machine]
 
-
-    cmake_urls = Path("CMakeUrls.cmake").read_text()
-    archive_url = re.findall(rf'set\({kind}_url\s+"(?P<data>.*)"\)$', cmake_urls, flags=re.MULTILINE)[0]
-    archive_sha256 = re.findall(rf'set\({kind}_sha256\s+"(?P<data>.*)"\)$', cmake_urls, flags=re.MULTILINE)[0]
-
-    archive_name = archive_url.rsplit("/", maxsplit=1)[1]
-    archive_path = archive_dir / archive_name
-    if not archive_path.exists():
-        with urllib.request.urlopen(archive_url) as response:
-            archive_path.write_bytes(response.read())
-
-    sha256 = hashlib.sha256(archive_path.read_bytes()).hexdigest()
-    if archive_sha256.lower() != sha256.lower():
-        msg = f"Invalid sha256 for {archive_url!r}. Expected {archive_sha256!r}, got {sha256!r}"
-        raise ValueError(msg)
+    archive_path = _fetch_archive(kind, archive_dir)
+    archive_name = archive_path.name
 
     if os.name == "posix":
         assert archive_name.endswith(".tar.gz")

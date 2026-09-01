@@ -37,7 +37,7 @@ if(CMakePythonDistributions_SUPERBUILD)
 
   set(RUN_CMAKE_TEST_EXCLUDE "BootstrapTest" CACHE STRING "CMake test suite exclusion regex")
 
-  set(CMakePythonDistributions_ARCHIVE_DOWNLOAD_DIR "${CMAKE_BINARY_DIR}"
+  set(CMakePythonDistributions_ARCHIVE_DOWNLOAD_DIR "${CMAKE_SOURCE_DIR}/archive-cache"
     CACHE PATH "Directory where to download archives"
     )
 
