@@ -60,9 +60,6 @@ if(CMakePythonDistributions_SUPERBUILD)
   endfunction()
 
   set(src_archive "unix_source")
-  if(WIN32)
-    set(src_archive "windows_source")
-  endif()
   check_archive_var("${src_archive}")
 
   set(binary_archive "linux32_binary")

@@ -49,9 +49,8 @@ tarball listed in ``CMakeUrls.cmake``, bundled as
 tarball, so it needs network access; building a wheel from the sdist with
 ``BUILD_CMAKE_FROM_SOURCE=ON`` (the default on Linux) does not.
 
-Two paths still download at wheel-build time: ``BUILD_CMAKE_FROM_SOURCE=OFF``
-(the default on macOS and Windows) fetches a prebuilt binary archive, and a
-Windows source build fetches the ``.zip`` source archive.
+``BUILD_CMAKE_FROM_SOURCE=OFF`` (the default on macOS and Windows) still
+downloads a prebuilt binary archive at wheel-build time.
 
 The source distribution is generated using the following command::
 
