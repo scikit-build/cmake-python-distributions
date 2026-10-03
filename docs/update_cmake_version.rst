@@ -27,8 +27,8 @@ Classic procedure
    inline dependency metadata, so ``uv run`` handles the ``requests``
    dependency). For example::
 
-    $ uv run scripts/update_cmake_version.py 4.4.3
-    Collecting URLs and SHA256s from 'https://api.github.com/repos/Kitware/CMake/releases/tags/v4.4.3'
+    $ uv run scripts/update_cmake_version.py 4.4.4
+    Collecting URLs and SHA256s from 'https://api.github.com/repos/Kitware/CMake/releases/tags/v4.4.4'
     [...]
 
    It updates ``CMakeUrls.cmake``, ``pyproject.toml``, ``README.rst``,
