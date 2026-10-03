@@ -55,7 +55,6 @@ def get_cmake_archive_urls_and_sha256s(version: str, verbose: bool=False) -> dic
 
         expected_files = {
             f"cmake-{version}.tar.gz": "unix_source",
-            f"cmake-{version}.zip": "win_source",
             f"cmake-{version}-linux-x86_64.tar.gz": "linux64_binary",
             f"cmake-{version}-macos10.10-universal.tar.gz": "macos10_10_binary",
             f"cmake-{version}-windows-i386.zip": "win32_binary",
@@ -120,9 +119,6 @@ def generate_cmake_variables(urls_and_sha256s: Mapping[str, tuple[str, str]]) ->
       # CMake sources
       set(unix_source_url          "{unix_source_url}")
       set(unix_source_sha256       "{unix_source_sha256}")
-
-      set(windows_source_url       "{win_source_url}")
-      set(windows_source_sha256    "{win_source_sha256}")
 
       #-----------------------------------------------------------------------------
       # CMake binaries

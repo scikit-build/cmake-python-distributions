@@ -4,9 +4,6 @@
 set(unix_source_url          "https://github.com/Kitware/CMake/releases/download/v4.4.3/cmake-4.4.3.tar.gz")
 set(unix_source_sha256       "c46400618b4f1f2b43507f24fb22f3ae830c3416cf23b776e16e1d413aa892f0")
 
-set(windows_source_url       "https://github.com/Kitware/CMake/releases/download/v4.4.3/cmake-4.4.3.zip")
-set(windows_source_sha256    "bc2cc41a1097e5e8b58902209dba880d0dc3361779cb7600f5e8a92eedb45e01")
-
 #-----------------------------------------------------------------------------
 # CMake binaries
 

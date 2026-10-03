@@ -134,6 +134,9 @@ jobs:
       - name: Build SDist
         run: pipx run build --sdist
 
+      - name: Check bundled CMake source archive
+        run: tar tzf dist/*.tar.gz | grep -E '/archive-cache/cmake-[0-9.]+\.tar\.gz$'
+
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: cibw-sdist
@@ -171,9 +174,14 @@ jobs:
           name: cibw-sdist
           path: dist
 
-      - name: Install SDist
+      # Dead proxy blocks the CMake download; PyPI stays reachable for build deps.
+      - name: Install SDist (offline, from bundled source)
         env:
-          CMAKE_ARGS: "-DBUILD_CMAKE_FROM_SOURCE:BOOL=OFF"
+          CMAKE_ARGS: "-DBUILD_CMAKE_FROM_SOURCE:BOOL=ON"
+          CMAKE_BUILD_PARALLEL_LEVEL: "4"
+          http_proxy: "http://127.0.0.1:9"
+          https_proxy: "http://127.0.0.1:9"
+          no_proxy: "pypi.org,files.pythonhosted.org"
         run: |
           uv pip install dist/*.tar.gz
           rm -rf dist

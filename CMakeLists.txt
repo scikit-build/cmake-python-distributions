@@ -37,7 +37,7 @@ if(CMakePythonDistributions_SUPERBUILD)
 
   set(RUN_CMAKE_TEST_EXCLUDE "BootstrapTest" CACHE STRING "CMake test suite exclusion regex")
 
-  set(CMakePythonDistributions_ARCHIVE_DOWNLOAD_DIR "${CMAKE_BINARY_DIR}"
+  set(CMakePythonDistributions_ARCHIVE_DOWNLOAD_DIR "${CMAKE_SOURCE_DIR}/archive-cache"
     CACHE PATH "Directory where to download archives"
     )
 
@@ -60,9 +60,6 @@ if(CMakePythonDistributions_SUPERBUILD)
   endfunction()
 
   set(src_archive "unix_source")
-  if(WIN32)
-    set(src_archive "windows_source")
-  endif()
   check_archive_var("${src_archive}")
 
   set(binary_archive "linux32_binary")

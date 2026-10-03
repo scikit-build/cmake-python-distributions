@@ -43,9 +43,16 @@ wheels on PyPI are produced with `cibuildwheel <https://cibuildwheel.pypa.io>`_
 Source distribution (sdist)
 ---------------------------
 
-The source distribution contains only this project's sources; the CMake source
-or binary archive listed in ``CMakeUrls.cmake`` is downloaded when the wheel is
-built. The source distribution is generated using the following command::
+The source distribution contains this project's sources plus the CMake source
+tarball listed in ``CMakeUrls.cmake``, bundled as
+``archive-cache/cmake-<version>.tar.gz``. Building the sdist downloads that
+tarball, so it needs network access; building a wheel from the sdist with
+``BUILD_CMAKE_FROM_SOURCE=ON`` (the default on Linux) does not.
+
+``BUILD_CMAKE_FROM_SOURCE=OFF`` (the default on macOS and Windows) still
+downloads a prebuilt binary archive at wheel-build time.
+
+The source distribution is generated using the following command::
 
     python -m build --sdist
 
@@ -101,9 +108,10 @@ in two ways.
 Caching downloads
 ^^^^^^^^^^^^^^^^^
 
-To avoid the re-download of CMake sources and/or binary packages, passing the
-option ``-Ccmake.define.CMakePythonDistributions_ARCHIVE_DOWNLOAD_DIR=/path/to/cache``
-enables successive builds to re-use existing archives instead of re-downloading them.
+Archives are downloaded into ``archive-cache/`` in the source tree (gitignored)
+and re-used by later builds when their hash matches. To use a different
+location, pass
+``-Ccmake.define.CMakePythonDistributions_ARCHIVE_DOWNLOAD_DIR=/path/to/cache``.
 
 Re-using the build tree
 ^^^^^^^^^^^^^^^^^^^^^^^
