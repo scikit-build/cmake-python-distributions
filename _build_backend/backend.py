@@ -121,6 +121,10 @@ def _bootstrap_build(temp_path: str, config_settings: dict[str, list[str] | str]
         prefix_path = temp_path_ / "cmake-install"
         cmake_path = prefix_path / "bin" / "cmake"
         bootstrap_args = [f"--prefix={prefix_path}", "--no-qt-gui", "--no-debugger", f"--parallel={parallel}", "--", "-DBUILD_TESTING=OFF", "-DBUILD_CursesDialog:BOOL=OFF"]
+        for name in ("OPENSSL_ROOT_DIR", "OPENSSL_USE_STATIC_LIBS"):
+            value = (config_settings or {}).get(f"cmake.define.{name}")
+            if value is not None:
+                bootstrap_args.append(f"-D{name}={value}")
         previous_cwd = Path().absolute()
         os.chdir(bootstrap_path.parent)
         try:
