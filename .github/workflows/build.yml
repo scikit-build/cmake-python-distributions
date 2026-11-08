@@ -47,40 +47,40 @@ jobs:
           - os: ubuntu-latest
             arch: "x86_64"
             build: "musllinux_"
-          - os: ubuntu-latest
+          - os: ubuntu-24.04
             arch: "i686"
             build: "manylinux_"
-          - os: ubuntu-latest
+          - os: ubuntu-24.04
             arch: "i686"
             build: "musllinux_"
-          - os: ubuntu-24.04-arm
+          - os: ubuntu-26.04-arm
             arch: "aarch64"
             build: "manylinux_"
-          - os: ubuntu-24.04-arm
+          - os: ubuntu-26.04-arm
             arch: "aarch64"
             build: "musllinux_"
-          - os: ubuntu-24.04-arm
+          - os: ubuntu-26.04-arm
             arch: "ppc64le"
             build: "manylinux_"
-          - os: ubuntu-24.04-arm
+          - os: ubuntu-26.04-arm
             arch: "ppc64le"
             build: "musllinux_"
-          - os: ubuntu-24.04-arm
+          - os: ubuntu-26.04-arm
             arch: "s390x"
             build: "manylinux_"
-          - os: ubuntu-24.04-arm
+          - os: ubuntu-26.04-arm
             arch: "s390x"
             build: "musllinux_"
-          - os: ubuntu-24.04-arm
+          - os: ubuntu-26.04-arm
             arch: "riscv64"
             build: "manylinux_"
-          - os: ubuntu-24.04-arm
+          - os: ubuntu-26.04-arm
             arch: "riscv64"
             build: "musllinux_"
-          - os: ubuntu-24.04-arm
+          - os: ubuntu-26.04-arm
             arch: "armv7l"
             build: "manylinux_"
-          - os: ubuntu-24.04-arm
+          - os: ubuntu-26.04-arm
             arch: "armv7l"
             build: "musllinux_"
           - os: windows-2022
@@ -92,7 +92,7 @@ jobs:
           - os: windows-2022
             arch: "x86"
             build: ""
-          - os: macos-14
+          - os: macos-15
             arch: "universal2"
             build: ""
 
@@ -114,7 +114,7 @@ jobs:
         uses: pypa/cibuildwheel@f9b966cfadf4109556cadc5bb39ddb72d0ce664e # v4.3.5
         env:
           CIBW_ARCHS: "${{ matrix.arch }}"
-          CIBW_BUILD: "cp310-${{ matrix.build }}*"
+          CIBW_BUILD: "cp311-${{ matrix.build }}*"
 
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
