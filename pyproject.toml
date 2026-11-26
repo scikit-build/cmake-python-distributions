@@ -1,5 +1,5 @@
 [build-system]
-requires = ["scikit-build-core>=0.10"]
+requires = ["scikit-build-core>=0.11"]
 build-backend = "backend"
 backend-path = ["_build_backend"]
 
@@ -9,13 +9,12 @@ version = "4.5.1"
 description = "CMake is an open-source, cross-platform family of tools designed to build, test and package software"
 keywords = ["CMake", "build", "c++", "fortran", "cross-platform", "cross-compilation"]
 readme = "README.rst"
-license = {text = "Apache 2.0"}
+license = "Apache-2.0 AND BSD-3-Clause"
+license-files = ["LICENSE_Apache_20", "LICENSE_BSD_3"]
 authors = [
     {name = "Jean-Christophe Fillion-Robin", email = "jchris.fillionr@kitware.com"},
 ]
 classifiers = [
-    "License :: OSI Approved :: Apache Software License",
-    "License :: OSI Approved :: BSD License",
     "Programming Language :: C",
     "Programming Language :: C++",
     "Programming Language :: Fortran",
